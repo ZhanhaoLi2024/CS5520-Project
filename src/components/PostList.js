@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   FlatList,
   Text,
   StyleSheet,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
-const PostItem = ({ title, description, createdAt }) => {
+const PostItem = ({
+  title,
+  description,
+  createdAt,
+  onDelete,
+  id,
+  showDeleteButton,
+}) => {
   return (
     <View style={styles.postItem}>
       <Text style={styles.postTitle}>{title}</Text>
@@ -15,6 +24,17 @@ const PostItem = ({ title, description, createdAt }) => {
       <Text style={styles.postDate}>
         {new Date(createdAt).toLocaleDateString()}
       </Text>
+      {showDeleteButton && (
+        <Pressable
+          style={({ pressed }) => [
+            styles.deleteButton,
+            pressed && styles.deleteButtonPressed,
+          ]}
+          onPress={() => onDelete(id)}
+        >
+          <AntDesign name="delete" size={20} color="#FF6B6B" />
+        </Pressable>
+      )}
     </View>
   );
 };
@@ -24,7 +44,9 @@ const PostList = ({
   loading,
   onRefresh,
   emptyMessage = "No posts available",
+  onDelete,
   indexCreating = false,
+  showDeleteButton = false,
 }) => {
   if (loading) {
     return (
@@ -46,7 +68,13 @@ const PostList = ({
 
       <FlatList
         data={posts}
-        renderItem={({ item }) => <PostItem {...item} />}
+        renderItem={({ item }) => (
+          <PostItem
+            {...item}
+            onDelete={showDeleteButton ? onDelete : null}
+            showDeleteButton={showDeleteButton}
+          />
+        )}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={
@@ -104,21 +132,34 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   postTitle: {
     fontSize: 18,
     fontWeight: "600",
     color: "#333",
-    marginBottom: 8,
+    flexShrink: 1,
   },
   postDescription: {
     fontSize: 14,
     color: "#666",
     marginBottom: 8,
+    flexShrink: 1,
   },
   postDate: {
     fontSize: 12,
     color: "#999",
+    marginRight: 16,
+  },
+  deleteButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: "#ffeded",
+  },
+  deleteButtonPressed: {
+    opacity: 0.5,
   },
 });
 

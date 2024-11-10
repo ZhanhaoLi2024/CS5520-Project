@@ -7,10 +7,15 @@ import {
   StyleSheet,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { auth } from "../Firebase/firebaseSetup";
-import { getAllPosts, getUserPosts } from "../Firebase/firebaseHelper";
+import {
+  getAllPosts,
+  getUserPosts,
+  deletePost,
+} from "../Firebase/firebaseHelper";
 import { useFocusEffect } from "@react-navigation/native";
 import PostList from "../components/PostList";
 
@@ -74,6 +79,7 @@ const AllPostsScreen = () => {
       onRefresh={loadPosts}
       indexCreating={indexCreating}
       emptyMessage="No posts yet"
+      showDeleteButton={false}
     />
   );
 };
@@ -119,13 +125,43 @@ const MyPostsScreen = () => {
     }
   };
 
+  const handleDeletePost = async (postId) => {
+    Alert.alert(
+      "Delete Post",
+      "Are you sure you want to delete this post?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            try {
+              await deletePost(postId);
+              // Refresh the posts list after successful deletion
+              await loadMyPosts();
+            } catch (error) {
+              console.error("Error deleting post:", error);
+              Alert.alert("Error", "Failed to delete post");
+            }
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
     <PostList
       posts={posts}
       loading={loading}
       onRefresh={loadMyPosts}
+      onDelete={handleDeletePost}
       indexCreating={indexCreating}
       emptyMessage="You haven't created any posts yet"
+      showDeleteButton={true}
     />
   );
 };
