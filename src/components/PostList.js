@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   FlatList,
@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   Pressable,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 
 const PostItem = ({
   title,
@@ -18,7 +18,18 @@ const PostItem = ({
   showDeleteButton,
   onPress,
   userId,
+  likesCount,
+  commentsCount,
+  onLike,
 }) => {
+  const [liked, setLiked] = useState(false);
+
+  // Handle like button press
+  const handleLike = () => {
+    setLiked(!liked);
+    onLike(id, liked ? -1 : 1); // Adjust likes count based on current state
+  };
+
   const handleDelete = () => {
     onDelete(id);
   };
@@ -34,6 +45,21 @@ const PostItem = ({
         <Text style={styles.postDate}>
           {new Date(createdAt).toLocaleDateString()}
         </Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.likesContainer}>
+            <Pressable onPress={handleLike} style={styles.likeButton}>
+              <AntDesign
+                name={liked ? "heart" : "hearto"}
+                size={20}
+                color={liked ? "#FF6B6B" : "#999"}
+              />
+            </Pressable>
+            <Text style={styles.likesCount}>{likesCount}</Text>
+          </View>
+          <Text style={styles.commentsCount}>
+            {commentsCount} {commentsCount === 1 ? "Comment" : "Comments"}
+          </Text>
+        </View>
       </View>
       {showDeleteButton && (
         <Pressable
@@ -59,6 +85,7 @@ const PostList = ({
   indexCreating = false,
   showDeleteButton = false,
   emptyMessage = "No posts available",
+  onLike,
 }) => {
   if (loading) {
     return (
@@ -95,6 +122,9 @@ const PostList = ({
               userId={item.userId}
               showDeleteButton={showDeleteButton}
               onPress={onPress}
+              likesCount={item.likesCount}
+              commentsCount={item.commentsCount}
+              onLike={onLike}
             />
           )}
           keyExtractor={(item) => item.id}
@@ -106,17 +136,6 @@ const PostList = ({
     </View>
   );
 };
-
-const renderItem = ({ item }) => (
-  <PostItem
-    title={item.title}
-    description={item.description}
-    createdAt={item.createdAt}
-    onPress={() => navigation.navigate("PostDetail", { post: item })}
-    onDelete={showDeleteButton ? onDelete : null}
-    showDeleteButton={showDeleteButton}
-  />
-);
 
 const styles = StyleSheet.create({
   container: {
@@ -154,16 +173,16 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  textContainer: {
+    flex: 1,
   },
   postTitle: {
     fontSize: 18,
@@ -180,7 +199,27 @@ const styles = StyleSheet.create({
   postDate: {
     fontSize: 12,
     color: "#999",
+  },
+  statsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  likesContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 16,
+  },
+  likeButton: {
+    marginRight: 6,
+  },
+  likesCount: {
+    fontSize: 14,
+    color: "#666",
+  },
+  commentsCount: {
+    fontSize: 14,
+    color: "#666",
   },
   deleteButton: {
     padding: 8,
