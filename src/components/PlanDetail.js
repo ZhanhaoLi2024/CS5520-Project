@@ -1,17 +1,15 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
+import React, { useEffect } from "react";
 
 export default function PlanDetail({ route, navigation }) {
   const { plan } = route.params;
 
   useEffect(() => {
-    // Set the header title to the dish name
     navigation.setOptions({
       title: plan.dishName,
     });
   }, [navigation, plan.dishName]);
 
-  // Format the date for display
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -22,27 +20,39 @@ export default function PlanDetail({ route, navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.section}>
-        <Text style={styles.label}>Dish Name</Text>
-        <Text style={styles.value}>{plan.dishName}</Text>
-      </View>
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.section}>
+          <Text style={styles.label}>Dish Name</Text>
+          <Text style={styles.value}>{plan.dishName}</Text>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Planned Date</Text>
-        <Text style={styles.value}>{formatDate(plan.plannedDate)}</Text>
-      </View>
+        <View style={styles.section}>
+          <Text style={styles.label}>Planned Date</Text>
+          <Text style={styles.value}>{formatDate(plan.plannedDate)}</Text>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Steps</Text>
-        {plan.steps.map((step, index) => (
-          <View key={index} style={styles.stepContainer}>
-            <Text style={styles.stepNumber}>{index + 1}</Text>
-            <Text style={styles.stepText}>{step}</Text>
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+        <View style={styles.section}>
+          <Text style={styles.label}>Steps</Text>
+          {plan.steps.map((step, index) => (
+            <View key={index} style={styles.stepContainer}>
+              <Text style={styles.stepNumber}>{index + 1}</Text>
+              <Text style={styles.stepText}>{step}</Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+
+      <Pressable
+        style={({ pressed }) => [
+          styles.editButton,
+          pressed && styles.editButtonPressed,
+        ]}
+        onPress={() => navigation.navigate("PlanEdit", { plan })}
+      >
+        <Text style={styles.editButtonText}>Edit Plan</Text>
+      </Pressable>
+    </View>
   );
 }
 
@@ -50,6 +60,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  scrollContainer: {
+    flex: 1,
   },
   section: {
     padding: 16,
@@ -85,5 +98,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
     lineHeight: 24,
+  },
+  editButton: {
+    backgroundColor: "#FF6B6B",
+    margin: 16,
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  editButtonPressed: {
+    opacity: 0.7,
+  },
+  editButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
