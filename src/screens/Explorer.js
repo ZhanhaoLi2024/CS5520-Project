@@ -26,10 +26,92 @@ const PostItem = ({ title, description, createdAt }) => {
   );
 };
 
+const ErrorMessage = ({ message, onRetry }) => (
+  <View style={styles.centered}>
+    <Text style={styles.errorText}>{message}</Text>
+    {onRetry && (
+      <Pressable style={styles.retryButton} onPress={onRetry}>
+        <Text style={styles.retryButtonText}>Retry</Text>
+      </Pressable>
+    )}
+  </View>
+);
+
+const LoadingMessage = () => (
+  <View style={styles.centered}>
+    <ActivityIndicator size="large" color="#FF6B6B" />
+    <Text style={[styles.loadingText, { marginTop: 10 }]}>Loading...</Text>
+  </View>
+);
+
 const AllPostsScreen = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [indexCreating, setIndexCreating] = useState(false);
+
+  useEffect(() => {
+    loadPosts();
+  }, []);
+
+  const loadPosts = async () => {
+    try {
+      setLoading(true);
+      setIndexCreating(false);
+      const loadedPosts = await getAllPosts();
+      setPosts(loadedPosts);
+    } catch (error) {
+      console.error("Error loading posts:", error);
+      if (
+        error.message?.includes("index") ||
+        error.code === "failed-precondition"
+      ) {
+        setIndexCreating(true);
+        // Try simple query without sorting
+        try {
+          const simplePosts = await getDocuments("posts");
+          const sortedPosts = simplePosts.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          setPosts(sortedPosts);
+        } catch (fallbackError) {
+          console.error("Fallback query failed:", fallbackError);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#FF6B6B" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>All Posts</Text>
+      {indexCreating && (
+        <View style={styles.indexingBanner}>
+          <Text style={styles.indexingText}>
+            Setting up database optimization... Some features may be limited.
+          </Text>
+        </View>
+      )}
+      <FlatList
+        data={posts}
+        renderItem={({ item }) => <PostItem {...item} />}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listContainer}
+        ListEmptyComponent={
+          <View style={styles.centered}>
+            <Text style={styles.emptyText}>No posts yet</Text>
+          </View>
+        }
+        refreshing={loading}
+        onRefresh={loadPosts}
+      />
     </View>
   );
 };
