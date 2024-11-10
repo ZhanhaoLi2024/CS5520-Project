@@ -71,8 +71,7 @@ export default function Plan({ navigation }) {
       dishName={item.dishName}
       plannedDate={item.plannedDate}
       onPress={() => {
-        // Handle plan item press - can be used for viewing details later
-        console.log("Pressed plan:", item.dishName);
+        navigation.navigate("PlanDetail", { plan: item });
       }}
       onDelete={handleDeletePlan}
     />
