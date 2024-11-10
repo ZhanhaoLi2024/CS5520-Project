@@ -27,24 +27,6 @@ const PostItem = ({ title, description, createdAt }) => {
   );
 };
 
-const ErrorMessage = ({ message, onRetry }) => (
-  <View style={styles.centered}>
-    <Text style={styles.errorText}>{message}</Text>
-    {onRetry && (
-      <Pressable style={styles.retryButton} onPress={onRetry}>
-        <Text style={styles.retryButtonText}>Retry</Text>
-      </Pressable>
-    )}
-  </View>
-);
-
-const LoadingMessage = () => (
-  <View style={styles.centered}>
-    <ActivityIndicator size="large" color="#FF6B6B" />
-    <Text style={[styles.loadingText, { marginTop: 10 }]}>Loading...</Text>
-  </View>
-);
-
 const AllPostsScreen = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -222,7 +204,7 @@ export default function Explorer({ navigation }) {
       <Tab.Screen
         name="AllPosts"
         component={AllPostsScreen}
-        options={{ tabBarLabel: "All Posts" }}
+        options={{ tabBarLabel: "All" }}
       />
       <Tab.Screen
         name="MyPosts"
