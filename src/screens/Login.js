@@ -44,7 +44,6 @@ export default function Login({ navigation }) {
         password
       );
       console.log("Logged in with:", userCredential.user.email);
-      navigation.replace("Plan");
     } catch (error) {
       let errorMessage = "An error occurred during login";
       switch (error.code) {
