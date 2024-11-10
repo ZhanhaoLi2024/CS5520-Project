@@ -1,4 +1,3 @@
-// src/Firebase/firebaseHelper.js
 import {
   collection,
   addDoc,
@@ -109,4 +108,26 @@ export const getUserProfile = async (userId) => {
     where("userId", "==", userId),
   ]);
   return documents[0];
+};
+
+export const createPost = async (postData) => {
+  try {
+    if (!postData.userId) {
+      throw new Error("userId is required");
+    }
+    if (!postData.title) {
+      throw new Error("title is required");
+    }
+
+    const docRef = await addDoc(collection(db, "posts"), {
+      ...postData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error("Error creating post:", error);
+    throw error;
+  }
 };
