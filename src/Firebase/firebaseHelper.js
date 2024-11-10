@@ -1,4 +1,3 @@
-// src/Firebase/firebaseHelper.js
 import {
   collection,
   addDoc,
@@ -109,4 +108,113 @@ export const getUserProfile = async (userId) => {
     where("userId", "==", userId),
   ]);
   return documents[0];
+};
+
+const executeQueryWithFallback = async (primaryQuery, fallbackQuery) => {
+  try {
+    const querySnapshot = await getDocs(primaryQuery);
+    const documents = [];
+    querySnapshot.forEach((doc) => {
+      documents.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+    return documents;
+  } catch (error) {
+    if (error.code === "failed-precondition") {
+      console.log("Using fallback query due to missing index");
+      const fallbackSnapshot = await getDocs(fallbackQuery);
+      const documents = [];
+      fallbackSnapshot.forEach((doc) => {
+        documents.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      return documents.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+    }
+    throw error;
+  }
+};
+
+export const getAllPosts = async () => {
+  try {
+    const postsRef = collection(db, "posts");
+    const primaryQuery = query(postsRef, orderBy("createdAt", "desc"));
+    const fallbackQuery = query(postsRef);
+
+    return await executeQueryWithFallback(primaryQuery, fallbackQuery);
+  } catch (error) {
+    console.error("Error fetching all posts:", error);
+    throw error;
+  }
+};
+
+export const getUserPosts = async (userId) => {
+  try {
+    const postsRef = collection(db, "posts");
+    // Primary query with ordering
+    const primaryQuery = query(
+      postsRef,
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
+    // Fallback query without ordering
+    const fallbackQuery = query(postsRef, where("userId", "==", userId));
+
+    return await executeQueryWithFallback(primaryQuery, fallbackQuery);
+  } catch (error) {
+    console.error("Error fetching user posts:", error);
+    throw error;
+  }
+};
+
+export const createPost = async (postData) => {
+  try {
+    if (!postData.userId) {
+      throw new Error("userId is required");
+    }
+    if (!postData.title) {
+      throw new Error("title is required");
+    }
+
+    const docRef = await addDoc(collection(db, "posts"), {
+      ...postData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error("Error creating post:", error);
+    throw error;
+  }
+};
+
+export const updatePost = async (postId, updateData) => {
+  try {
+    const docRef = doc(db, "posts", postId);
+    const updates = {
+      ...updateData,
+      updatedAt: new Date().toISOString(),
+    };
+    await updateDoc(docRef, updates);
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating post:", error);
+    throw error;
+  }
+};
+
+export const deletePost = async (postId) => {
+  try {
+    await deleteDoc(doc(db, "posts", postId));
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    throw error;
+  }
 };

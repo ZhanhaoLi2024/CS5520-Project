@@ -10,32 +10,13 @@ import {
   Image,
 } from "react-native";
 // import * as ImagePicker from "expo-image-picker";
-import { createDocument } from "../Firebase/firebaseHelper";
+import { createPost } from "../Firebase/firebaseHelper";
 import { auth } from "../Firebase/firebaseSetup";
 
 export default function NewPost({ navigation }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  //   const [image, setImage] = useState(null);
-
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Sorry, we need camera roll permissions to make this work!");
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
     if (!title.trim()) {
@@ -49,22 +30,48 @@ export default function NewPost({ navigation }) {
     }
 
     try {
+      setSubmitting(true);
       const postData = {
         title: title.trim(),
         description: description.trim(),
-        userId: auth.currentUser.uid,
-        // imageUrl: image,
+        userId: auth.currentUser.uid, // Make sure to include this
         createdAt: new Date().toISOString(),
+        // Add any other fields you need
       };
 
-      await createDocument("posts", postData);
-      Alert.alert("Success", "Post created successfully!", [
-        { text: "OK", onPress: () => navigation.goBack() },
-      ]);
+      const result = await createPost(postData);
+      if (result.success) {
+        Alert.alert("Success", "Post created successfully!", [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          },
+        ]);
+      }
     } catch (error) {
       console.error("Error creating post:", error);
-      Alert.alert("Error", "Failed to create post");
+      Alert.alert("Error", "Failed to create post. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
+  };
+
+  const pickImage = async () => {
+    // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    // if (status !== "granted") {
+    //   Alert.alert("Permission required", "You need to grant permission to access your media library to pick an image.");
+    //   return;
+    // }
+    // const result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsEditing: true,
+    //   aspect: [4, 3],
+    //   quality: 1,
+    // });
+    // if (result.cancelled) {
+    //   return;
+    // }
+    // setImage(result.uri);
   };
 
   return (
@@ -76,6 +83,7 @@ export default function NewPost({ navigation }) {
           value={title}
           onChangeText={setTitle}
           maxLength={100}
+          editable={!submitting}
         />
 
         <TextInput
@@ -85,6 +93,7 @@ export default function NewPost({ navigation }) {
           onChangeText={setDescription}
           multiline
           numberOfLines={4}
+          editable={!submitting}
         />
 
         <Pressable style={styles.imageButton} onPress={pickImage}>
