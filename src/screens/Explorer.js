@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-export default function Create() {
+export default function Explorer() {
   return (
     <View>
-      <Text>Create</Text>
+      <Text>Explorer</Text>
     </View>
   );
 }
