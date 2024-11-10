@@ -193,3 +193,28 @@ export const createPost = async (postData) => {
     throw error;
   }
 };
+
+export const updatePost = async (postId, updateData) => {
+  try {
+    const docRef = doc(db, "posts", postId);
+    const updates = {
+      ...updateData,
+      updatedAt: new Date().toISOString(),
+    };
+    await updateDoc(docRef, updates);
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating post:", error);
+    throw error;
+  }
+};
+
+export const deletePost = async (postId) => {
+  try {
+    await deleteDoc(doc(db, "posts", postId));
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    throw error;
+  }
+};
