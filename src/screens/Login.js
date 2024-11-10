@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Pressable,
+  Alert,
+} from "react-native";
 import React, { useState } from "react";
 import { auth } from "../Firebase/firebaseSetup";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -7,8 +14,30 @@ export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const validateForm = () => {
+    if (!email.trim()) {
+      Alert.alert("Error", "Please enter your email");
+      return false;
+    }
+    if (!password.trim()) {
+      Alert.alert("Error", "Please enter your password");
+      return false;
+    }
+    if (!email.includes("@")) {
+      Alert.alert("Error", "Please enter a valid email address");
+      return false;
+    }
+    return true;
+  };
+
   const handleLogin = async () => {
+    if (!validateForm()) return;
     try {
+      if (!email || !password) {
+        Alert.alert("Error", "Please fill in all fields");
+        return;
+      }
+
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -17,8 +46,26 @@ export default function Login({ navigation }) {
       console.log("Logged in with:", userCredential.user.email);
       navigation.replace("Plan");
     } catch (error) {
-      console.log(error);
-      alert(error.message);
+      let errorMessage = "An error occurred during login";
+      switch (error.code) {
+        case "auth/invalid-email":
+          errorMessage = "Invalid email address format";
+          Alert.alert("Login Error", errorMessage);
+          break;
+        case "auth/user-disabled":
+          errorMessage = "This account has been disabled";
+          Alert.alert("Login Error", errorMessage);
+          break;
+        case "auth/user-not-found":
+          errorMessage = "No account found with this email";
+          Alert.alert("Login Error", errorMessage);
+          break;
+        case "auth/wrong-password":
+          errorMessage = "Incorrect password";
+          Alert.alert("Login Error", errorMessage);
+          break;
+      }
+      Alert.alert("Login Error", errorMessage);
     }
   };
 
