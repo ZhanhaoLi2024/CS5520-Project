@@ -55,6 +55,35 @@ export default function Profile({ navigation }) {
     }
   };
 
+  const handleUpdateProfile = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      // Update display name in Firebase Auth
+      await updateProfile(user, {
+        displayName: displayName,
+      });
+
+      // Update or create user document in Firestore
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          displayName: displayName,
+          email: user.email,
+          updatedAt: new Date().toISOString(),
+        },
+        { merge: true }
+      );
+
+      setIsEditing(false);
+      Alert.alert("Success", "Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      Alert.alert("Error", "Failed to update profile");
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -75,8 +104,31 @@ export default function Profile({ navigation }) {
 
         <View style={styles.infoContainer}>
           <Text style={styles.label}>Display Name</Text>
-          <Text style={styles.text}>{displayName || "Not set"}</Text>
+          {isEditing ? (
+            <TextInput
+              style={styles.input}
+              value={displayName}
+              onChangeText={setDisplayName}
+              placeholder="Enter your name"
+            />
+          ) : (
+            <Text style={styles.text}>{displayName || "Not set"}</Text>
+          )}
         </View>
+
+        <Pressable
+          style={styles.button}
+          onPress={() => {
+            if (isEditing) {
+              handleUpdateProfile();
+            }
+            setIsEditing(!isEditing);
+          }}
+        >
+          <Text style={styles.buttonText}>
+            {isEditing ? "Save Profile" : "Edit Profile"}
+          </Text>
+        </Pressable>
       </View>
     </ScrollView>
   );
