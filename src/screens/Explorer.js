@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { auth } from "../Firebase/firebaseSetup";
 import { getAllPosts, getUserPosts } from "../Firebase/firebaseHelper";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -49,9 +50,11 @@ const AllPostsScreen = () => {
   const [loading, setLoading] = useState(true);
   const [indexCreating, setIndexCreating] = useState(false);
 
-  useEffect(() => {
-    loadPosts();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadPosts();
+    }, [])
+  );
 
   const loadPosts = async () => {
     try {
@@ -121,9 +124,11 @@ const MyPostsScreen = () => {
   const [loading, setLoading] = useState(true);
   const [indexCreating, setIndexCreating] = useState(false);
 
-  useEffect(() => {
-    loadMyPosts();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadMyPosts();
+    }, [])
+  );
 
   const loadMyPosts = async () => {
     try {

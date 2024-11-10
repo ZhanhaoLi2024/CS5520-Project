@@ -218,3 +218,65 @@ export const deletePost = async (postId) => {
     throw error;
   }
 };
+
+export const subscribeToAllPosts = (onPostsUpdate, onError) => {
+  try {
+    const postsRef = collection(db, "posts");
+    const q = query(postsRef, orderBy("createdAt", "desc"));
+
+    // Return the unsubscribe function
+    return onSnapshot(
+      q,
+      (snapshot) => {
+        const posts = [];
+        snapshot.forEach((doc) => {
+          posts.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+        onPostsUpdate(posts);
+      },
+      (error) => {
+        console.error("Error listening to posts:", error);
+        onError(error);
+      }
+    );
+  } catch (error) {
+    console.error("Error setting up posts listener:", error);
+    onError(error);
+  }
+};
+
+export const subscribeToUserPosts = (userId, onPostsUpdate, onError) => {
+  try {
+    const postsRef = collection(db, "posts");
+    const q = query(
+      postsRef,
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
+
+    // Return the unsubscribe function
+    return onSnapshot(
+      q,
+      (snapshot) => {
+        const posts = [];
+        snapshot.forEach((doc) => {
+          posts.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+        onPostsUpdate(posts);
+      },
+      (error) => {
+        console.error("Error listening to user posts:", error);
+        onError(error);
+      }
+    );
+  } catch (error) {
+    console.error("Error setting up user posts listener:", error);
+    onError(error);
+  }
+};
