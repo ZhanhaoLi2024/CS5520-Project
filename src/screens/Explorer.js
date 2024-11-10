@@ -154,7 +154,16 @@ const MyPostsScreen = ({ navigation }) => {
   };
 
   const handlePostPress = (post) => {
-    navigation.navigate("PostDetail", { post });
+    // navigation.navigate("PostDetail", { post });
+    navigation.navigate("PostDetail", {
+      post: {
+        id: post.id,
+        title: post.title,
+        description: post.description,
+        createdAt: post.createdAt,
+        userId: post.userId, // Make sure userId is included
+      },
+    });
   };
 
   return (
