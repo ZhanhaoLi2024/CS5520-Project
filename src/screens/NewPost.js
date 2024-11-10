@@ -89,7 +89,13 @@ export default function NewPost({ navigation }) {
 
         <Pressable style={styles.imageButton} onPress={pickImage}>
           <Text style={[styles.imageButtonText, { color: "red" }]}>
-            iteration1 has not yet added photo functionality
+            iteration1 has not yet added camera functionality
+            {/* {image ? "Change Image" : "Add Image"} */}
+          </Text>
+        </Pressable>
+        <Pressable style={styles.imageButton} onPress={pickImage}>
+          <Text style={[styles.imageButtonText, { color: "red" }]}>
+            iteration1 has not yet added location functionality
             {/* {image ? "Change Image" : "Add Image"} */}
           </Text>
         </Pressable>
