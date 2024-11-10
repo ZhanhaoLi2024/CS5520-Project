@@ -24,7 +24,6 @@ export default function Signup({ navigation }) {
     passwordsMatch: false,
   });
 
-  // 密码强度和匹配检查
   useEffect(() => {
     setPasswordStrength({
       length: password.length >= 6,
@@ -39,19 +38,16 @@ export default function Signup({ navigation }) {
     });
   }, [password, confirmPassword]);
 
-  // 检查密码是否满足所有要求
   const isPasswordValid = () => {
     return Object.values(passwordStrength).every((value) => value === true);
   };
 
   const handleSignup = async () => {
-    // 基本验证
     if (!email || !password || !confirmPassword) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
 
-    // 密码强度验证
     if (!isPasswordValid()) {
       Alert.alert(
         "Weak Password",
@@ -74,7 +70,6 @@ export default function Signup({ navigation }) {
     }
   };
 
-  // 渲染密码要求项
   const renderPasswordRequirement = (met, text) => (
     <Text style={[styles.passwordHint, { color: met ? "#4CAF50" : "#666" }]}>
       {met ? "✓" : "○"} {text}
