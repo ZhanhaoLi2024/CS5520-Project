@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Alert } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
-export const PlanItem = ({ dishName, plannedDate, onPress }) => {
+export const PlanItem = ({ dishName, plannedDate, onPress, onDelete, id }) => {
   // Convert ISO string to readable date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -12,22 +13,57 @@ export const PlanItem = ({ dishName, plannedDate, onPress }) => {
     });
   };
 
+  const handleDelete = () => {
+    Alert.alert(
+      "Delete Plan",
+      `Are you sure you want to delete "${dishName}"?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => onDelete(id),
+          style: "destructive",
+        },
+      ]
+    );
+  };
+
   return (
-    <Pressable
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
-      onPress={onPress}
-    >
-      <Text style={styles.dishName}>{dishName}</Text>
-      <Text style={styles.date}>{formatDate(plannedDate)}</Text>
-    </Pressable>
+    <View style={styles.container}>
+      <Pressable
+        style={({ pressed }) => [
+          styles.contentContainer,
+          pressed && styles.pressed,
+        ]}
+        onPress={onPress}
+      >
+        <View style={styles.textContainer}>
+          <Text style={styles.dishName}>{dishName}</Text>
+          <Text style={styles.date}>{formatDate(plannedDate)}</Text>
+        </View>
+      </Pressable>
+      <Pressable
+        onPress={handleDelete}
+        style={({ pressed }) => [
+          styles.deleteButton,
+          pressed && styles.deletePressed,
+        ]}
+      >
+        <AntDesign name="delete" size={20} color="#FF6B6B" />
+      </Pressable>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "white",
     borderRadius: 10,
-    padding: 15,
     marginVertical: 8,
     marginHorizontal: 16,
     shadowColor: "#000",
@@ -39,8 +75,18 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
+  contentContainer: {
+    flex: 1,
+    padding: 15,
+  },
+  textContainer: {
+    flex: 1,
+  },
   pressed: {
     opacity: 0.7,
+  },
+  deletePressed: {
+    opacity: 0.5,
   },
   dishName: {
     fontSize: 18,
@@ -51,5 +97,10 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 14,
     color: "#666",
+  },
+  deleteButton: {
+    padding: 15,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

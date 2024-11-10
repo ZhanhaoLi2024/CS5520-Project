@@ -63,7 +63,7 @@ export default function Signup({ navigation }) {
         password
       );
       console.log("Account created for:", userCredential.user.email);
-      navigation.replace("Plan");
+      // navigation.replace("Plan");
     } catch (error) {
       console.log(error);
       Alert.alert("Error", error.message);

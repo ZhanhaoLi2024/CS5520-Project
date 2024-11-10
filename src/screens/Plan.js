@@ -1,7 +1,14 @@
-import { StyleSheet, View, FlatList, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  Pressable,
+  Alert,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { auth } from "../Firebase/firebaseSetup";
-import { getUserMealPlans } from "../Firebase/firebaseHelper";
+import { getUserMealPlans, deleteMealPlan } from "../Firebase/firebaseHelper";
 import { PlanItem } from "../components/PlanItem";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -40,19 +47,34 @@ export default function Plan({ navigation }) {
       setMealPlans(plans);
     } catch (error) {
       console.error("Error loading meal plans:", error);
+      Alert.alert("Error", "Failed to load meal plans");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleDeletePlan = async (planId) => {
+    try {
+      await deleteMealPlan(planId);
+      // Refresh the meal plans list after deletion
+      await loadMealPlans();
+      Alert.alert("Success", "Meal plan deleted successfully");
+    } catch (error) {
+      console.error("Error deleting meal plan:", error);
+      Alert.alert("Error", "Failed to delete meal plan");
+    }
+  };
+
   const renderItem = ({ item }) => (
     <PlanItem
+      id={item.id}
       dishName={item.dishName}
       plannedDate={item.plannedDate}
       onPress={() => {
         // Handle plan item press - can be used for viewing details later
         console.log("Pressed plan:", item.dishName);
       }}
+      onDelete={handleDeletePlan}
     />
   );
 
