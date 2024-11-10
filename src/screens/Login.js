@@ -15,7 +15,7 @@ export default function Login({ navigation }) {
         password
       );
       console.log("Logged in with:", userCredential.user.email);
-      navigation.replace("Home");
+      navigation.replace("Plan");
     } catch (error) {
       console.log(error);
       alert(error.message);
