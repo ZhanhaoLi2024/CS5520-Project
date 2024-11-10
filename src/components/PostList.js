@@ -16,26 +16,36 @@ const PostItem = ({
   onDelete,
   id,
   showDeleteButton,
+  onPress,
 }) => {
+  const handleDelete = () => {
+    onDelete(id);
+  };
+
   return (
-    <View style={styles.postItem}>
-      <Text style={styles.postTitle}>{title}</Text>
-      <Text style={styles.postDescription}>{description}</Text>
-      <Text style={styles.postDate}>
-        {new Date(createdAt).toLocaleDateString()}
-      </Text>
+    <Pressable
+      style={({ pressed }) => [styles.postItem, pressed && styles.pressed]}
+      onPress={() => onPress({ title, description, createdAt, id })}
+    >
+      <View style={styles.textContainer}>
+        <Text style={styles.postTitle}>{title}</Text>
+        <Text style={styles.postDescription}>{description}</Text>
+        <Text style={styles.postDate}>
+          {new Date(createdAt).toLocaleDateString()}
+        </Text>
+      </View>
       {showDeleteButton && (
         <Pressable
           style={({ pressed }) => [
             styles.deleteButton,
             pressed && styles.deleteButtonPressed,
           ]}
-          onPress={() => onDelete(id)}
+          onPress={handleDelete}
         >
           <AntDesign name="delete" size={20} color="#FF6B6B" />
         </Pressable>
       )}
-    </View>
+    </Pressable>
   );
 };
 
@@ -43,15 +53,16 @@ const PostList = ({
   posts,
   loading,
   onRefresh,
-  emptyMessage = "No posts available",
   onDelete,
+  onPress,
   indexCreating = false,
   showDeleteButton = false,
+  emptyMessage = "No posts available",
 }) => {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#FF6B6B" />
+        <Text>Loading...</Text>
       </View>
     );
   }
@@ -66,28 +77,44 @@ const PostList = ({
         </View>
       )}
 
-      <FlatList
-        data={posts}
-        renderItem={({ item }) => (
-          <PostItem
-            {...item}
-            onDelete={showDeleteButton ? onDelete : null}
-            showDeleteButton={showDeleteButton}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={
-          <View style={styles.centered}>
-            <Text style={styles.emptyText}>{emptyMessage}</Text>
-          </View>
-        }
-        refreshing={loading}
-        onRefresh={onRefresh}
-      />
+      {posts.length === 0 ? (
+        <View style={styles.centered}>
+          <Text style={styles.emptyText}>{emptyMessage}</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={posts}
+          renderItem={({ item }) => (
+            <PostItem
+              title={item.title}
+              description={item.description}
+              createdAt={item.createdAt}
+              onDelete={onDelete}
+              id={item.id}
+              showDeleteButton={showDeleteButton}
+              onPress={onPress}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+          refreshing={loading}
+          onRefresh={onRefresh}
+        />
+      )}
     </View>
   );
 };
+
+const renderItem = ({ item }) => (
+  <PostItem
+    title={item.title}
+    description={item.description}
+    createdAt={item.createdAt}
+    onPress={() => navigation.navigate("PostDetail", { post: item })}
+    onDelete={showDeleteButton ? onDelete : null}
+    showDeleteButton={showDeleteButton}
+  />
+);
 
 const styles = StyleSheet.create({
   container: {

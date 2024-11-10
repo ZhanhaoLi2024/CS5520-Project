@@ -1,48 +1,58 @@
-// PostDetail.js
-import React from "react";
-import { StyleSheet, View, ScrollView, Text, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 
-export default function PostDetail({ route }) {
+const PostDetail = ({ route, navigation }) => {
   const { post } = route.params;
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: post.title,
+    });
+  }, [navigation, post.title]);
 
   return (
     <ScrollView style={styles.container}>
-      <Image source={{ uri: post.imageUrl }} style={styles.image} />
-      <View style={styles.content}>
-        <Text style={styles.title}>{post.title}</Text>
-        <Text style={styles.description}>{post.description}</Text>
-        <Text style={styles.date}>
-          {new Date(post.createdAt).toLocaleDateString()}
+      <View style={styles.section}>
+        <Text style={styles.label}>Title</Text>
+        <Text style={styles.value}>{post.title}</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.label}>Description</Text>
+        <Text style={styles.value}>{post.description}</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.label}>Created At</Text>
+        <Text style={styles.value}>
+          {new Date(post.createdAt).toLocaleString()}
         </Text>
       </View>
+
+      {/* Add more sections as needed, e.g., user, comments, etc. */}
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
   },
-  image: {
-    width: "100%",
-    height: 250,
-  },
-  content: {
+  section: {
     padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
+  label: {
+    fontSize: 14,
+    color: "#666",
     marginBottom: 8,
   },
-  description: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 12,
-  },
-  date: {
-    fontSize: 14,
-    color: "#999",
+  value: {
+    fontSize: 18,
+    color: "#333",
   },
 });
+
+export default PostDetail;
