@@ -17,6 +17,7 @@ const PostItem = ({
   id,
   showDeleteButton,
   onPress,
+  userId,
 }) => {
   const handleDelete = () => {
     onDelete(id);
@@ -25,7 +26,7 @@ const PostItem = ({
   return (
     <Pressable
       style={({ pressed }) => [styles.postItem, pressed && styles.pressed]}
-      onPress={() => onPress({ title, description, createdAt, id })}
+      onPress={() => onPress({ title, description, createdAt, id, userId })}
     >
       <View style={styles.textContainer}>
         <Text style={styles.postTitle}>{title}</Text>
@@ -91,6 +92,7 @@ const PostList = ({
               createdAt={item.createdAt}
               onDelete={onDelete}
               id={item.id}
+              userId={item.userId}
               showDeleteButton={showDeleteButton}
               onPress={onPress}
             />

@@ -15,6 +15,7 @@ import PlanDetail from "./src/components/PlanDetail";
 import PlanEdit from "./src/screens/PlanEdit";
 import NewPost from "./src/screens/NewPost";
 import PostDetail from "./src/components/PostDetail";
+import EditPost from "./src/components/EditPost";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -143,6 +144,14 @@ const AppStack = () => (
       name="PostDetail"
       component={PostDetail}
       options={{
+        headerBackTitle: "Back",
+      }}
+    />
+    <Stack.Screen
+      name="EditPost"
+      component={EditPost}
+      options={{
+        title: "Edit Post",
         headerBackTitle: "Back",
       }}
     />

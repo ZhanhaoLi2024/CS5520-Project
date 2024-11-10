@@ -12,13 +12,19 @@ export default function PlanEdit({ route, navigation }) {
       Alert.alert("Success", "Meal plan updated successfully!", [
         {
           text: "OK",
+          //   onPress: () => {
+          //     // Navigate back to plan detail with updated data
+          //     navigation.navigate("PlanDetail", {
+          //       plan: {
+          //         ...plan,
+          //         ...formData,
+          //       },
+          //     });
+          //   },
           onPress: () => {
-            // Navigate back to plan detail with updated data
-            navigation.navigate("PlanDetail", {
-              plan: {
-                ...plan,
-                ...formData,
-              },
+            // Navigate back to Explorer screen
+            navigation.navigate("MainTabs", {
+              screen: "Plan",
             });
           },
         },
