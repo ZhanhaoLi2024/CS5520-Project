@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useState, useEffect } from "react";
 import { auth } from "./src/Firebase/firebaseSetup";
 import { onAuthStateChanged } from "firebase/auth";
-// import { MapIcon, UserIcon, CompassIcon, CalendarIcon } from "lucide-react";
 import Login from "./src/screens/Login";
 import Signup from "./src/screens/Signup";
 import Explorer from "./src/screens/Explorer";
@@ -24,8 +23,8 @@ const BottomTabs = () => {
           backgroundColor: "#ffffff",
           borderTopWidth: 1,
           borderTopColor: "#e5e5e5",
-          paddingBottom: 5,
-          paddingTop: 5,
+          // paddingBottom: 5,
+          // paddingTop: 5,
         },
         tabBarActiveTintColor: "#FF6B6B",
         tabBarInactiveTintColor: "#999999",
