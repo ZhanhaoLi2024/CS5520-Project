@@ -154,7 +154,16 @@ const MyPostsScreen = ({ navigation }) => {
   };
 
   const handlePostPress = (post) => {
-    navigation.navigate("PostDetail", { post });
+    // navigation.navigate("PostDetail", { post });
+    navigation.navigate("PostDetail", {
+      post: {
+        id: post.id,
+        title: post.title,
+        description: post.description,
+        createdAt: post.createdAt,
+        userId: post.userId, // Make sure userId is included
+      },
+    });
   };
 
   return (
@@ -164,18 +173,6 @@ const MyPostsScreen = ({ navigation }) => {
       onRefresh={loadMyPosts}
       onDelete={handleDeletePost}
       onPress={handlePostPress}
-      indexCreating={indexCreating}
-      emptyMessage="You haven't created any posts yet"
-      showDeleteButton={true}
-    />
-  );
-
-  return (
-    <PostList
-      posts={posts}
-      loading={loading}
-      onRefresh={loadMyPosts}
-      onDelete={handleDeletePost}
       indexCreating={indexCreating}
       emptyMessage="You haven't created any posts yet"
       showDeleteButton={true}
