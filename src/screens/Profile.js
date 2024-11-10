@@ -22,6 +22,8 @@ import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 export default function Profile({ navigation }) {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -84,6 +86,33 @@ export default function Profile({ navigation }) {
     }
   };
 
+  const handleUpdatePassword = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      // Reauthenticate user before password change
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        currentPassword
+      );
+      await reauthenticateWithCredential(user, credential);
+
+      // Update password
+      await updatePassword(user, newPassword);
+
+      setNewPassword("");
+      setCurrentPassword("");
+      Alert.alert("Success", "Password updated successfully!");
+    } catch (error) {
+      console.error("Error updating password:", error);
+      Alert.alert(
+        "Error",
+        "Failed to update password. Please check your current password."
+      );
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -128,6 +157,34 @@ export default function Profile({ navigation }) {
           <Text style={styles.buttonText}>
             {isEditing ? "Save Profile" : "Edit Profile"}
           </Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.profileSection}>
+        <Text style={styles.sectionTitle}>Change Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Current Password"
+          value={currentPassword}
+          onChangeText={setCurrentPassword}
+          secureTextEntry
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="New Password"
+          value={newPassword}
+          onChangeText={setNewPassword}
+          secureTextEntry
+        />
+        <Pressable
+          style={[
+            styles.button,
+            (!currentPassword || !newPassword) && styles.buttonDisabled,
+          ]}
+          onPress={handleUpdatePassword}
+          disabled={!currentPassword || !newPassword}
+        >
+          <Text style={styles.buttonText}>Update Password</Text>
         </Pressable>
       </View>
     </ScrollView>
