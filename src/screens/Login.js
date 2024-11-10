@@ -15,7 +15,7 @@ export default function Login({ navigation }) {
         password
       );
       console.log("Logged in with:", userCredential.user.email);
-      navigation.navigate("Home");
+      navigation.replace("Home");
     } catch (error) {
       console.log(error);
       alert(error.message);
@@ -47,7 +47,7 @@ export default function Login({ navigation }) {
         <Text style={styles.buttonText}>Login</Text>
       </Pressable>
 
-      <Pressable onPress={() => navigation.navigate("Signup")}>
+      <Pressable onPress={() => navigation.replace("Signup")}>
         <Text style={styles.linkText}>Don't have an account? Sign up</Text>
       </Pressable>
     </View>
