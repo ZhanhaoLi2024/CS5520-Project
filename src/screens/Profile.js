@@ -22,11 +22,24 @@ import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 export default function Profile({ navigation }) {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     loadUserProfile();
     // Set up navigation options
-    navigation.setOptions({});
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable
+          onPress={handleSignOut}
+          style={({ pressed }) => [
+            styles.logoutButton,
+            pressed && styles.buttonPressed,
+          ]}
+        >
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </Pressable>
+      ),
+    });
   }, [navigation]);
 
   const loadUserProfile = async () => {
@@ -39,6 +52,15 @@ export default function Profile({ navigation }) {
       if (userDoc.exists()) {
         setDisplayName(userDoc.data().displayName || "");
       }
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error signing out:", error);
+      Alert.alert("Error", "Failed to sign out");
     }
   };
 
@@ -110,6 +132,13 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  logoutButton: {
+    marginRight: 15,
+  },
+  logoutButtonText: {
+    color: "#FF6B6B",
+    fontSize: 16,
   },
   buttonPressed: {
     opacity: 0.7,
