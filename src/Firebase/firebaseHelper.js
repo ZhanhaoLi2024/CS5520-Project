@@ -79,11 +79,16 @@ export const createMealPlan = async (mealPlanData) => {
 };
 
 export const getUserMealPlans = async (userId) => {
-  const conditions = [
-    where("userId", "==", userId),
-    orderBy("plannedDate", "desc"),
-  ];
-  return await getDocuments("mealPlans", conditions);
+  try {
+    const conditions = [where("userId", "==", userId)];
+    const documents = await getDocuments("mealPlans", conditions);
+    return documents.sort(
+      (a, b) => new Date(b.plannedDate) - new Date(a.plannedDate)
+    );
+  } catch (error) {
+    console.error("Error fetching meal plans:", error);
+    throw error;
+  }
 };
 
 export const updateMealPlan = async (mealPlanId, updateData) => {
