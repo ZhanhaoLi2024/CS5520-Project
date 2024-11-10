@@ -10,6 +10,7 @@ import Explorer from "./src/screens/Explorer";
 import Profile from "./src/screens/Profile";
 import Map from "./src/screens/Map";
 import Plan from "./src/screens/Plan";
+import MealPlanner from "./src/screens/MealPlanner";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -102,6 +103,14 @@ const AppStack = () => (
       name="MainTabs"
       component={BottomTabs}
       options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="MealPlanner"
+      component={MealPlanner}
+      options={{
+        title: "Meal Planner",
+        headerBackTitle: "Back",
+      }}
     />
   </>
 );
