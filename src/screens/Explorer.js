@@ -169,18 +169,6 @@ const MyPostsScreen = ({ navigation }) => {
       showDeleteButton={true}
     />
   );
-
-  return (
-    <PostList
-      posts={posts}
-      loading={loading}
-      onRefresh={loadMyPosts}
-      onDelete={handleDeletePost}
-      indexCreating={indexCreating}
-      emptyMessage="You haven't created any posts yet"
-      showDeleteButton={true}
-    />
-  );
 };
 
 export default function Explorer({ navigation }) {
