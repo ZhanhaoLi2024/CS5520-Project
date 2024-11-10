@@ -13,6 +13,8 @@ import Plan from "./src/screens/Plan";
 import MealPlanner from "./src/screens/MealPlanner";
 import PlanDetail from "./src/components/PlanDetail";
 import PlanEdit from "./src/screens/PlanEdit";
+import NewPost from "./src/screens/NewPost";
+import PostDetail from "./src/components/PostDetail";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -126,6 +128,21 @@ const AppStack = () => (
       component={PlanEdit}
       options={{
         title: "Edit Meal Plan",
+        headerBackTitle: "Back",
+      }}
+    />
+    <Stack.Screen
+      name="NewPost"
+      component={NewPost}
+      options={{
+        title: "Create Post",
+        headerBackTitle: "Back",
+      }}
+    />
+    <Stack.Screen
+      name="PostDetail"
+      component={PostDetail}
+      options={{
         headerBackTitle: "Back",
       }}
     />
