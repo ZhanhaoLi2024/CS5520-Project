@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { auth } from "../Firebase/firebaseSetup";
 import { getAllPosts, getUserPosts } from "../Firebase/firebaseHelper";
 import { useFocusEffect } from "@react-navigation/native";
+import PostList from "../components/PostList";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -51,7 +52,6 @@ const AllPostsScreen = () => {
         error.code === "failed-precondition"
       ) {
         setIndexCreating(true);
-        // Try simple query without sorting
         try {
           const simplePosts = await getDocuments("posts");
           const sortedPosts = simplePosts.sort(
@@ -67,37 +67,14 @@ const AllPostsScreen = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#FF6B6B" />
-      </View>
-    );
-  }
-
   return (
-    <View style={styles.container}>
-      {indexCreating && (
-        <View style={styles.indexingBanner}>
-          <Text style={styles.indexingText}>
-            Setting up database optimization... Some features may be limited.
-          </Text>
-        </View>
-      )}
-      <FlatList
-        data={posts}
-        renderItem={({ item }) => <PostItem {...item} />}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={
-          <View style={styles.centered}>
-            <Text style={styles.emptyText}>No posts yet</Text>
-          </View>
-        }
-        refreshing={loading}
-        onRefresh={loadPosts}
-      />
-    </View>
+    <PostList
+      posts={posts}
+      loading={loading}
+      onRefresh={loadPosts}
+      indexCreating={indexCreating}
+      emptyMessage="No posts yet"
+    />
   );
 };
 
@@ -125,7 +102,6 @@ const MyPostsScreen = () => {
         error.code === "failed-precondition"
       ) {
         setIndexCreating(true);
-        // Try simple query without sorting
         try {
           const simplePosts = await getDocuments("posts", [
             where("userId", "==", auth.currentUser.uid),
@@ -144,32 +120,16 @@ const MyPostsScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {indexCreating && (
-        <View style={styles.indexingBanner}>
-          <Text style={styles.indexingText}>
-            Setting up database optimization... Some features may be limited.
-          </Text>
-        </View>
-      )}
-      <FlatList
-        data={posts}
-        renderItem={({ item }) => <PostItem {...item} />}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={
-          <View style={styles.centered}>
-            <Text style={styles.emptyText}>
-              You haven't created any posts yet
-            </Text>
-          </View>
-        }
-        refreshing={loading}
-        onRefresh={loadMyPosts}
-      />
-    </View>
+    <PostList
+      posts={posts}
+      loading={loading}
+      onRefresh={loadMyPosts}
+      indexCreating={indexCreating}
+      emptyMessage="You haven't created any posts yet"
+    />
   );
 };
+
 export default function Explorer({ navigation }) {
   useEffect(() => {
     navigation.setOptions({
