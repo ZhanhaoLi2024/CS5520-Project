@@ -31,7 +31,7 @@ export const buttonStyles = StyleSheet.create({
     color: "#FF6B6B",
     fontSize: 16,
   },
-  
+
   submitButtonPressed: {
     opacity: 0.7,
   },
@@ -121,5 +121,55 @@ export const buttonStyles = StyleSheet.create({
   imageButtonText: {
     color: "#666",
     fontSize: 16,
+  },
+
+  headerAddButton: {
+    marginRight: 15,
+  },
+  buttonPressed: {
+    opacity: 0.7,
+  },
+  headerAddButtonText: {
+    fontSize: 24,
+    color: "#FF6B6B",
+  },
+
+  profileButton: {
+    backgroundColor: "#FF6B6B",
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  profileButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  buttonDisabled: {
+    backgroundColor: "#ffb3b3",
+  },
+  logoutButton: {
+    marginRight: 15,
+  },
+  logoutButtonText: {
+    color: "#FF6B6B",
+    fontSize: 16,
+  },
+  buttonPressed: {
+    opacity: 0.7,
+  },
+
+  postCommentButton: {
+    backgroundColor: "#FF6B6B",
+    padding: 12,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  postCommentButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

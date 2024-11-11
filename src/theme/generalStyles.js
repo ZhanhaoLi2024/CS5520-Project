@@ -280,4 +280,76 @@ export const generalStyles = StyleSheet.create({
   formContainer: {
     padding: 20,
   },
+
+  planContainer: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
+  },
+  list: {
+    paddingVertical: 16,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: "#666",
+    marginBottom: 8,
+  },
+  subText: {
+    fontSize: 14,
+    color: "#999",
+    textAlign: "center",
+  },
+
+  profileContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  profileSection: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#333",
+  },
+  infoContainer: {
+    marginBottom: 15,
+  },
+  profileLabel: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 5,
+  },
+  profileText: {
+    fontSize: 16,
+    color: "#333",
+  },
+
+  postDetailContainer: {
+    padding: 16,
+  },
+  postDetailTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+    color: "#333",
+  },
+  postCommentItem: {
+    padding: 8,
+    borderBottomColor: "#ddd",
+    borderBottomWidth: 1,
+    marginBottom: 8,
+  },
+  postCommentText: {
+    color: "#333",
+    fontSize: 16,
+  },
 });

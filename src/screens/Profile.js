@@ -1,15 +1,13 @@
+import React, { useState, useEffect } from "react";
 import {
-  StyleSheet,
-  Text,
   View,
+  Text,
   TextInput,
   Pressable,
   Alert,
   ScrollView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import { auth } from "../Firebase/firebaseSetup";
-import { db } from "../Firebase/firebaseSetup";
+import { auth, db } from "../Firebase/firebaseSetup";
 import {
   signOut,
   updatePassword,
@@ -17,7 +15,10 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
-import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { generalStyles } from "../theme/generalStyles";
+import { inputStyles } from "../theme/inputStyles";
+import { buttonStyles } from "../theme/buttonStyles";
 
 export default function Profile({ navigation }) {
   const [displayName, setDisplayName] = useState("");
@@ -28,17 +29,16 @@ export default function Profile({ navigation }) {
 
   useEffect(() => {
     loadUserProfile();
-    // Set up navigation options
     navigation.setOptions({
       headerRight: () => (
         <Pressable
           onPress={handleSignOut}
           style={({ pressed }) => [
-            styles.logoutButton,
-            pressed && styles.buttonPressed,
+            buttonStyles.logoutButton,
+            pressed && buttonStyles.buttonPressed,
           ]}
         >
-          <Text style={styles.logoutButtonText}>Logout</Text>
+          <Text style={buttonStyles.logoutButtonText}>Logout</Text>
         </Pressable>
       ),
     });
@@ -48,8 +48,6 @@ export default function Profile({ navigation }) {
     const user = auth.currentUser;
     if (user) {
       setEmail(user.email);
-
-      // Try to get additional user data from Firestore
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
         setDisplayName(userDoc.data().displayName || "");
@@ -62,22 +60,12 @@ export default function Profile({ navigation }) {
       const user = auth.currentUser;
       if (!user) return;
 
-      // Update display name in Firebase Auth
-      await updateProfile(user, {
-        displayName: displayName,
-      });
-
-      // Update or create user document in Firestore
+      await updateProfile(user, { displayName });
       await setDoc(
         doc(db, "users", user.uid),
-        {
-          displayName: displayName,
-          email: user.email,
-          updatedAt: new Date().toISOString(),
-        },
+        { displayName, email: user.email, updatedAt: new Date().toISOString() },
         { merge: true }
       );
-
       setIsEditing(false);
       Alert.alert("Success", "Profile updated successfully!");
     } catch (error) {
@@ -91,14 +79,8 @@ export default function Profile({ navigation }) {
       const user = auth.currentUser;
       if (!user) return;
 
-      // Reauthenticate user before password change
-      const credential = EmailAuthProvider.credential(
-        user.email,
-        currentPassword
-      );
+      const credential = EmailAuthProvider.credential(user.email, currentPassword);
       await reauthenticateWithCredential(user, credential);
-
-      // Update password
       await updatePassword(user, newPassword);
 
       setNewPassword("");
@@ -106,10 +88,7 @@ export default function Profile({ navigation }) {
       Alert.alert("Success", "Password updated successfully!");
     } catch (error) {
       console.error("Error updating password:", error);
-      Alert.alert(
-        "Error",
-        "Failed to update password. Please check your current password."
-      );
+      Alert.alert("Error", "Failed to update password");
     }
   };
 
@@ -123,30 +102,30 @@ export default function Profile({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.profileSection}>
-        <Text style={styles.sectionTitle}>Profile Information</Text>
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>Email</Text>
-          <Text style={styles.text}>{email}</Text>
+    <ScrollView style={generalStyles.profileContainer}>
+      <View style={generalStyles.profileSection}>
+        <Text style={generalStyles.sectionTitle}>Profile Information</Text>
+        <View style={generalStyles.infoContainer}>
+          <Text style={generalStyles.profileLabel}>Email</Text>
+          <Text style={generalStyles.profileText}>{email}</Text>
         </View>
 
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>Display Name</Text>
+        <View style={generalStyles.infoContainer}>
+          <Text style={generalStyles.profileLabel}>Display Name</Text>
           {isEditing ? (
             <TextInput
-              style={styles.input}
+              style={inputStyles.profileInput}
               value={displayName}
               onChangeText={setDisplayName}
               placeholder="Enter your name"
             />
           ) : (
-            <Text style={styles.text}>{displayName || "Not set"}</Text>
+            <Text style={generalStyles.profileText}>{displayName || "Not set"}</Text>
           )}
         </View>
 
         <Pressable
-          style={styles.button}
+          style={buttonStyles.profileButton}
           onPress={() => {
             if (isEditing) {
               handleUpdateProfile();
@@ -154,23 +133,23 @@ export default function Profile({ navigation }) {
             setIsEditing(!isEditing);
           }}
         >
-          <Text style={styles.buttonText}>
+          <Text style={buttonStyles.profileButtonText}>
             {isEditing ? "Save Profile" : "Edit Profile"}
           </Text>
         </Pressable>
       </View>
 
-      <View style={styles.profileSection}>
-        <Text style={styles.sectionTitle}>Change Password</Text>
+      <View style={generalStyles.profileSection}>
+        <Text style={generalStyles.sectionTitle}>Change Password</Text>
         <TextInput
-          style={styles.input}
+          style={inputStyles.profileInput}
           placeholder="Current Password"
           value={currentPassword}
           onChangeText={setCurrentPassword}
           secureTextEntry
         />
         <TextInput
-          style={styles.input}
+          style={inputStyles.profileInput}
           placeholder="New Password"
           value={newPassword}
           onChangeText={setNewPassword}
@@ -178,78 +157,15 @@ export default function Profile({ navigation }) {
         />
         <Pressable
           style={[
-            styles.button,
-            (!currentPassword || !newPassword) && styles.buttonDisabled,
+            buttonStyles.profileButton,
+            (!currentPassword || !newPassword) && buttonStyles.buttonDisabled,
           ]}
           onPress={handleUpdatePassword}
           disabled={!currentPassword || !newPassword}
         >
-          <Text style={styles.buttonText}>Update Password</Text>
+          <Text style={buttonStyles.profileButtonText}>Update Password</Text>
         </Pressable>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  profileSection: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#333",
-  },
-  infoContainer: {
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 5,
-  },
-  text: {
-    fontSize: 16,
-    color: "#333",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 5,
-    padding: 12,
-    marginBottom: 15,
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: "#FF6B6B",
-    padding: 15,
-    borderRadius: 5,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonDisabled: {
-    backgroundColor: "#ffb3b3",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  logoutButton: {
-    marginRight: 15,
-  },
-  logoutButtonText: {
-    color: "#FF6B6B",
-    fontSize: 16,
-  },
-  buttonPressed: {
-    opacity: 0.7,
-  },
-});

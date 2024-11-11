@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Pressable, FlatList, StyleSheet } from "react-native";
+import { View, Text, TextInput, Pressable, FlatList } from "react-native";
 import { auth } from "../Firebase/firebaseSetup";
 import { addComment, getComments } from "../Firebase/firebaseHelper";
+import { generalStyles } from "../theme/generalStyles";
+import { inputStyles } from "../theme/inputStyles";
+import { buttonStyles } from "../theme/buttonStyles";
 
 const PostDetailScreen = ({ route }) => {
   const { post } = route.params;
@@ -27,37 +30,28 @@ const PostDetailScreen = ({ route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{post.title}</Text>
+    <View style={generalStyles.postDetailContainer}>
+      <Text style={generalStyles.postDetailTitle}>{post.title}</Text>
       <FlatList
         data={comments}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.commentItem}>
-            <Text>{item.text}</Text>
+          <View style={generalStyles.postCommentItem}>
+            <Text style={generalStyles.postCommentText}>{item.text}</Text>
           </View>
         )}
       />
       <TextInput
-        style={styles.input}
+        style={inputStyles.postCommentInput}
         placeholder="Add a comment..."
         value={newComment}
         onChangeText={setNewComment}
       />
-      <Pressable onPress={handleAddComment} style={styles.button}>
-        <Text style={styles.buttonText}>Post Comment</Text>
+      <Pressable onPress={handleAddComment} style={buttonStyles.postCommentButton}>
+        <Text style={buttonStyles.postCommentButtonText}>Post Comment</Text>
       </Pressable>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { padding: 16 },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16 },
-  commentItem: { padding: 8, borderBottomColor: "#ddd", borderBottomWidth: 1 },
-  input: { borderWidth: 1, borderColor: "#ddd", padding: 8, marginBottom: 8 },
-  button: { backgroundColor: "#FF6B6B", padding: 10, alignItems: "center" },
-  buttonText: { color: "#fff" },
-});
 
 export default PostDetailScreen;

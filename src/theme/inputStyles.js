@@ -44,4 +44,24 @@ export const inputStyles = StyleSheet.create({
     height: 120,
     textAlignVertical: "top",
   },
+
+  profileInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 5,
+    padding: 12,
+    marginBottom: 15,
+    fontSize: 16,
+    backgroundColor: "#f5f5f5",
+  },
+
+  postCommentInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 12,
+    borderRadius: 5,
+    marginBottom: 12,
+    fontSize: 16,
+    backgroundColor: "#f5f5f5",
+  },
 });
