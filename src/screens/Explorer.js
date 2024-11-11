@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { View, Alert } from "react-native";
+import { View, Alert, Pressable, Text } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { auth } from "../Firebase/firebaseSetup";
-import { 
-  getAllPostsWithStats, 
-  getUserPosts, 
-  deletePost, 
-  updatePostStatistics 
+import {
+  getAllPostsWithStats,
+  getUserPosts,
+  deletePost,
+  updatePostStatistics,
 } from "../Firebase/firebaseHelper";
 import PostList from "../components/PostList";
+import { AntDesign } from "@expo/vector-icons";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -35,10 +36,9 @@ const AllPostsScreen = ({ navigation }) => {
     navigation.navigate("PostDetail", { post });
   };
 
-  // Handle likes for a specific post
   const handleLike = async (postId, increment) => {
     await updatePostStatistics(postId, "likesCount", increment);
-    loadPosts(); // Refresh posts after liking
+    loadPosts();
   };
 
   return (
@@ -92,7 +92,7 @@ const MyPostsScreen = ({ navigation }) => {
 
   const handleLike = async (postId, increment) => {
     await updatePostStatistics(postId, "likesCount", increment);
-    loadMyPosts(); // Refresh posts after liking
+    loadMyPosts();
   };
 
   return (
@@ -109,8 +109,21 @@ const MyPostsScreen = ({ navigation }) => {
   );
 };
 
-// Main Explorer component with tab navigation
+// Main Explorer component with tab navigation and "Add New Post" button
 export default function Explorer({ navigation }) {
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable
+          onPress={() => navigation.navigate("NewPost")}
+          style={{ marginRight: 15 }}
+        >
+          <AntDesign name="plus" size={24} color="#FF6B6B" />
+        </Pressable>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <Tab.Navigator
       screenOptions={{

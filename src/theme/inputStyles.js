@@ -39,4 +39,9 @@ export const inputStyles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
   },
+
+  descriptionInput: {
+    height: 120,
+    textAlignVertical: "top",
+  },
 });

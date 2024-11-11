@@ -272,4 +272,12 @@ export const generalStyles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 5,
   },
+
+  newPostContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  formContainer: {
+    padding: 20,
+  },
 });

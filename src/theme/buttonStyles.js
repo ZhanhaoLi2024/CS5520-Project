@@ -8,11 +8,7 @@ export const buttonStyles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
+
   removeButton: {
     padding: 8,
     borderRadius: 20,
@@ -35,13 +31,7 @@ export const buttonStyles = StyleSheet.create({
     color: "#FF6B6B",
     fontSize: 16,
   },
-  submitButton: {
-    backgroundColor: "#FF6B6B",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    margin: 16,
-  },
+  
   submitButtonPressed: {
     opacity: 0.7,
   },
@@ -116,5 +106,20 @@ export const buttonStyles = StyleSheet.create({
 
   authButtonDisabled: {
     backgroundColor: "#ffb3b3",
+  },
+
+  imageButton: {
+    backgroundColor: "#f5f5f5",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderStyle: "dashed",
+  },
+  imageButtonText: {
+    color: "#666",
+    fontSize: 16,
   },
 });
