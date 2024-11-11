@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  StyleSheet,
   View,
   TextInput,
   ScrollView,
@@ -9,9 +8,11 @@ import {
   Alert,
   Image,
 } from "react-native";
-// import * as ImagePicker from "expo-image-picker";
 import { createPost } from "../Firebase/firebaseHelper";
 import { auth } from "../Firebase/firebaseSetup";
+import { generalStyles } from "../theme/generalStyles";
+import { inputStyles } from "../theme/inputStyles";
+import { buttonStyles } from "../theme/buttonStyles";
 
 export default function NewPost({ navigation }) {
   const [title, setTitle] = useState("");
@@ -34,18 +35,14 @@ export default function NewPost({ navigation }) {
       const postData = {
         title: title.trim(),
         description: description.trim(),
-        userId: auth.currentUser.uid, // Make sure to include this
+        userId: auth.currentUser.uid,
         createdAt: new Date().toISOString(),
-        // Add any other fields you need
       };
 
       const result = await createPost(postData);
       if (result.success) {
         Alert.alert("Success", "Post created successfully!", [
-          {
-            text: "OK",
-            onPress: () => navigation.goBack(),
-          },
+          { text: "OK", onPress: () => navigation.goBack() },
         ]);
       }
     } catch (error) {
@@ -57,28 +54,14 @@ export default function NewPost({ navigation }) {
   };
 
   const pickImage = async () => {
-    // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    // if (status !== "granted") {
-    //   Alert.alert("Permission required", "You need to grant permission to access your media library to pick an image.");
-    //   return;
-    // }
-    // const result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: true,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
-    // if (result.cancelled) {
-    //   return;
-    // }
-    // setImage(result.uri);
+    // Placeholder for image picker functionality
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.formContainer}>
+    <ScrollView style={generalStyles.newPostContainer}>
+      <View style={generalStyles.formContainer}>
         <TextInput
-          style={styles.input}
+          style={inputStyles.authInput}
           placeholder="Title"
           value={title}
           onChangeText={setTitle}
@@ -87,7 +70,7 @@ export default function NewPost({ navigation }) {
         />
 
         <TextInput
-          style={[styles.input, styles.descriptionInput]}
+          style={[inputStyles.authInput, inputStyles.descriptionInput]}
           placeholder="Description"
           value={description}
           onChangeText={setDescription}
@@ -96,83 +79,21 @@ export default function NewPost({ navigation }) {
           editable={!submitting}
         />
 
-        <Pressable style={styles.imageButton} onPress={pickImage}>
-          <Text style={[styles.imageButtonText, { color: "red" }]}>
+        <Pressable style={buttonStyles.imageButton} onPress={pickImage}>
+          <Text style={buttonStyles.imageButtonText}>
             iteration1 has not yet added camera functionality
-            {/* {image ? "Change Image" : "Add Image"} */}
           </Text>
         </Pressable>
-        <Pressable style={styles.imageButton} onPress={pickImage}>
-          <Text style={[styles.imageButtonText, { color: "red" }]}>
+        <Pressable style={buttonStyles.imageButton} onPress={pickImage}>
+          <Text style={buttonStyles.imageButtonText}>
             iteration1 has not yet added location functionality
-            {/* {image ? "Change Image" : "Add Image"} */}
-          </Text>
-        </Pressable>
-        {/* <Pressable style={styles.imageButton} onPress={pickImage}>
-          <Text style={styles.imageButtonText}>
-            {image ? "Change Image" : "Add Image"}
           </Text>
         </Pressable>
 
-        {image && <Image source={{ uri: image }} style={styles.previewImage} />} */}
-
-        <Pressable style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Create Post</Text>
+        <Pressable style={buttonStyles.submitButton} onPress={handleSubmit}>
+          <Text style={buttonStyles.submitButtonText}>Create Post</Text>
         </Pressable>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  formContainer: {
-    padding: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    fontSize: 16,
-  },
-  descriptionInput: {
-    height: 120,
-    textAlignVertical: "top",
-  },
-  imageButton: {
-    backgroundColor: "#f5f5f5",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderStyle: "dashed",
-  },
-  imageButtonText: {
-    color: "#666",
-    fontSize: 16,
-  },
-  previewImage: {
-    width: "100%",
-    height: 200,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  submitButton: {
-    backgroundColor: "#FF6B6B",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-});

@@ -1,136 +1,110 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
+import { Text, View, Pressable, TextInput, FlatList } from "react-native";
 import { auth } from "../Firebase/firebaseSetup";
+import { addComment, getComments } from "../Firebase/firebaseHelper";
+import { generalStyles } from "../theme/generalStyles";
+import { inputStyles } from "../theme/inputStyles";
+import { buttonStyles } from "../theme/buttonStyles";
 
 const PostDetail = ({ route, navigation }) => {
   const { post } = route.params;
   const currentUserId = auth.currentUser?.uid;
   const isAuthor = currentUserId === post.userId;
 
-  console.log("Post Detail Debug Info:");
-  console.log("Current User ID:", currentUserId);
-  console.log("Post User ID:", post.userId);
-  console.log("Post Data:", post);
-  console.log("Is Author:", isAuthor);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [loadingComments, setLoadingComments] = useState(true);
 
   useEffect(() => {
-    navigation.setOptions({
-      title: post.title,
-    });
+    navigation.setOptions({ title: post.title });
   }, [navigation, post.title]);
 
-  const pickImage = () => {
-    // Add image picker logic here
+  useEffect(() => {
+    const fetchComments = async () => {
+      const fetchedComments = await getComments(post.id);
+      setComments(fetchedComments);
+      setLoadingComments(false);
+    };
+    fetchComments();
+  }, [post.id]);
+
+  const handleAddComment = async () => {
+    if (newComment.trim() === "") return;
+
+    await addComment(post.id, currentUserId, newComment);
+    setNewComment("");
+
+    const updatedComments = await getComments(post.id);
+    setComments(updatedComments);
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollContainer}>
-        <View style={styles.section}>
-          <Text style={styles.label}>Title</Text>
-          <Text style={styles.value}>{post.title}</Text>
-        </View>
+    <View style={generalStyles.container}>
+      {/* Post Title and Description */}
+      <View style={generalStyles.postSection}>
+        <Text style={generalStyles.postLabel}>Title</Text>
+        <Text style={generalStyles.postValue}>{post.title}</Text>
+      </View>
 
-        <View style={styles.section}>
-          <Text style={styles.label}>Description</Text>
-          <Text style={styles.value}>{post.description}</Text>
-        </View>
+      <View style={generalStyles.postSection}>
+        <Text style={generalStyles.postLabel}>Description</Text>
+        <Text style={generalStyles.postValue}>{post.description}</Text>
+      </View>
 
-        <Pressable style={styles.imageButton} onPress={pickImage}>
-          <Text style={[styles.imageButtonText, { color: "red" }]}>
-            iteration1 has not yet added camera functionality
-            {/* {image ? "Change Image" : "Add Image"} */}
-          </Text>
+      {/* Comments Section */}
+      <View style={generalStyles.commentsSection}>
+        <Text style={generalStyles.commentsHeader}>Comments</Text>
+        {loadingComments ? (
+          <Text style={generalStyles.loadingText}>Loading comments...</Text>
+        ) : (
+          <FlatList
+            data={comments}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View style={generalStyles.commentItem}>
+                <Text style={generalStyles.commentAuthor}>{item.authorName}</Text>
+                <Text style={generalStyles.commentText}>{item.text}</Text>
+              </View>
+            )}
+            ListEmptyComponent={
+              <Text style={generalStyles.emptyCommentsText}>
+                No comments yet. Be the first to comment!
+              </Text>
+            }
+          />
+        )}
+      </View>
+
+      {/* Add Comment Input */}
+      <View style={generalStyles.addCommentContainer}>
+        <TextInput
+          style={inputStyles.commentInput}
+          placeholder="Write a comment..."
+          value={newComment}
+          onChangeText={setNewComment}
+          placeholderTextColor="#999"
+        />
+        <Pressable style={buttonStyles.addCommentButton} onPress={handleAddComment}>
+          <Text style={buttonStyles.addCommentButtonText}>Post</Text>
         </Pressable>
-        <Pressable style={styles.imageButton} onPress={pickImage}>
-          <Text style={[styles.imageButtonText, { color: "red" }]}>
-            iteration1 has not yet added location functionality
-            {/* {image ? "Change Image" : "Add Image"} */}
-          </Text>
-        </Pressable>
+      </View>
 
-        {/* <View style={styles.section}>
-          <Text style={styles.label}>Created At</Text>
-          <Text style={styles.value}>
-            {new Date(post.createdAt).toLocaleString()}
-          </Text>
-        </View> */}
-      </ScrollView>
-
+      {/* Edit Button for the Author */}
       {isAuthor && (
-        <View style={styles.buttonContainer}>
+        <View style={generalStyles.buttonContainer}>
           <Pressable
             style={({ pressed }) => [
-              styles.editButton,
-              pressed && styles.editButtonPressed,
+              buttonStyles.editButton,
+              pressed && buttonStyles.editButtonPressed,
             ]}
             onPress={() => navigation.navigate("EditPost", { post })}
           >
-            <Text style={styles.editButtonText}>Edit Post</Text>
+            <Text style={buttonStyles.editButtonText}>Edit Post</Text>
           </Pressable>
         </View>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  scrollContainer: {
-    flex: 1,
-  },
-  section: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  label: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-  },
-  value: {
-    fontSize: 18,
-    color: "#333",
-  },
-  buttonContainer: {
-    padding: 16,
-    paddingBottom: 32,
-    borderTopWidth: 1,
-    borderTopColor: "#eee",
-    backgroundColor: "#fff",
-  },
-  editButton: {
-    backgroundColor: "#FF6B6B",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  editButtonPressed: {
-    opacity: 0.7,
-  },
-  editButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  imageButton: {
-    backgroundColor: "#f5f5f5",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderStyle: "dashed",
-  },
-  imageButtonText: {
-    color: "#666",
-    fontSize: 16,
-  },
-});
 
 export default PostDetail;

@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   FlatList,
   Text,
-  StyleSheet,
-  ActivityIndicator,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { toggleLikePost, hasUserLikedPost } from "../Firebase/firebaseHelper";
+import { auth } from "../Firebase/firebaseSetup";
+import { generalStyles } from "../theme/generalStyles";
+import { buttonStyles } from "../theme/buttonStyles";
 
+// PostItem Component
 const PostItem = ({
   title,
   description,
@@ -18,28 +22,80 @@ const PostItem = ({
   showDeleteButton,
   onPress,
   userId,
+  likesCount,
+  commentsCount,
 }) => {
+  const currentUserId = auth.currentUser?.uid;
+  const [liked, setLiked] = useState(false);
+  const [currentLikes, setCurrentLikes] = useState(likesCount || 0);
+
+  useEffect(() => {
+    const checkIfLiked = async () => {
+      if (currentUserId) {
+        const alreadyLiked = await hasUserLikedPost(id, currentUserId);
+        setLiked(alreadyLiked);
+      }
+    };
+    checkIfLiked();
+  }, [id, currentUserId]);
+
+  const handleLike = async () => {
+    if (!currentUserId) return;
+
+    try {
+      const result = await toggleLikePost(id, currentUserId);
+      setLiked(result.liked);
+      setCurrentLikes(result.likesCount);
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    }
+  };
+
   const handleDelete = () => {
     onDelete(id);
   };
 
   return (
     <Pressable
-      style={({ pressed }) => [styles.postItem, pressed && styles.pressed]}
+      style={({ pressed }) => [
+        generalStyles.postItemContainer,
+        pressed && generalStyles.postItemPressed,
+      ]}
       onPress={() => onPress({ title, description, createdAt, id, userId })}
     >
-      <View style={styles.textContainer}>
-        <Text style={styles.postTitle}>{title}</Text>
-        <Text style={styles.postDescription}>{description}</Text>
-        <Text style={styles.postDate}>
+      <View style={generalStyles.textContainer}>
+        <Text style={generalStyles.postTitle}>{title}</Text>
+        <Text style={generalStyles.postDescription}>{description}</Text>
+        <Text style={generalStyles.postDate}>
           {new Date(createdAt).toLocaleDateString()}
         </Text>
+
+        <View style={generalStyles.statsContainer}>
+          {/* Likes Section */}
+          <View style={generalStyles.likesContainer}>
+            <Pressable onPress={handleLike} style={buttonStyles.likeButton}>
+              <AntDesign
+                name={liked ? "heart" : "hearto"}
+                size={20}
+                color={liked ? "#FF6B6B" : "#999"}
+              />
+            </Pressable>
+            <Text style={generalStyles.likesCount}>{currentLikes}</Text>
+          </View>
+
+          {/* Comments Count */}
+          <Text style={generalStyles.commentsCount}>
+            {commentsCount} {commentsCount === 1 ? "Comment" : "Comments"}
+          </Text>
+        </View>
       </View>
+
+      {/* Delete Button */}
       {showDeleteButton && (
         <Pressable
           style={({ pressed }) => [
-            styles.deleteButton,
-            pressed && styles.deleteButtonPressed,
+            buttonStyles.postDeleteButton,
+            pressed && buttonStyles.postDeleteButtonPressed,
           ]}
           onPress={handleDelete}
         >
@@ -50,37 +106,29 @@ const PostItem = ({
   );
 };
 
+// PostList Component
 const PostList = ({
   posts,
   loading,
   onRefresh,
   onDelete,
   onPress,
-  indexCreating = false,
   showDeleteButton = false,
   emptyMessage = "No posts available",
 }) => {
   if (loading) {
     return (
-      <View style={styles.centered}>
-        <Text>Loading...</Text>
+      <View style={generalStyles.centered}>
+        <ActivityIndicator size="large" color="#FF6B6B" />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      {indexCreating && (
-        <View style={styles.indexingBanner}>
-          <Text style={styles.indexingText}>
-            Setting up database optimization... Some features may be limited.
-          </Text>
-        </View>
-      )}
-
+    <View style={generalStyles.container}>
       {posts.length === 0 ? (
-        <View style={styles.centered}>
-          <Text style={styles.emptyText}>{emptyMessage}</Text>
+        <View style={generalStyles.centered}>
+          <Text style={generalStyles.emptyText}>{emptyMessage}</Text>
         </View>
       ) : (
         <FlatList
@@ -95,10 +143,12 @@ const PostList = ({
               userId={item.userId}
               showDeleteButton={showDeleteButton}
               onPress={onPress}
+              likesCount={item.likesCount}
+              commentsCount={item.commentsCount}
             />
           )}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContainer}
+          contentContainerStyle={generalStyles.listContainer}
           refreshing={loading}
           onRefresh={onRefresh}
         />
@@ -106,90 +156,5 @@ const PostList = ({
     </View>
   );
 };
-
-const renderItem = ({ item }) => (
-  <PostItem
-    title={item.title}
-    description={item.description}
-    createdAt={item.createdAt}
-    onPress={() => navigation.navigate("PostDetail", { post: item })}
-    onDelete={showDeleteButton ? onDelete : null}
-    showDeleteButton={showDeleteButton}
-  />
-);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  listContainer: {
-    padding: 16,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-  },
-  indexingBanner: {
-    backgroundColor: "#FFF3CD",
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#FFE69C",
-  },
-  indexingText: {
-    color: "#856404",
-    fontSize: 14,
-    textAlign: "center",
-  },
-  postItem: {
-    backgroundColor: "white",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  postTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-    flexShrink: 1,
-  },
-  postDescription: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-    flexShrink: 1,
-  },
-  postDate: {
-    fontSize: 12,
-    color: "#999",
-    marginRight: 16,
-  },
-  deleteButton: {
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: "#ffeded",
-  },
-  deleteButtonPressed: {
-    opacity: 0.5,
-  },
-});
 
 export default PostList;

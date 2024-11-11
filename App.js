@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useState, useEffect } from "react";
 import { auth } from "./src/Firebase/firebaseSetup";
 import { onAuthStateChanged } from "firebase/auth";
+import { Feather, MaterialIcons, FontAwesome5 } from "react-native-vector-icons";
 import Login from "./src/screens/Login";
 import Signup from "./src/screens/Signup";
 import Explorer from "./src/screens/Explorer";
@@ -29,51 +30,53 @@ const BottomTabs = () => {
           backgroundColor: "#ffffff",
           borderTopWidth: 1,
           borderTopColor: "#e5e5e5",
-          // paddingBottom: 5,
-          // paddingTop: 5,
         },
         tabBarActiveTintColor: "#FF6B6B",
         tabBarInactiveTintColor: "#999999",
         headerShown: true,
       }}
     >
+      {/* Plan Tab */}
       <Tab.Screen
         name="Plan"
         component={Plan}
         options={{
-          // tabBarIcon: ({ color, size }) => (
-          //   <CalendarIcon color={color} size={size} />
-          // ),
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="calendar-today" color={color} size={size} />
+          ),
           title: "Plan",
         }}
       />
+      {/* Explorer Tab */}
       <Tab.Screen
         name="Explorer"
         component={Explorer}
         options={{
-          // tabBarIcon: ({ color, size }) => (
-          //   <CompassIcon color={color} size={size} />
-          // ),
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="compass" color={color} size={size} />
+          ),
           title: "Explorer",
         }}
       />
+      {/* Map Tab */}
       <Tab.Screen
         name="Map"
         component={Map}
         options={{
-          // tabBarIcon: ({ color, size }) => (
-          //   <MapIcon color={color} size={size} />
-          // ),
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="map-marker-alt" color={color} size={size} />
+          ),
           title: "Map",
         }}
       />
+      {/* Profile Tab */}
       <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
-          // tabBarIcon: ({ color, size }) => (
-          //   <UserIcon color={color} size={size} />
-          // ),
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="user" color={color} size={size} />
+          ),
           title: "Profile",
         }}
       />
@@ -87,16 +90,12 @@ const AuthStack = () => (
     <Stack.Screen
       name="Login"
       component={Login}
-      options={{
-        title: "Welcome",
-      }}
+      options={{ title: "Welcome" }}
     />
     <Stack.Screen
       name="Signup"
       component={Signup}
-      options={{
-        title: "Create Account",
-      }}
+      options={{ title: "Create Account" }}
     />
   </>
 );
@@ -120,9 +119,7 @@ const AppStack = () => (
     <Stack.Screen
       name="PlanDetail"
       component={PlanDetail}
-      options={{
-        headerBackTitle: "Back",
-      }}
+      options={{ headerBackTitle: "Back" }}
     />
     <Stack.Screen
       name="PlanEdit"
@@ -143,9 +140,7 @@ const AppStack = () => (
     <Stack.Screen
       name="PostDetail"
       component={PostDetail}
-      options={{
-        headerBackTitle: "Back",
-      }}
+      options={{ headerBackTitle: "Back" }}
     />
     <Stack.Screen
       name="EditPost"
@@ -163,13 +158,8 @@ export default function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-        console.log("User is signed in:", user.email);
-      } else {
-        setUser(null);
-        console.log("User is signed out");
-      }
+      setUser(user ? user : null);
+      console.log(user ? `User signed in: ${user.email}` : "User signed out");
     });
     return () => unsubscribe();
   }, []);
