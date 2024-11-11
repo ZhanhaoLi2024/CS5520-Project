@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  StyleSheet,
   View,
   TextInput,
   ScrollView,
@@ -9,6 +8,9 @@ import {
   Alert,
 } from "react-native";
 import { updatePost } from "../Firebase/firebaseHelper";
+import { generalStyles } from "../theme/generalStyles";
+import { inputStyles } from "../theme/inputStyles";
+import { buttonStyles } from "../theme/buttonStyles";
 
 export default function EditPost({ route, navigation }) {
   const { post } = route.params;
@@ -40,12 +42,9 @@ export default function EditPost({ route, navigation }) {
           {
             text: "OK",
             onPress: () => {
-              // Navigate back to Explorer screen
               navigation.navigate("MainTabs", {
                 screen: "Explorer",
-                params: {
-                  screen: "MyPosts",
-                },
+                params: { screen: "MyPosts" },
               });
             },
           },
@@ -62,10 +61,10 @@ export default function EditPost({ route, navigation }) {
   const pickImage = () => {};
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.formContainer}>
+    <ScrollView style={generalStyles.container}>
+      <View style={generalStyles.formContainer}>
         <TextInput
-          style={styles.input}
+          style={inputStyles.input}
           placeholder="Title"
           value={title}
           onChangeText={setTitle}
@@ -74,7 +73,7 @@ export default function EditPost({ route, navigation }) {
         />
 
         <TextInput
-          style={[styles.input, styles.descriptionInput]}
+          style={[inputStyles.input, inputStyles.descriptionInput]}
           placeholder="Description"
           value={description}
           onChangeText={setDescription}
@@ -83,70 +82,21 @@ export default function EditPost({ route, navigation }) {
           editable={!submitting}
         />
 
-        <Pressable style={styles.imageButton} onPress={pickImage}>
-          <Text style={[styles.imageButtonText, { color: "red" }]}>
+        <Pressable style={buttonStyles.imageButton} onPress={pickImage}>
+          <Text style={[buttonStyles.imageButtonText, { color: "red" }]}>
             iteration1 has not yet added camera functionality
-            {/* {image ? "Change Image" : "Add Image"} */}
           </Text>
         </Pressable>
-        <Pressable style={styles.imageButton} onPress={pickImage}>
-          <Text style={[styles.imageButtonText, { color: "red" }]}>
+        <Pressable style={buttonStyles.imageButton} onPress={pickImage}>
+          <Text style={[buttonStyles.imageButtonText, { color: "red" }]}>
             iteration1 has not yet added location functionality
-            {/* {image ? "Change Image" : "Add Image"} */}
           </Text>
         </Pressable>
 
-        <Pressable style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Update Post</Text>
+        <Pressable style={buttonStyles.submitButton} onPress={handleSubmit}>
+          <Text style={buttonStyles.submitButtonText}>Update Post</Text>
         </Pressable>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  formContainer: {
-    padding: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    fontSize: 16,
-  },
-  descriptionInput: {
-    height: 120,
-    textAlignVertical: "top",
-  },
-  submitButton: {
-    backgroundColor: "#FF6B6B",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  imageButton: {
-    backgroundColor: "#f5f5f5",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderStyle: "dashed",
-  },
-  imageButtonText: {
-    color: "#666",
-    fontSize: 16,
-  },
-});

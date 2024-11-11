@@ -1,0 +1,220 @@
+import { StyleSheet } from "react-native";
+
+export const generalStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  section: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  formContainer: {
+    padding: 20,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 8,
+    color: "#333",
+  },
+  stepsContainer: {
+    marginBottom: 20,
+  },
+  stepInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+
+  stepContainer: {
+    flexDirection: "row",
+    marginTop: 12,
+    alignItems: "flex-start",
+  },
+  stepNumber: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: "#FF6B6B",
+    color: "#fff",
+    textAlign: "center",
+    lineHeight: 24,
+    marginRight: 12,
+  },
+  stepText: {
+    flex: 1,
+    fontSize: 16,
+    color: "#333",
+    lineHeight: 24,
+  },
+
+  planItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 10,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 15,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  pressed: {
+    opacity: 0.7,
+  },
+  dishName: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 8,
+  },
+  date: {
+    fontSize: 14,
+    color: "#666",
+  },
+
+  postSection: {
+    marginBottom: 20,
+    padding: 16,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+  },
+  postLabel: {
+    fontSize: 16,
+    color: "#666",
+    marginBottom: 8,
+    fontWeight: "600",
+  },
+  postValue: {
+    fontSize: 18,
+    color: "#333",
+    lineHeight: 24,
+  },
+  commentsSection: {
+    flex: 1,
+    marginTop: 20,
+  },
+  commentsHeader: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 16,
+    color: "#FF6B6B",
+  },
+  loadingText: {
+    color: "#999",
+    textAlign: "center",
+    marginTop: 20,
+  },
+  commentItem: {
+    backgroundColor: "#f1f1f1",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  commentAuthor: {
+    fontWeight: "700",
+    color: "#333",
+    marginBottom: 4,
+  },
+  commentText: {
+    color: "#666",
+    lineHeight: 20,
+  },
+  emptyCommentsText: {
+    textAlign: "center",
+    color: "#999",
+    marginTop: 20,
+  },
+  addCommentContainer: {
+    alignItems: "center",
+    marginTop: 16,
+  },
+  buttonContainer: {
+    paddingTop: 24,
+  },
+
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  postItemContainer: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  postItemPressed: {
+    opacity: 0.7,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  postTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+  },
+  postDescription: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 8,
+  },
+  postDate: {
+    fontSize: 12,
+    color: "#999",
+  },
+  statsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  likesContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 16,
+  },
+  likesCount: {
+    fontSize: 14,
+    color: "#666",
+  },
+  commentsCount: {
+    fontSize: 14,
+    color: "#666",
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#999",
+    textAlign: "center",
+  },
+});

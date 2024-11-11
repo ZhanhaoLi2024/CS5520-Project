@@ -3,13 +3,14 @@ import {
   View,
   FlatList,
   Text,
-  StyleSheet,
-  ActivityIndicator,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { toggleLikePost, hasUserLikedPost } from "../Firebase/firebaseHelper";
 import { auth } from "../Firebase/firebaseSetup";
+import { generalStyles } from "../theme/generalStyles";
+import { buttonStyles } from "../theme/buttonStyles";
 
 // PostItem Component
 const PostItem = ({
@@ -28,7 +29,6 @@ const PostItem = ({
   const [liked, setLiked] = useState(false);
   const [currentLikes, setCurrentLikes] = useState(likesCount || 0);
 
-  // Fetch the liked status from Firestore to check if the user has already liked this post
   useEffect(() => {
     const checkIfLiked = async () => {
       if (currentUserId) {
@@ -39,7 +39,6 @@ const PostItem = ({
     checkIfLiked();
   }, [id, currentUserId]);
 
-  // Handle like button press
   const handleLike = async () => {
     if (!currentUserId) return;
 
@@ -58,42 +57,45 @@ const PostItem = ({
 
   return (
     <Pressable
-      style={({ pressed }) => [styles.postItem, pressed && styles.pressed]}
+      style={({ pressed }) => [
+        generalStyles.postItemContainer,
+        pressed && generalStyles.postItemPressed,
+      ]}
       onPress={() => onPress({ title, description, createdAt, id, userId })}
     >
-      <View style={styles.textContainer}>
-        <Text style={styles.postTitle}>{title}</Text>
-        <Text style={styles.postDescription}>{description}</Text>
-        <Text style={styles.postDate}>
+      <View style={generalStyles.textContainer}>
+        <Text style={generalStyles.postTitle}>{title}</Text>
+        <Text style={generalStyles.postDescription}>{description}</Text>
+        <Text style={generalStyles.postDate}>
           {new Date(createdAt).toLocaleDateString()}
         </Text>
 
-        <View style={styles.statsContainer}>
+        <View style={generalStyles.statsContainer}>
           {/* Likes Section */}
-          <View style={styles.likesContainer}>
-            <Pressable onPress={handleLike} style={styles.likeButton}>
+          <View style={generalStyles.likesContainer}>
+            <Pressable onPress={handleLike} style={buttonStyles.likeButton}>
               <AntDesign
                 name={liked ? "heart" : "hearto"}
                 size={20}
                 color={liked ? "#FF6B6B" : "#999"}
               />
             </Pressable>
-            <Text style={styles.likesCount}>{currentLikes}</Text>
+            <Text style={generalStyles.likesCount}>{currentLikes}</Text>
           </View>
 
           {/* Comments Count */}
-          <Text style={styles.commentsCount}>
+          <Text style={generalStyles.commentsCount}>
             {commentsCount} {commentsCount === 1 ? "Comment" : "Comments"}
           </Text>
         </View>
       </View>
 
-      {/* Delete Button for User's Own Posts */}
+      {/* Delete Button */}
       {showDeleteButton && (
         <Pressable
           style={({ pressed }) => [
-            styles.deleteButton,
-            pressed && styles.deleteButtonPressed,
+            buttonStyles.postDeleteButton,
+            pressed && buttonStyles.postDeleteButtonPressed,
           ]}
           onPress={handleDelete}
         >
@@ -116,17 +118,17 @@ const PostList = ({
 }) => {
   if (loading) {
     return (
-      <View style={styles.centered}>
-        <Text>Loading...</Text>
+      <View style={generalStyles.centered}>
+        <ActivityIndicator size="large" color="#FF6B6B" />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={generalStyles.container}>
       {posts.length === 0 ? (
-        <View style={styles.centered}>
-          <Text style={styles.emptyText}>{emptyMessage}</Text>
+        <View style={generalStyles.centered}>
+          <Text style={generalStyles.emptyText}>{emptyMessage}</Text>
         </View>
       ) : (
         <FlatList
@@ -146,7 +148,7 @@ const PostList = ({
             />
           )}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContainer}
+          contentContainerStyle={generalStyles.listContainer}
           refreshing={loading}
           onRefresh={onRefresh}
         />
@@ -154,79 +156,5 @@ const PostList = ({
     </View>
   );
 };
-
-// Styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  postItem: {
-    backgroundColor: "white",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  textContainer: {
-    flex: 1,
-  },
-  postTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-  },
-  postDescription: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-  },
-  postDate: {
-    fontSize: 12,
-    color: "#999",
-  },
-  statsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 8,
-  },
-  likesContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 16,
-  },
-  likeButton: {
-    marginRight: 6,
-  },
-  likesCount: {
-    fontSize: 14,
-    color: "#666",
-  },
-  commentsCount: {
-    fontSize: 14,
-    color: "#666",
-  },
-  deleteButton: {
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: "#ffeded",
-  },
-  deleteButtonPressed: {
-    opacity: 0.5,
-  },
-});
 
 export default PostList;
