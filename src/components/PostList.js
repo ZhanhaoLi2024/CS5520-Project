@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   FlatList,
@@ -7,8 +7,11 @@ import {
   ActivityIndicator,
   Pressable,
 } from "react-native";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { toggleLikePost, hasUserLikedPost } from "../Firebase/firebaseHelper";
+import { auth } from "../Firebase/firebaseSetup";
 
+// PostItem Component
 const PostItem = ({
   title,
   description,
@@ -20,14 +23,33 @@ const PostItem = ({
   userId,
   likesCount,
   commentsCount,
-  onLike,
 }) => {
+  const currentUserId = auth.currentUser?.uid;
   const [liked, setLiked] = useState(false);
+  const [currentLikes, setCurrentLikes] = useState(likesCount || 0);
+
+  // Fetch the liked status from Firestore to check if the user has already liked this post
+  useEffect(() => {
+    const checkIfLiked = async () => {
+      if (currentUserId) {
+        const alreadyLiked = await hasUserLikedPost(id, currentUserId);
+        setLiked(alreadyLiked);
+      }
+    };
+    checkIfLiked();
+  }, [id, currentUserId]);
 
   // Handle like button press
-  const handleLike = () => {
-    setLiked(!liked);
-    onLike(id, liked ? -1 : 1); // Adjust likes count based on current state
+  const handleLike = async () => {
+    if (!currentUserId) return;
+
+    try {
+      const result = await toggleLikePost(id, currentUserId);
+      setLiked(result.liked);
+      setCurrentLikes(result.likesCount);
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    }
   };
 
   const handleDelete = () => {
@@ -45,7 +67,9 @@ const PostItem = ({
         <Text style={styles.postDate}>
           {new Date(createdAt).toLocaleDateString()}
         </Text>
+
         <View style={styles.statsContainer}>
+          {/* Likes Section */}
           <View style={styles.likesContainer}>
             <Pressable onPress={handleLike} style={styles.likeButton}>
               <AntDesign
@@ -54,13 +78,17 @@ const PostItem = ({
                 color={liked ? "#FF6B6B" : "#999"}
               />
             </Pressable>
-            <Text style={styles.likesCount}>{likesCount}</Text>
+            <Text style={styles.likesCount}>{currentLikes}</Text>
           </View>
+
+          {/* Comments Count */}
           <Text style={styles.commentsCount}>
             {commentsCount} {commentsCount === 1 ? "Comment" : "Comments"}
           </Text>
         </View>
       </View>
+
+      {/* Delete Button for User's Own Posts */}
       {showDeleteButton && (
         <Pressable
           style={({ pressed }) => [
@@ -76,16 +104,15 @@ const PostItem = ({
   );
 };
 
+// PostList Component
 const PostList = ({
   posts,
   loading,
   onRefresh,
   onDelete,
   onPress,
-  indexCreating = false,
   showDeleteButton = false,
   emptyMessage = "No posts available",
-  onLike,
 }) => {
   if (loading) {
     return (
@@ -97,14 +124,6 @@ const PostList = ({
 
   return (
     <View style={styles.container}>
-      {indexCreating && (
-        <View style={styles.indexingBanner}>
-          <Text style={styles.indexingText}>
-            Setting up database optimization... Some features may be limited.
-          </Text>
-        </View>
-      )}
-
       {posts.length === 0 ? (
         <View style={styles.centered}>
           <Text style={styles.emptyText}>{emptyMessage}</Text>
@@ -124,7 +143,6 @@ const PostList = ({
               onPress={onPress}
               likesCount={item.likesCount}
               commentsCount={item.commentsCount}
-              onLike={onLike}
             />
           )}
           keyExtractor={(item) => item.id}
@@ -137,6 +155,7 @@ const PostList = ({
   );
 };
 
+// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -147,25 +166,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-  },
-  listContainer: {
-    padding: 16,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-  },
-  indexingBanner: {
-    backgroundColor: "#FFF3CD",
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#FFE69C",
-  },
-  indexingText: {
-    color: "#856404",
-    fontSize: 14,
-    textAlign: "center",
   },
   postItem: {
     backgroundColor: "white",
@@ -188,13 +188,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     color: "#333",
-    flexShrink: 1,
   },
   postDescription: {
     fontSize: 14,
     color: "#666",
     marginBottom: 8,
-    flexShrink: 1,
   },
   postDate: {
     fontSize: 12,

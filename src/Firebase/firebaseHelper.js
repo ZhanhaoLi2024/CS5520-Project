@@ -4,10 +4,15 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
   deleteDoc,
+  setDoc,
   doc,
   updateDoc,
   orderBy,
+  onSnapshot,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { db } from "./firebaseSetup";
 
@@ -156,13 +161,13 @@ export const getAllPosts = async () => {
 export const getUserPosts = async (userId) => {
   try {
     const postsRef = collection(db, "posts");
-    // Primary query with ordering
+
+    // Define the primary and fallback queries
     const primaryQuery = query(
       postsRef,
       where("userId", "==", userId),
       orderBy("createdAt", "desc")
     );
-    // Fallback query without ordering
     const fallbackQuery = query(postsRef, where("userId", "==", userId));
 
     return await executeQueryWithFallback(primaryQuery, fallbackQuery);
@@ -171,6 +176,7 @@ export const getUserPosts = async (userId) => {
     throw error;
   }
 };
+
 
 export const createPost = async (postData) => {
   try {
@@ -278,5 +284,109 @@ export const subscribeToUserPosts = (userId, onPostsUpdate, onError) => {
   } catch (error) {
     console.error("Error setting up user posts listener:", error);
     onError(error);
+  }
+};
+
+// Create or update post statistics (likes, comments)
+export const updatePostStatistics = async (postId, field, increment) => {
+  try {
+    const docRef = doc(db, "postStatistics", postId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      // Update existing document
+      const currentValue = docSnap.data()[field] || 0;
+      await updateDoc(docRef, {
+        [field]: currentValue + increment,
+      });
+    } else {
+      // Create a new document if it doesn't exist
+      await setDoc(docRef, { [field]: increment });
+    }
+  } catch (error) {
+    console.error("Error updating post statistics:", error);
+    throw error;
+  }
+};
+
+// Get post statistics by postId
+export const getPostStatistics = async (postId) => {
+  try {
+    const docRef = doc(db, "postStatistics", postId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    }
+    return { likesCount: 0, commentsCount: 0 };
+  } catch (error) {
+    console.error("Error fetching post statistics:", error);
+    throw error;
+  }
+};
+
+
+// Fetch all posts along with their statistics
+export const getAllPostsWithStats = async () => {
+  const postsRef = collection(db, "posts");
+  const postsSnapshot = await getDocs(query(postsRef, orderBy("createdAt", "desc")));
+
+  const posts = await Promise.all(
+    postsSnapshot.docs.map(async (postDoc) => {
+      const postData = postDoc.data();
+      const postId = postDoc.id;
+      const stats = await getPostStatistics(postId);
+      return { id: postId, ...postData, ...stats };
+    })
+  );
+  return posts;
+};
+
+// Function to toggle like for a post
+// Toggle like for a post and update both posts and postStatistics collections
+export const toggleLikePost = async (postId, userId) => {
+  try {
+    const postDocRef = doc(db, "posts", postId);
+    const postDocSnap = await getDoc(postDocRef);
+
+    if (postDocSnap.exists()) {
+      const postData = postDocSnap.data();
+      const alreadyLiked = postData.likedBy?.includes(userId);
+      let updatedLikesCount = postData.likesCount || 0;
+
+      if (alreadyLiked) {
+        // Unlike the post
+        await updateDoc(postDocRef, {
+          likedBy: arrayRemove(userId),
+          likesCount: updatedLikesCount - 1,
+        });
+        return { liked: false, likesCount: updatedLikesCount - 1 };
+      } else {
+        // Like the post
+        await updateDoc(postDocRef, {
+          likedBy: arrayUnion(userId),
+          likesCount: updatedLikesCount + 1,
+        });
+        return { liked: true, likesCount: updatedLikesCount + 1 };
+      }
+    }
+  } catch (error) {
+    console.error("Error toggling like:", error);
+    throw error;
+  }
+};
+
+// Check if a user has already liked a specific post
+export const hasUserLikedPost = async (postId, userId) => {
+  try {
+    const postDocRef = doc(db, "posts", postId);
+    const postDocSnap = await getDoc(postDocRef);
+    if (postDocSnap.exists()) {
+      const likedBy = postDocSnap.data().likedBy || [];
+      return likedBy.includes(userId);
+    }
+    return false;
+  } catch (error) {
+    console.error("Error checking if user liked the post:", error);
+    return false;
   }
 };
