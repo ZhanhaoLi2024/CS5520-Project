@@ -352,4 +352,22 @@ export const generalStyles = StyleSheet.create({
     color: "#333",
     fontSize: 16,
   },
+
+  logo: {
+    width: 150,
+    height: 150,
+    resizeMode: "contain",
+    alignSelf: "center",
+    marginTop: 40, // Adjust this value to move the logo closer to the top
+    marginBottom: 20,
+  },
+
+
+  loginLinkText: {
+    color: "#FF6B6B",
+    textAlign: "center",
+    fontSize: 14,
+    marginTop: 20,
+  },
+
 });

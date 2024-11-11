@@ -5,12 +5,16 @@ import {
   TextInput,
   Pressable,
   Alert,
+  Image,
 } from "react-native";
 import { auth } from "../Firebase/firebaseSetup";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { generalStyles } from "../theme/generalStyles";
 import { inputStyles } from "../theme/inputStyles";
 import { buttonStyles } from "../theme/buttonStyles";
+
+// Import the logo image
+import logo from "../../assets/Logo.png";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -62,7 +66,10 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <View style={generalStyles.authContainer}>
+    <View style={generalStyles.loginContainer}>
+      {/* Display the logo */}
+      <Image source={logo} style={generalStyles.logo} />
+
       <Text style={generalStyles.title}>Welcome to iCook!</Text>
 
       <TextInput
@@ -87,7 +94,7 @@ export default function Login({ navigation }) {
       </Pressable>
 
       <Pressable onPress={() => navigation.replace("Signup")}>
-        <Text style={generalStyles.linkText}>
+        <Text style={generalStyles.loginLinkText}>
           Don't have an account? Sign up
         </Text>
       </Pressable>
