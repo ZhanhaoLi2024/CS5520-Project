@@ -99,4 +99,22 @@ export const buttonStyles = StyleSheet.create({
   likeButton: {
     marginRight: 6,
   },
+
+  authButton: {
+    backgroundColor: "#FF6B6B",
+    padding: 15,
+    borderRadius: 5,
+    marginBottom: 15,
+    alignItems: "center",
+  },
+  authButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
+  authButtonDisabled: {
+    backgroundColor: "#ffb3b3",
+  },
 });

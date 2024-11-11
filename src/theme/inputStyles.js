@@ -28,4 +28,15 @@ export const inputStyles = StyleSheet.create({
     fontSize: 16,
     marginRight: 10,
   },
+
+  authInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 15,
+    marginBottom: 15,
+    borderRadius: 5,
+    backgroundColor: "#f5f5f5",
+    fontSize: 16,
+    color: "#333",
+  },
 });

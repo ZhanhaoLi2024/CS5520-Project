@@ -1,15 +1,17 @@
+import React, { useState, useEffect } from "react";
 import {
-  StyleSheet,
-  Text,
   View,
+  Text,
   TextInput,
   Pressable,
   Alert,
   ScrollView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
 import { auth } from "../Firebase/firebaseSetup";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { generalStyles } from "../theme/generalStyles";
+import { inputStyles } from "../theme/inputStyles";
+import { buttonStyles } from "../theme/buttonStyles";
 
 export default function Signup({ navigation }) {
   const [email, setEmail] = useState("");
@@ -63,7 +65,6 @@ export default function Signup({ navigation }) {
         password
       );
       console.log("Account created for:", userCredential.user.email);
-      // navigation.replace("Plan");
     } catch (error) {
       console.log(error);
       Alert.alert("Error", error.message);
@@ -71,18 +72,18 @@ export default function Signup({ navigation }) {
   };
 
   const renderPasswordRequirement = (met, text) => (
-    <Text style={[styles.passwordHint, { color: met ? "#4CAF50" : "#666" }]}>
+    <Text style={[generalStyles.passwordHint, { color: met ? "#4CAF50" : "#666" }]}>
       {met ? "✓" : "○"} {text}
     </Text>
   );
 
   return (
-    <View style={styles.container}>
+    <View style={generalStyles.signupContainer}>
       <ScrollView>
-        <Text style={styles.title}>Join iCook Community</Text>
+        <Text style={generalStyles.signupTitle}>Join iCook Community</Text>
 
         <TextInput
-          style={styles.input}
+          style={inputStyles.authInput}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
@@ -91,7 +92,7 @@ export default function Signup({ navigation }) {
         />
 
         <TextInput
-          style={styles.input}
+          style={inputStyles.authInput}
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
@@ -99,15 +100,15 @@ export default function Signup({ navigation }) {
         />
 
         <TextInput
-          style={styles.input}
+          style={inputStyles.authInput}
           placeholder="Confirm Password"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
         />
 
-        <View style={styles.passwordRules}>
-          <Text style={styles.passwordTitle}>Password Requirements:</Text>
+        <View style={generalStyles.passwordRules}>
+          <Text style={generalStyles.passwordTitle}>Password Requirements:</Text>
           {renderPasswordRequirement(
             passwordStrength.length,
             "At least 6 characters long"
@@ -135,85 +136,20 @@ export default function Signup({ navigation }) {
         </View>
 
         <Pressable
-          style={[styles.button, !isPasswordValid() && styles.buttonDisabled]}
+          style={[
+            buttonStyles.authButton,
+            !isPasswordValid() && buttonStyles.authButtonDisabled,
+          ]}
           onPress={handleSignup}
           disabled={!isPasswordValid()}
         >
-          <Text style={styles.buttonText}>Sign Up</Text>
+          <Text style={buttonStyles.authButtonText}>Sign Up</Text>
         </Pressable>
 
-        <Pressable
-          onPress={() => navigation.replace("Login")}
-          style={styles.linkContainer}
-        >
-          <Text style={styles.linkText}>Already have an account? Log in</Text>
+        <Pressable onPress={() => navigation.replace("Login")}>
+          <Text style={generalStyles.linkText}>Already have an account? Log in</Text>
         </Pressable>
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    marginTop: 40,
-    textAlign: "center",
-    color: "#1a1a1a",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 15,
-    marginBottom: 15,
-    borderRadius: 5,
-    backgroundColor: "#f5f5f5",
-  },
-  button: {
-    backgroundColor: "#FF6B6B",
-    padding: 15,
-    borderRadius: 5,
-    marginBottom: 15,
-  },
-  buttonDisabled: {
-    backgroundColor: "#ffb3b3",
-  },
-  buttonText: {
-    color: "white",
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  linkContainer: {
-    padding: 10,
-    marginBottom: 20,
-  },
-  linkText: {
-    color: "#FF6B6B",
-    textAlign: "center",
-    fontSize: 14,
-  },
-  passwordRules: {
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    backgroundColor: "#f9f9f9",
-    padding: 15,
-    borderRadius: 5,
-  },
-  passwordTitle: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: "#333",
-  },
-  passwordHint: {
-    fontSize: 12,
-    marginBottom: 5,
-  },
-});

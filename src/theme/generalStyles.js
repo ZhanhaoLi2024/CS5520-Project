@@ -217,4 +217,59 @@ export const generalStyles = StyleSheet.create({
     color: "#999",
     textAlign: "center",
   },
+
+  authContainer: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+    color: "#1a1a1a",
+  },
+  linkText: {
+    color: "#FF6B6B",
+    textAlign: "center",
+    fontSize: 14,
+  },
+
+  signupContainer: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#fff",
+  },
+  signupTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    marginTop: 40,
+    textAlign: "center",
+    color: "#1a1a1a",
+  },
+  linkText: {
+    color: "#FF6B6B",
+    textAlign: "center",
+    fontSize: 14,
+  },
+  passwordRules: {
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    backgroundColor: "#f9f9f9",
+    padding: 15,
+    borderRadius: 5,
+  },
+  passwordTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#333",
+  },
+  passwordHint: {
+    fontSize: 12,
+    marginBottom: 5,
+  },
 });
