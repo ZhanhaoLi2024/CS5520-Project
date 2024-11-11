@@ -390,3 +390,36 @@ export const hasUserLikedPost = async (postId, userId) => {
     return false;
   }
 };
+
+// Function to add a comment to a post
+export const addComment = async (postId, userId, text) => {
+  try {
+    const commentData = {
+      text,
+      userId,
+      createdAt: new Date().toISOString(),
+    };
+    await addDoc(collection(db, `posts/${postId}/comments`), commentData);
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    throw error;
+  }
+};
+
+// Function to get comments for a specific post
+export const getComments = async (postId) => {
+  try {
+    const commentsRef = collection(db, `posts/${postId}/comments`);
+    const commentsQuery = query(commentsRef, orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(commentsQuery);
+
+    const comments = [];
+    querySnapshot.forEach((doc) => {
+      comments.push({ id: doc.id, ...doc.data() });
+    });
+    return comments;
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    throw error;
+  }
+};
