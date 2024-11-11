@@ -287,42 +287,6 @@ export const subscribeToUserPosts = (userId, onPostsUpdate, onError) => {
   }
 };
 
-// Create or update post statistics (likes, comments)
-export const updatePostStatistics = async (postId, field, increment) => {
-  try {
-    const docRef = doc(db, "postStatistics", postId);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      // Update existing document
-      const currentValue = docSnap.data()[field] || 0;
-      await updateDoc(docRef, {
-        [field]: currentValue + increment,
-      });
-    } else {
-      // Create a new document if it doesn't exist
-      await setDoc(docRef, { [field]: increment });
-    }
-  } catch (error) {
-    console.error("Error updating post statistics:", error);
-    throw error;
-  }
-};
-
-// Get post statistics by postId
-export const getPostStatistics = async (postId) => {
-  try {
-    const docRef = doc(db, "postStatistics", postId);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return docSnap.data();
-    }
-    return { likesCount: 0, commentsCount: 0 };
-  } catch (error) {
-    console.error("Error fetching post statistics:", error);
-    throw error;
-  }
-};
 
 
 // Fetch all posts along with their statistics
@@ -391,15 +355,16 @@ export const hasUserLikedPost = async (postId, userId) => {
   }
 };
 
-// Function to add a comment to a post
+// Function to add a comment to a post and update comment count
 export const addComment = async (postId, userId, text) => {
   try {
     const commentData = {
-      text,
       userId,
+      text,
       createdAt: new Date().toISOString(),
     };
     await addDoc(collection(db, `posts/${postId}/comments`), commentData);
+    await updatePostStatistics(postId, "commentsCount", 1);
   } catch (error) {
     console.error("Error adding comment:", error);
     throw error;
@@ -420,6 +385,40 @@ export const getComments = async (postId) => {
     return comments;
   } catch (error) {
     console.error("Error fetching comments:", error);
+    throw error;
+  }
+};
+
+// Function to update comment count in postStatistics collection
+export const updatePostStatistics = async (postId, field, increment) => {
+  try {
+    const statsRef = doc(db, "postStatistics", postId);
+    const statsSnap = await getDoc(statsRef);
+
+    if (statsSnap.exists()) {
+      const currentValue = statsSnap.data()[field] || 0;
+      await updateDoc(statsRef, { [field]: currentValue + increment });
+    } else {
+      await setDoc(statsRef, { [field]: increment });
+    }
+  } catch (error) {
+    console.error("Error updating post statistics:", error);
+    throw error;
+  }
+};
+
+// Get post statistics (likes and comments count)
+export const getPostStatistics = async (postId) => {
+  try {
+    const statsRef = doc(db, "postStatistics", postId);
+    const statsSnap = await getDoc(statsRef);
+
+    if (statsSnap.exists()) {
+      return statsSnap.data();
+    }
+    return { likesCount: 0, commentsCount: 0 };
+  } catch (error) {
+    console.error("Error fetching post statistics:", error);
     throw error;
   }
 };
