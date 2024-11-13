@@ -260,49 +260,51 @@ npx expo start
 ```
 CS5520-PROJECT/
 ├── src/
-│   ├── components/           # Reusable UI components
-│   │   ├── MealPlan/        # Meal plan related components
-│   │   │   ├── MealPlanForm.js  # Form for creating/editing meal plans
-│   │   │   └── PlanItem.js      # Individual meal plan list item
-│   │   └── Post/            # Post related components
-│   │       └── PostList.js      # List view for posts
+│   ├── components/                  # Reusable UI components
+│   │   ├── MealPlan/                # Meal plan related components
+│   │   │   ├── MealPlanForm.js      # Form for creating/editing meal plans
+│   │   │   └── PlanItem.js          # Individual meal plan list item
+│   │   └── Post/                    # Post related components
+│   │       └── PostList.js          # List view for posts
 │   │
-│   ├── Firebase/            # Firebase configuration and helpers
-│   │   ├── firebaseHelper.js    # Firebase CRUD operations
-│   │   └── firebaseSetup.js     # Firebase initialization
+│   ├── Firebase/                    # Firebase configuration and helpers
+│   │   ├── firebaseHelper.js        # Firebase CRUD operations
+│   │   └── firebaseSetup.js         # Firebase initialization
 │   │
-│   ├── screens/             # Application screens
-│   │   ├── Auth/           # Authentication screens
-│   │   │   ├── Login.js        # User login screen
-│   │   │   └── Signup.js       # User registration screen
-│   │   ├── MealPlan/       # Meal plan screens
-│   │   │   ├── MealPlanner.js  # Create meal plan screen
-│   │   │   ├── Plan.js         # Meal plans list screen
-│   │   │   ├── PlanDetail.js   # Meal plan details screen
-│   │   │   └── PlanEdit.js     # Edit meal plan screen
-│   │   ├── Post/           # Post related screens
-│   │   │   ├── EditPost.js     # Edit post screen
-│   │   │   ├── Explorer.js     # Main posts feed screen
-│   │   │   ├── NewPost.js      # Create new post screen
-│   │   │   ├── PostDetail.js   # Post details screen
+│   ├── screens/                     # Application screens
+│   │   ├── Auth/                    # Authentication screens
+│   │   │   ├── Login.js             # User login screen
+│   │   │   └── Signup.js            # User registration screen
+│   │   │
+│   │   ├── MealPlan/                # Meal plan screens
+│   │   │   ├── MealPlanner.js       # Create meal plan screen
+│   │   │   ├── Plan.js              # Meal plans list screen
+│   │   │   ├── PlanDetail.js        # Meal plan details screen
+│   │   │   └── PlanEdit.js          # Edit meal plan screen
+│   │   │
+│   │   ├── Post/                    # Post related screens
+│   │   │   ├── EditPost.js          # Edit post screen
+│   │   │   ├── Explorer.js          # Main posts feed screen
+│   │   │   ├── NewPost.js           # Create new post screen
+│   │   │   ├── PostDetail.js        # Post details screen
 │   │   │   └── PostDetailScreen.js  # Detailed post view screen
-│   │   ├── Map.js          # Map feature screen (placeholder)
-│   │   └── Profile.js      # User profile screen
+│   │   │
+│   │   ├── Map.js                   # Map feature screen (placeholder)
+│   │   └── Profile.js               # User profile screen
 │   │
-│   └── theme/              # Styling and theming
-│       ├── buttonStyles.js    # Button style constants
-│       ├── colors.js          # Color palette definitions
-│       ├── fontSize.js        # Typography scale
-│       ├── generalStyles.js   # Common style patterns
-│       ├── inputStyles.js     # Input field styles
-│       └── styles.js          # Global styles
+│   └── theme/                       # Styling and theming
+│       ├── buttonStyles.js          # Button style constants
+│       ├── colors.js                # Color palette definitions
+│       ├── fontSize.js              # Typography scale
+│       ├── generalStyles.js         # Common style patterns
+│       ├── inputStyles.js           # Input field styles
+│       └── styles.js                # Global styles
 │
-├── .env                    # Environment variables
-├── .gitignore             # Git ignore configuration
-├── App.js                 # Application root component
-├── app.json               # Expo configuration
-├── babel.config.js        # Babel configuration
-├── package-lock.json      # Dependency lock file
-├── package.json          # Project dependencies and scripts
-└── README.md             # Project documentation
+├── .gitignore                       # Git ignore configuration
+├── App.js                           # Application root component
+├── app.json                         # Expo configuration
+├── babel.config.js                  # Babel configuration
+├── package-lock.json                # Dependency lock file
+├── package.json                     # Project dependencies and scripts
+└── README.md                        # Project documentation
 ```
