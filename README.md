@@ -148,46 +148,31 @@ Implemented three main collections in Firestore:
 
 ### Zhanhao Li
 
-#### Navigation Structure
+#### Completed Features in Iteration 1
 
-- Set up Stack Navigator for authentication and detail screens
-- Implemented Bottom Tab Navigator for main app sections
-- Created navigation flow between all screens (Plan, Explorer, Map, Profile)
-- Added proper navigation headers and transitions
-
-#### Database Integration
-
-- Configured Firebase/Firestore setup with proper security rules
-- Designed and implemented three main collections:
-  - users: For user profile data
-  - mealPlans: For storing meal planning information
-  - posts: For user posts and interactions
-
-#### Core Features
-
-- Developed complete meal planning system with CRUD operations
-- Created post management system for social interactions
-- Implemented real-time data updates using Firestore listeners
-- Added comprehensive error handling throughout the app
-
-#### Setup & Configuration
-
-- Set up project structure and dependencies
-- Configured environment variables for secure Firebase integration
-- Implemented proper data validation and security measures
-
-#### Documentation
-
-- Created comprehensive README documentation
-- Added inline code comments for maintainability
-- Documented data models and component structures
-
-#### Authentication & User Management (Iteration2)
-
-- Implemented complete authentication flow using Firebase Authentication
-- Created Login and Signup screens with robust validation
-- Developed Profile management system with user data updates
-- Implemented secure password reset functionality
+| Category                            | Feature              | Status | Description                                                                 |
+| ----------------------------------- | -------------------- | ------ | --------------------------------------------------------------------------- |
+| **Navigation**                      |                      |        |                                                                             |
+|                                     | Stack Navigator      | ✅     | - Authentication flow<br>- Screen transitions<br>- Header configuration     |
+|                                     | Bottom Tab Navigator | ✅     | - Main app navigation<br>- Tab bar customization                            |
+| **Database**                        |                      |        |                                                                             |
+|                                     | Firestore Setup      | ✅     | - Firebase configuration<br>- Security rules implementation                 |
+|                                     | CRUD Operations      | ✅     | - Users collection<br>- Meal plans collection<br>- Posts collection         |
+| **Plan**                            |                      |        |                                                                             |
+|                                     | Meal Plan Creation   | ✅     | - Form implementation<br>- Date selection<br>- Steps management             |
+|                                     | Meal Plan List       | ✅     | - Display all plans<br>- Delete functionality<br>- Navigation to details    |
+|                                     | Meal Plan Details    | ✅     | - View plan details<br>- Edit functionality                                 |
+| **Post**                            |                      |        |                                                                             |
+|                                     | Post Creation        | ✅     | - Create new posts<br>- Input validation                                    |
+|                                     | Post List            | ✅     | - Display all posts<br>- User's posts view                                  |
+|                                     | Post Management      | ✅     | - Delete posts<br>- View post details                                       |
+| **UI/UX**                           |                      |        |                                                                             |
+|                                     | Theme System         | ✅     | - Color schemes<br>- Typography<br>- Consistent styling                     |
+|                                     | Error Handling       | ✅     | - User feedback<br>- Loading states<br>- Form validation                    |
+| **Authentication**<br> (Iteration2) |                      |        |                                                                             |
+|                                     | User Registration    | ✅     | - Email/password sign up<br>- Input validation<br>- Error handling          |
+|                                     | User Login           | ✅     | - Email/password authentication<br>- Session management<br>- Error handling |
+|                                     | User Profile         | ✅     | - Profile information display<br>- Profile editing<br>- Password updating   |
 
 ## Technical Architecture
 
