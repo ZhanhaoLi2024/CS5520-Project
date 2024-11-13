@@ -9,7 +9,7 @@ import {
   deletePost,
   updatePostStatistics,
 } from "../../Firebase/firebaseHelper";
-import PostList from "../components/PostList";
+import PostList from "../../components/Post/PostList";
 import { AntDesign } from "@expo/vector-icons";
 
 const Tab = createMaterialTopTabNavigator();

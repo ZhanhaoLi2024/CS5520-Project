@@ -5,7 +5,7 @@ import {
   getUserMealPlans,
   deleteMealPlan,
 } from "../../Firebase/firebaseHelper";
-import { PlanItem } from "../components/PlanItem";
+import { PlanItem } from "../../components/MealPlan/PlanItem";
 import { useFocusEffect } from "@react-navigation/native";
 import { generalStyles } from "../../theme/generalStyles";
 import { buttonStyles } from "../../theme/buttonStyles";

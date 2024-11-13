@@ -7,7 +7,7 @@ import { inputStyles } from "../../theme/inputStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
 
 // Import the logo image
-import logo from "../../assets/Logo.png";
+import logo from "../../../assets/Logo.png";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
