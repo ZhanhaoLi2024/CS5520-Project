@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert } from "react-native";
-import MealPlanForm from "../components/MealPlanForm";
+import MealPlanForm from "../../components/MealPlan/MealPlanForm";
 import { auth } from "../../Firebase/firebaseSetup";
 import { createMealPlan } from "../../Firebase/firebaseHelper";
 

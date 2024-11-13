@@ -4,19 +4,23 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useState, useEffect } from "react";
 import { auth } from "./src/Firebase/firebaseSetup";
 import { onAuthStateChanged } from "firebase/auth";
-import { Feather, MaterialIcons, FontAwesome5 } from "react-native-vector-icons";
-import Login from "./src/screens/Login";
-import Signup from "./src/screens/Signup";
-import Explorer from "./src/screens/Explorer";
+import {
+  Feather,
+  MaterialIcons,
+  FontAwesome5,
+} from "react-native-vector-icons";
+import Login from "./src/screens/Auth/Login";
+import Signup from "./src/screens/Auth/Signup";
+import Explorer from "./src/screens/Post/Explorer";
 import Profile from "./src/screens/Profile";
 import Map from "./src/screens/Map";
-import Plan from "./src/screens/Plan";
-import MealPlanner from "./src/screens/MealPlanner";
-import PlanDetail from "./src/components/PlanDetail";
-import PlanEdit from "./src/screens/PlanEdit";
-import NewPost from "./src/screens/NewPost";
-import PostDetail from "./src/components/PostDetail";
-import EditPost from "./src/components/EditPost";
+import Plan from "./src/screens/MealPlan/Plan";
+import MealPlanner from "./src/screens/MealPlan/MealPlanner";
+import PlanDetail from "./src/screens/MealPlan/PlanDetail";
+import PlanEdit from "./src/screens/MealPlan/PlanEdit";
+import NewPost from "./src/screens/Post/NewPost";
+import PostDetail from "./src/screens/Post/PostDetail";
+import EditPost from "./src/screens/Post/EditPost";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
