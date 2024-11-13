@@ -6,38 +6,6 @@ iCook is a mobile application designed to help international students connect th
 
 ## Project Progress (Iteration 1)
 
-### Scoring Breakdown
-
-1. **Working App (15/15 points)**
-
-   - Successfully implemented frontend and backend connectivity
-   - App runs without crashes on both iOS and Android
-   - Firebase integration complete with proper configuration
-
-2. **App Progress (50/55 points)**
-
-   - Implemented core navigation structure using both stack and tab navigators
-   - Established complete authentication flow with signup/login
-   - Created basic CRUD operations for meal plans and posts
-   - Set up Firebase/Firestore database structure
-   - Missing points due to pending camera and location implementations
-
-3. **README/Screenshots (10/10 points)**
-
-   - Comprehensive documentation of features and progress
-   - Clear explanation of data model
-   - Detailed contributor breakdown
-
-4. **GitHub Contributor Uniformity (10/10 points)**
-
-   - All team members actively contributing
-   - Balanced workload distribution
-
-5. **GitHub Commits/Versions/Comments (8/10 points)**
-   - Regular commits with descriptive messages
-   - Proper branch management
-   - Minor points deducted for some non-descriptive commit messages
-
 ### Features Implemented
 
 #### Navigation
@@ -116,7 +84,117 @@ Implemented three main collections in Firestore:
 
 ### Screenshots
 
-[Add your screenshots here]
+#### Plan
+
+- Plan Main Screen(User-owned plans and delete button)
+
+   <img src="assets/README/Plan%20Main%20Screen.png" style="zoom:15%;">
+
+- Plan Detail
+
+   <img src="assets/README/Plan Detail.png" style="zoom:15%;">
+
+- Create Plan Screen
+
+  <img src="assets/README/Create Plan Screen.png" style="zoom:15%;">
+
+- Edit Plan Screen
+
+  <img src="assets/README/Edit Plan Screen.png" style="zoom:15%;">
+
+#### Post
+
+- Post Main Screen
+
+  - All Posts
+
+    <img src="assets/README/All Posts.png" style="zoom:15%;">
+
+  - My Posts
+
+    <img src="assets/README/My Posts.png" style="zoom:15%;">
+
+- New Post
+
+  <img src="assets/README/New Post.png" style="zoom:15%;">
+
+- Edit Post
+
+  <img src="assets/README/Edit Post.png" style="zoom:15%;">
+
+#### Profile
+
+- Profile Screen
+
+<img src="assets/README/Profile Screen.png" style="zoom:15%;">
+
+#### Auth(Iteration2)
+
+- Login
+
+<img src="assets/README/Login.png" style="zoom:15%;">
+
+- Signup
+
+<img src="assets/README/Signup.png" style="zoom:15%;">
+
+## Team Members and Contributions
+
+### [Team Member 1 Name]
+
+- Implemented authentication system
+- Created profile management
+- Set up Firebase configuration
+
+### Zhanhao Li
+
+#### Navigation Structure
+
+- Set up Stack Navigator for authentication and detail screens
+- Implemented Bottom Tab Navigator for main app sections
+- Created navigation flow between all screens (Plan, Explorer, Map, Profile)
+- Added proper navigation headers and transitions
+
+#### Database Integration
+
+- Configured Firebase/Firestore setup with proper security rules
+- Designed and implemented three main collections:
+  - users: For user profile data
+  - mealPlans: For storing meal planning information
+  - posts: For user posts and interactions
+
+#### Core Features
+
+- Developed complete meal planning system with CRUD operations
+- Created post management system for social interactions
+- Implemented real-time data updates using Firestore listeners
+- Added comprehensive error handling throughout the app
+
+#### Setup & Configuration
+
+- Set up project structure and dependencies
+- Configured environment variables for secure Firebase integration
+- Implemented proper data validation and security measures
+
+#### Documentation
+
+- Created comprehensive README documentation
+- Added inline code comments for maintainability
+- Documented data models and component structures
+
+#### Authentication & User Management (Iteration2)
+
+- Implemented complete authentication flow using Firebase Authentication
+- Created Login and Signup screens with robust validation
+- Developed Profile management system with user data updates
+- Implemented secure password reset functionality
+
+## Technical Architecture
+
+- React Native for cross-platform mobile development
+- Firebase Authentication for user management
+- Cloud Firestore for database
+- Expo for development and building
 
 ## Setup Instructions
 
@@ -192,60 +270,54 @@ service cloud.firestore {
 npx expo start
 ```
 
-## Team Members and Contributions
+## Project Structure
 
-### [Team Member 1 Name]
-
-- Implemented authentication system
-- Created profile management
-- Set up Firebase configuration
-
-### Zhanhao Li
-
-#### Navigation Structure
-
-- Set up Stack Navigator for authentication and detail screens
-- Implemented Bottom Tab Navigator for main app sections
-- Created navigation flow between all screens (Plan, Explorer, Map, Profile)
-- Added proper navigation headers and transitions
-
-#### Database Integration
-
-- Configured Firebase/Firestore setup with proper security rules
-- Designed and implemented three main collections:
-  - users: For user profile data
-  - mealPlans: For storing meal planning information
-  - posts: For user posts and interactions
-
-#### Core Features
-
-- Developed complete meal planning system with CRUD operations
-- Created post management system for social interactions
-- Implemented real-time data updates using Firestore listeners
-- Added comprehensive error handling throughout the app
-
-#### Setup & Configuration
-
-- Set up project structure and dependencies
-- Configured environment variables for secure Firebase integration
-- Implemented proper data validation and security measures
-
-#### Documentation
-
-- Created comprehensive README documentation
-- Added inline code comments for maintainability
-- Documented data models and component structures
-
-#### Authentication & User Management (Iteration2)
-
-- Implemented complete authentication flow using Firebase Authentication
-- Created Login and Signup screens with robust validation
-- Developed Profile management system with user data updates
-- Implemented secure password reset functionality
-
-## Technical Architecture
-
-- React Native for cross-platform mobile development
-- Firebase Authentication for user management
-- Cloud Firestore for database
-- Expo for development and building
+```
+CS5520-PROJECT/
+├── src/
+│   ├── components/           # Reusable UI components
+│   │   ├── MealPlan/        # Meal plan related components
+│   │   │   ├── MealPlanForm.js  # Form for creating/editing meal plans
+│   │   │   └── PlanItem.js      # Individual meal plan list item
+│   │   └── Post/            # Post related components
+│   │       └── PostList.js      # List view for posts
+│   │
+│   ├── Firebase/            # Firebase configuration and helpers
+│   │   ├── firebaseHelper.js    # Firebase CRUD operations
+│   │   └── firebaseSetup.js     # Firebase initialization
+│   │
+│   ├── screens/             # Application screens
+│   │   ├── Auth/           # Authentication screens
+│   │   │   ├── Login.js        # User login screen
+│   │   │   └── Signup.js       # User registration screen
+│   │   ├── MealPlan/       # Meal plan screens
+│   │   │   ├── MealPlanner.js  # Create meal plan screen
+│   │   │   ├── Plan.js         # Meal plans list screen
+│   │   │   ├── PlanDetail.js   # Meal plan details screen
+│   │   │   └── PlanEdit.js     # Edit meal plan screen
+│   │   ├── Post/           # Post related screens
+│   │   │   ├── EditPost.js     # Edit post screen
+│   │   │   ├── Explorer.js     # Main posts feed screen
+│   │   │   ├── NewPost.js      # Create new post screen
+│   │   │   ├── PostDetail.js   # Post details screen
+│   │   │   └── PostDetailScreen.js  # Detailed post view screen
+│   │   ├── Map.js          # Map feature screen (placeholder)
+│   │   └── Profile.js      # User profile screen
+│   │
+│   └── theme/              # Styling and theming
+│       ├── buttonStyles.js    # Button style constants
+│       ├── colors.js          # Color palette definitions
+│       ├── fontSize.js        # Typography scale
+│       ├── generalStyles.js   # Common style patterns
+│       ├── inputStyles.js     # Input field styles
+│       └── styles.js          # Global styles
+│
+├── .env                    # Environment variables
+├── .gitignore             # Git ignore configuration
+├── App.js                 # Application root component
+├── app.json               # Expo configuration
+├── babel.config.js        # Babel configuration
+├── package-lock.json      # Dependency lock file
+├── package.json          # Project dependencies and scripts
+└── README.md             # Project documentation
+```
