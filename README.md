@@ -84,7 +84,59 @@ Implemented three main collections in Firestore:
 
 ### Screenshots
 
-[Add your screenshots here]
+#### Plan
+
+- Plan Main Screen(User-owned plans and delete button)
+
+   <img src="assets/README/Plan%20Main%20Screen.png" style="zoom:15%;">
+
+- Plan Detail
+
+   <img src="assets/README/Plan Detail.png" style="zoom:15%;">
+
+- Create Plan Screen
+
+  <img src="assets/README/Create Plan Screen.png" style="zoom:15%;">
+
+- Edit Plan Screen
+
+  <img src="assets/README/Edit Plan Screen.png" style="zoom:15%;">
+
+#### Post
+
+- Post Main Screen
+
+  - All Posts
+
+    <img src="assets/README/All Posts.png" style="zoom:15%;">
+
+  - My Posts
+
+    <img src="assets/README/My Posts.png" style="zoom:15%;">
+
+- New Post
+
+  <img src="assets/README/New Post.png" style="zoom:15%;">
+
+- Edit Post
+
+  <img src="assets/README/Edit Post.png" style="zoom:15%;">
+
+#### Profile
+
+- Profile Screen
+
+<img src="assets/README/Profile Screen.png" style="zoom:15%;">
+
+#### Auth(Iteration2)
+
+- Login
+
+<img src="assets/README/Login.png" style="zoom:15%;">
+
+- Signup
+
+<img src="assets/README/Signup.png" style="zoom:15%;">
 
 ## Team Members and Contributions
 
