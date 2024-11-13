@@ -8,9 +8,9 @@ import {
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { generalStyles } from "../theme/generalStyles";
-import { inputStyles } from "../theme/inputStyles";
-import { buttonStyles } from "../theme/buttonStyles";
+import { generalStyles } from "../../theme/generalStyles";
+import { inputStyles } from "../../theme/inputStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
 export default function MealPlanForm({
   initialValues = {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert } from "react-native";
 import MealPlanForm from "../components/MealPlanForm";
-import { updateMealPlan } from "../Firebase/firebaseHelper";
+import { updateMealPlan } from "../../Firebase/firebaseHelper";
 
 export default function PlanEdit({ route, navigation }) {
   const { plan } = route.params;

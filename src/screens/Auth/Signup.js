@@ -7,11 +7,11 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
-import { auth } from "../Firebase/firebaseSetup";
+import { auth } from "../../Firebase/firebaseSetup";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { generalStyles } from "../theme/generalStyles";
-import { inputStyles } from "../theme/inputStyles";
-import { buttonStyles } from "../theme/buttonStyles";
+import { generalStyles } from "../../theme/generalStyles";
+import { inputStyles } from "../../theme/inputStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
 export default function Signup({ navigation }) {
   const [email, setEmail] = useState("");
@@ -72,7 +72,9 @@ export default function Signup({ navigation }) {
   };
 
   const renderPasswordRequirement = (met, text) => (
-    <Text style={[generalStyles.passwordHint, { color: met ? "#4CAF50" : "#666" }]}>
+    <Text
+      style={[generalStyles.passwordHint, { color: met ? "#4CAF50" : "#666" }]}
+    >
       {met ? "✓" : "○"} {text}
     </Text>
   );
@@ -108,7 +110,9 @@ export default function Signup({ navigation }) {
         />
 
         <View style={generalStyles.passwordRules}>
-          <Text style={generalStyles.passwordTitle}>Password Requirements:</Text>
+          <Text style={generalStyles.passwordTitle}>
+            Password Requirements:
+          </Text>
           {renderPasswordRequirement(
             passwordStrength.length,
             "At least 6 characters long"
@@ -147,7 +151,9 @@ export default function Signup({ navigation }) {
         </Pressable>
 
         <Pressable onPress={() => navigation.replace("Login")}>
-          <Text style={generalStyles.linkText}>Already have an account? Log in</Text>
+          <Text style={generalStyles.linkText}>
+            Already have an account? Log in
+          </Text>
         </Pressable>
       </ScrollView>
     </View>

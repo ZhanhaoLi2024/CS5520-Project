@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { View, Alert, Pressable, Text } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { auth } from "../Firebase/firebaseSetup";
+import { auth } from "../../Firebase/firebaseSetup";
 import {
   getAllPostsWithStats,
   getUserPosts,
   deletePost,
   updatePostStatistics,
-} from "../Firebase/firebaseHelper";
+} from "../../Firebase/firebaseHelper";
 import PostList from "../components/PostList";
 import { AntDesign } from "@expo/vector-icons";
 

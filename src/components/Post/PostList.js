@@ -7,10 +7,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { toggleLikePost, hasUserLikedPost } from "../Firebase/firebaseHelper";
-import { auth } from "../Firebase/firebaseSetup";
-import { generalStyles } from "../theme/generalStyles";
-import { buttonStyles } from "../theme/buttonStyles";
+import {
+  toggleLikePost,
+  hasUserLikedPost,
+} from "../../Firebase/firebaseHelper";
+import { auth } from "../../Firebase/firebaseSetup";
+import { generalStyles } from "../../theme/generalStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
 // PostItem Component
 const PostItem = ({

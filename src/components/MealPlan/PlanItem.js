@@ -1,8 +1,8 @@
 import React from "react";
 import { Text, View, Pressable, Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { generalStyles } from "../theme/generalStyles";
-import { buttonStyles } from "../theme/buttonStyles";
+import { generalStyles } from "../../theme/generalStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
 export const PlanItem = ({ dishName, plannedDate, onPress, onDelete, id }) => {
   // Convert ISO string to a readable date format

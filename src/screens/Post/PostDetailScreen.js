@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Pressable, FlatList } from "react-native";
-import { auth } from "../Firebase/firebaseSetup";
-import { addComment, getComments } from "../Firebase/firebaseHelper";
-import { generalStyles } from "../theme/generalStyles";
-import { inputStyles } from "../theme/inputStyles";
-import { buttonStyles } from "../theme/buttonStyles";
+import { auth } from "../../Firebase/firebaseSetup";
+import { addComment, getComments } from "../../Firebase/firebaseHelper";
+import { generalStyles } from "../../theme/generalStyles";
+import { inputStyles } from "../../theme/inputStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
 const PostDetailScreen = ({ route }) => {
   const { post } = route.params;
@@ -47,7 +47,10 @@ const PostDetailScreen = ({ route }) => {
         value={newComment}
         onChangeText={setNewComment}
       />
-      <Pressable onPress={handleAddComment} style={buttonStyles.postCommentButton}>
+      <Pressable
+        onPress={handleAddComment}
+        style={buttonStyles.postCommentButton}
+      >
         <Text style={buttonStyles.postCommentButtonText}>Post Comment</Text>
       </Pressable>
     </View>

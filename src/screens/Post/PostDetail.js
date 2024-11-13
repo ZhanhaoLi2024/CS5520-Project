@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, Pressable, TextInput, FlatList } from "react-native";
-import { auth } from "../Firebase/firebaseSetup";
-import { addComment, getComments } from "../Firebase/firebaseHelper";
-import { generalStyles } from "../theme/generalStyles";
-import { inputStyles } from "../theme/inputStyles";
-import { buttonStyles } from "../theme/buttonStyles";
+import { auth } from "../../Firebase/firebaseSetup";
+import { addComment, getComments } from "../../Firebase/firebaseHelper";
+import { generalStyles } from "../../theme/generalStyles";
+import { inputStyles } from "../../theme/inputStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
 const PostDetail = ({ route, navigation }) => {
   const { post } = route.params;
@@ -62,7 +62,9 @@ const PostDetail = ({ route, navigation }) => {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View style={generalStyles.commentItem}>
-                <Text style={generalStyles.commentAuthor}>{item.authorName}</Text>
+                <Text style={generalStyles.commentAuthor}>
+                  {item.authorName}
+                </Text>
                 <Text style={generalStyles.commentText}>{item.text}</Text>
               </View>
             )}
@@ -84,7 +86,10 @@ const PostDetail = ({ route, navigation }) => {
           onChangeText={setNewComment}
           placeholderTextColor="#999"
         />
-        <Pressable style={buttonStyles.addCommentButton} onPress={handleAddComment}>
+        <Pressable
+          style={buttonStyles.addCommentButton}
+          onPress={handleAddComment}
+        >
           <Text style={buttonStyles.addCommentButtonText}>Post</Text>
         </Pressable>
       </View>

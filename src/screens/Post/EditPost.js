@@ -7,10 +7,10 @@ import {
   Text,
   Alert,
 } from "react-native";
-import { updatePost } from "../Firebase/firebaseHelper";
-import { generalStyles } from "../theme/generalStyles";
-import { inputStyles } from "../theme/inputStyles";
-import { buttonStyles } from "../theme/buttonStyles";
+import { updatePost } from "../../Firebase/firebaseHelper";
+import { generalStyles } from "../../theme/generalStyles";
+import { inputStyles } from "../../theme/inputStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
 export default function EditPost({ route, navigation }) {
   const { post } = route.params;

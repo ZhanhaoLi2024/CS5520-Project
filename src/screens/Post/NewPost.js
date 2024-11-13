@@ -8,11 +8,11 @@ import {
   Alert,
   Image,
 } from "react-native";
-import { createPost } from "../Firebase/firebaseHelper";
-import { auth } from "../Firebase/firebaseSetup";
-import { generalStyles } from "../theme/generalStyles";
-import { inputStyles } from "../theme/inputStyles";
-import { buttonStyles } from "../theme/buttonStyles";
+import { createPost } from "../../Firebase/firebaseHelper";
+import { auth } from "../../Firebase/firebaseSetup";
+import { generalStyles } from "../../theme/generalStyles";
+import { inputStyles } from "../../theme/inputStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
 export default function NewPost({ navigation }) {
   const [title, setTitle] = useState("");
