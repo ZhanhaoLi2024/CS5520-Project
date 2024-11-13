@@ -79,7 +79,10 @@ export default function Profile({ navigation }) {
       const user = auth.currentUser;
       if (!user) return;
 
-      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        currentPassword
+      );
       await reauthenticateWithCredential(user, credential);
       await updatePassword(user, newPassword);
 
@@ -120,7 +123,9 @@ export default function Profile({ navigation }) {
               placeholder="Enter your name"
             />
           ) : (
-            <Text style={generalStyles.profileText}>{displayName || "Not set"}</Text>
+            <Text style={generalStyles.profileText}>
+              {displayName || "Not set"}
+            </Text>
           )}
         </View>
 

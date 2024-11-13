@@ -1,7 +1,7 @@
 import { Text, View, ScrollView, Pressable } from "react-native";
 import React, { useEffect } from "react";
-import { generalStyles } from "../theme/generalStyles";
-import { buttonStyles } from "../theme/buttonStyles";
+import { generalStyles } from "../../theme/generalStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
 export default function PlanDetail({ route, navigation }) {
   const { plan } = route.params;
@@ -33,7 +33,9 @@ export default function PlanDetail({ route, navigation }) {
         {/* Planned Date Section */}
         <View style={generalStyles.section}>
           <Text style={generalStyles.label}>Planned Date</Text>
-          <Text style={generalStyles.value}>{formatDate(plan.plannedDate)}</Text>
+          <Text style={generalStyles.value}>
+            {formatDate(plan.plannedDate)}
+          </Text>
         </View>
 
         {/* Cooking Steps Section */}

@@ -1,8 +1,8 @@
 import React from "react";
 import { Alert } from "react-native";
 import MealPlanForm from "../components/MealPlanForm";
-import { auth } from "../Firebase/firebaseSetup";
-import { createMealPlan } from "../Firebase/firebaseHelper";
+import { auth } from "../../Firebase/firebaseSetup";
+import { createMealPlan } from "../../Firebase/firebaseHelper";
 
 export default function MealPlanner({ navigation }) {
   const handleSubmit = async (formData) => {

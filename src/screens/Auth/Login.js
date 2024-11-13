@@ -1,17 +1,10 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  Alert,
-  Image,
-} from "react-native";
-import { auth } from "../Firebase/firebaseSetup";
+import { View, Text, TextInput, Pressable, Alert, Image } from "react-native";
+import { auth } from "../../Firebase/firebaseSetup";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { generalStyles } from "../theme/generalStyles";
-import { inputStyles } from "../theme/inputStyles";
-import { buttonStyles } from "../theme/buttonStyles";
+import { generalStyles } from "../../theme/generalStyles";
+import { inputStyles } from "../../theme/inputStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
 // Import the logo image
 import logo from "../../assets/Logo.png";
