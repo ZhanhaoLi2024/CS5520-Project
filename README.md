@@ -94,12 +94,19 @@ posts: {
   title: string,            // Post title
   description: string,      // Post content
   createdAt: timestamp,     // Creation timestamp
-  updatedAt: timestamp      // Last update timestamp
+  updatedAt: timestamp,     // Last update timestamp
+  likeCount: string         // Other user like
+  comments: {               // Subcollection
+    userId: string,         // Reference to comment author
+    text: string,           // Comment content
+    createdAt: timestamp,   // Comment creation time
 }
 CREATE:
 - Create new post
 - Implementation: NewPost.js -> handleSubmit()
 - Function: createPost() in firebaseHelper.js
+- Add a comment to a specific post
+- Give a like to a specific post
 
 READ:
 - Fetch all posts (Explorer tab)
@@ -108,13 +115,15 @@ READ:
 - Functions: getDocuments() with various conditions
 
 UPDATE:
-- Not implemented in iteration 1
-- Planned for future iterations
+- Update user's posts
+- Implementation: EditPost.js -> handleSubmit()
+- Functions: updatePost() in firebaseHelper.js
 
 DELETE:
 - Delete user's posts
 - Implementation: Explorer.js -> handleDeletePost()
 - Function: deletePost() in firebaseHelper.js
+- Delete like
 ```
 
 ### Pending Features for Next Iterations
