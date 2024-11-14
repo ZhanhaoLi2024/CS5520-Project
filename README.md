@@ -140,11 +140,24 @@ Implemented three main collections in Firestore:
 
 ## Team Members and Contributions
 
-### [Team Member 1 Name]
+### Zihao Li
 
-- Implemented authentication system
-- Created profile management
-- Set up Firebase configuration
+| Category                            | Feature                | Status | Description                                                                 |
+| ----------------------------------- | ---------------------- | ------ | ------------------------------------------------------------------------- |
+| **Authentication**                  |                        |        |                                                                           |
+|                                     | Authentication System  | ✅     | - Implemented Firebase authentication<br>- Email/password login & sign-up  |
+|                                     | Profile Management     | ✅     | - User profile display<br>- Profile editing functionality                  |
+| **Database Setup**                  |                        |        |                                                                           |
+|                                     | Firebase Configuration | ✅     | - Set up Firebase SDK and Firestore<br>- Configuration for secure access   |
+| **Posts**                           |                        |        |                                                                           |
+|                                     | Comments System        | ✅     | - Added comments to posts<br>- Real-time updates with Firestore            |
+|                                     | Likes System           | ✅     | - Implemented like/unlike functionality<br>- Updated post statistics       |
+| **Plan Management**                 |                        |        |                                                                           |
+|                                     | Plan Detail Screen     | ✅     | - Created detail view for meal plans<br>- Steps display with UI enhancements|
+|                                     | Plan Item Component    | ✅     | - Developed reusable components for displaying plans<br>- Delete functionality|
+| **UI/UX Enhancements**              |                        |        |                                                                           |
+|                                     | Global Styling         | ✅     | - Created reusable stylesheets<br>- Implemented theme for colors & fonts   |
+|                                     | Form Validation        | ✅     | - Enhanced form validation for inputs<br>- User feedback with alerts       |
 
 ### Zhanhao Li
 
