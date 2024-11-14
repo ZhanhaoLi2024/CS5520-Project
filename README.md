@@ -25,45 +25,97 @@ iCook is a mobile application designed to help international students connect th
 
 Implemented three main collections in Firestore:
 
-1. **users Collection**
+1. Users Collection
 
-   ```javascript
-   {
-     userId: string,
-     displayName: string,
-     email: string,
-     updatedAt: timestamp
-   }
-   ```
+```typescript
+users: {
+  userId: string,            // Auth UID as document ID
+  displayName: string,       // User's display name
+  email: string,            // User's email address
+  updatedAt: timestamp,     // Last profile update timestamp
+}
 
-2. **mealPlans Collection**
+CREATE:
+- Automatically created when user signs up
+- Implementation: Profile.js handles user document creation
 
-   ```javascript
-   {
-     userId: string,
-     dishName: string,
-     plannedDate: timestamp,
-     steps: array,
-     createdAt: timestamp
-   }
-   ```
+READ:
+- Fetch user profile data
+- Implementation: Profile.js getUserProfile()
 
-3. **posts Collection**
-   ```javascript
-   {
-     userId: string,
-     title: string,
-     description: string,
-     createdAt: timestamp
-   }
-   ```
+UPDATE:
+- Update display name and profile information
+- Implementation: Profile.js handleUpdateProfile()
 
-#### CRUD Operations
+DELETE:
+- Not implemented in iteration 1
+```
 
-- Create: Users can create new meal plans and posts
-- Read: Users can view meal plans and posts
-- Update: Users can edit meal plans and profile information
-- Delete: Users can delete meal plans and posts
+2. Meal Plans Collection
+
+```typescript
+mealPlans: {
+  id: string,               // Auto-generated document ID
+  userId: string,           // Reference to user who created the plan
+  dishName: string,         // Name of the dish
+  plannedDate: timestamp,   // When the meal is planned for
+  steps: string[],          // Array of cooking steps
+  createdAt: timestamp,     // Creation timestamp
+  updatedAt: timestamp,     // Last update timestamp
+}
+
+CREATE:
+- Create new meal plan
+- Implementation: MealPlanner.js -> createMealPlan()
+- Function: createDocument() in firebaseHelper.js
+
+READ:
+- Fetch user's meal plans
+- Implementation: Plan.js -> getUserMealPlans()
+- Function: getDocuments() with userId condition
+
+UPDATE:
+- Edit existing meal plan
+- Implementation: PlanEdit.js -> updateMealPlan()
+- Function: updateDocument() in firebaseHelper.js
+
+DELETE:
+- Delete meal plan
+- Implementation: Plan.js -> handleDeletePlan()
+- Function: deleteDocument() in firebaseHelper.js
+```
+
+3. Posts Collection
+
+```typescript
+posts: {
+  id: string,               // Auto-generated document ID
+  userId: string,           // Reference to user who created the post
+  title: string,            // Post title
+  description: string,      // Post content
+  createdAt: timestamp,     // Creation timestamp
+  updatedAt: timestamp      // Last update timestamp
+}
+CREATE:
+- Create new post
+- Implementation: NewPost.js -> handleSubmit()
+- Function: createPost() in firebaseHelper.js
+
+READ:
+- Fetch all posts (Explorer tab)
+- Fetch user's posts (My Posts tab)
+- Implementation: Explorer.js -> getAllPosts(), getUserPosts()
+- Functions: getDocuments() with various conditions
+
+UPDATE:
+- Not implemented in iteration 1
+- Planned for future iterations
+
+DELETE:
+- Delete user's posts
+- Implementation: Explorer.js -> handleDeletePost()
+- Function: deletePost() in firebaseHelper.js
+```
 
 ### Pending Features for Next Iterations
 
@@ -154,13 +206,13 @@ Implemented three main collections in Firestore:
 |                        | All Post System        | ✅     | - Implemented like/unlike and comments functionality in all post system     |
 |                        | My Post System         | ✅     | - Implemented like/unlike and comments functionality in my post system      |
 | **Plan**               |                        |        |                                                                             |
-|                        | Plan Detail UI         | ✅     | - Create and enhance the display UI of the interface                        |
-|                        | Plan Item Component UI | ✅     | - Create and enhance the display UI of the interface                        |
+|                        | Plan Detail UI         | ✅     | - Enhance the display UI of the interface                                   |
+|                        | Plan Item Component UI | ✅     | - Enhance the display UI of the interface                                   |
 | **UI/UX Enhancements** |                        |        |                                                                             |
 |                        | Global Styling         | ✅     | - Created reusable stylesheets<br>- Implemented theme for colors & fonts    |
 |                        | Form Validation        | ✅     | - Enhanced form validation for inputs<br>- User feedback with alerts        |
 |                        | Icon                   | ✅     | - Add icon and theme to app                                                 |
-|                        | Logo                   | ✅     | - Draw the theme logo of our app                                            |
+|                        | Logo                   | ✅     | - Create the theme logo of our app                                          |
 
 ### Zhanhao Li
 
