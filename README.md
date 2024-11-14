@@ -142,22 +142,25 @@ Implemented three main collections in Firestore:
 
 ### Zihao Li
 
-| Category                            | Feature                | Status | Description                                                                 |
-| ----------------------------------- | ---------------------- | ------ | ------------------------------------------------------------------------- |
-| **Authentication**                  |                        |        |                                                                           |
-|                                     | Authentication System  | ✅     | - Implemented Firebase authentication<br>- Email/password login & sign-up  |
-|                                     | Profile Management     | ✅     | - User profile display<br>- Profile editing functionality                  |
-| **Database Setup**                  |                        |        |                                                                           |
-|                                     | Firebase Configuration | ✅     | - Set up Firebase SDK and Firestore<br>- Configuration for secure access   |
-| **Posts**                           |                        |        |                                                                           |
-|                                     | Comments System        | ✅     | - Added comments to posts<br>- Real-time updates with Firestore            |
-|                                     | Likes System           | ✅     | - Implemented like/unlike functionality<br>- Updated post statistics       |
-| **Plan Management**                 |                        |        |                                                                           |
-|                                     | Plan Detail Screen     | ✅     | - Created detail view for meal plans<br>- Steps display with UI enhancements|
-|                                     | Plan Item Component    | ✅     | - Developed reusable components for displaying plans<br>- Delete functionality|
-| **UI/UX Enhancements**              |                        |        |                                                                           |
-|                                     | Global Styling         | ✅     | - Created reusable stylesheets<br>- Implemented theme for colors & fonts   |
-|                                     | Form Validation        | ✅     | - Enhanced form validation for inputs<br>- User feedback with alerts       |
+| Category               | Feature                | Status | Description                                                                 |
+| ---------------------- | ---------------------- | ------ | --------------------------------------------------------------------------- |
+| **Authentication**     |                        |        |                                                                             |
+|                        | Authentication System  | ✅     | - Setting up authentication on firebase<br>- Email/password login & sign-up |
+| **Database**           |                        |        |                                                                             |
+|                        | Firebase Configuration | ✅     | - Set up postStatistics collection<br>- Configuration for secure access     |
+| **Posts**              |                        |        |                                                                             |
+|                        | Comments System        | ✅     | - Added comments to posts<br>- Real-time updates with Firestore             |
+|                        | Likes System           | ✅     | - Implemented like/unlike functionality<br>- Updated post statistics        |
+|                        | All Post System        | ✅     | - Implemented like/unlike and comments functionality in all post system     |
+|                        | My Post System         | ✅     | - Implemented like/unlike and comments functionality in my post system      |
+| **Plan**               |                        |        |                                                                             |
+|                        | Plan Detail UI         | ✅     | - Create and enhance the display UI of the interface                        |
+|                        | Plan Item Component UI | ✅     | - Create and enhance the display UI of the interface                        |
+| **UI/UX Enhancements** |                        |        |                                                                             |
+|                        | Global Styling         | ✅     | - Created reusable stylesheets<br>- Implemented theme for colors & fonts    |
+|                        | Form Validation        | ✅     | - Enhanced form validation for inputs<br>- User feedback with alerts        |
+|                        | Icon                   | ✅     | - Add icon and theme to app                                                 |
+|                        | Logo                   | ✅     | - Draw the theme logo of our app                                            |
 
 ### Zhanhao Li
 
