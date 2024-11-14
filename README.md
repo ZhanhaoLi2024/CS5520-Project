@@ -25,7 +25,7 @@ iCook is a mobile application designed to help international students connect th
 
 Implemented three main collections in Firestore:
 
-1. Users Collection
+1. Users Collection (Iteration)
 
 ```typescript
 users: {
