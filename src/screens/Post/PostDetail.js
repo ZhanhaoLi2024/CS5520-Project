@@ -96,7 +96,7 @@ const PostDetail = ({ route, navigation }) => {
         <View style={generalStyles.imageContainer}>
           <Image
             source={{ uri: imageUrl }}
-            style={generalStyles.image}
+            style={generalStyles.imageUri}
             resizeMode="cover"
           />
         </View>
