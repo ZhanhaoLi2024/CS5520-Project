@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "newArchitectureEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -16,6 +17,13 @@
         "expo-image-picker",
         {
           "cameraPermission": "The app needs access to your camera to take photos for your posts."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app needs access to your photos to let you share them with your friends.",
+          "cameraPermission": "The app needs access to your camera to let you take photos to share."
         }
       ]
     ],

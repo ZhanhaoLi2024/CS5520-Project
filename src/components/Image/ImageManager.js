@@ -31,9 +31,9 @@ const ImageManager = ({ onImageTaken }) => {
 
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
-        aspect: [1, 1], // 改为1:1正方形
+        aspect: [1, 1],
         quality: 0.5,
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ImagePicker.MediaType.Images,
       });
 
       if (!result.canceled) {

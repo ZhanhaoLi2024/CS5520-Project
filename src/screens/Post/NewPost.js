@@ -7,15 +7,14 @@ import {
   Text,
   Alert,
 } from "react-native";
-import { createPost } from "../../Firebase/firebaseHelper";
-import { auth } from "../../Firebase/firebaseSetup";
-import { storage } from "../../Firebase/firebaseSetup";
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { createPost, uploadImage } from "../../Firebase/firebaseHelper";
+import { auth, storage } from "../../Firebase/firebaseSetup";
 import LocationPicker from "../../components/Location/LocationPicker";
 import ImageManager from "../../components/Image/ImageManager";
 import { generalStyles } from "../../theme/generalStyles";
 import { inputStyles } from "../../theme/inputStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import { ref, uploadBytesResumable } from "firebase/storage";
 
 export default function NewPost({ navigation, route }) {
   const [title, setTitle] = useState("");
@@ -33,6 +32,7 @@ export default function NewPost({ navigation, route }) {
   const handleLocationPicked = (pickedLocation) => {
     setLocation(pickedLocation);
   };
+
   const handleImageTaken = (uri) => {
     setImageUri(uri);
   };
@@ -66,6 +66,7 @@ export default function NewPost({ navigation, route }) {
 
     try {
       setSubmitting(true);
+
       const locationData = location
         ? {
             coords: {
@@ -77,7 +78,6 @@ export default function NewPost({ navigation, route }) {
         : null;
 
       let imageUrl = null;
-
       if (imageUri) {
         imageUrl = await uploadImage(imageUri);
       }
@@ -134,8 +134,17 @@ export default function NewPost({ navigation, route }) {
 
         <LocationPicker onLocationPicked={handleLocationPicked} />
 
-        <Pressable style={buttonStyles.submitButton} onPress={handleSubmit}>
-          <Text style={buttonStyles.submitButtonText}>Create Post</Text>
+        <Pressable
+          style={[
+            buttonStyles.submitButton,
+            submitting && buttonStyles.buttonDisabled,
+          ]}
+          onPress={handleSubmit}
+          disabled={submitting}
+        >
+          <Text style={buttonStyles.submitButtonText}>
+            {submitting ? "Creating..." : "Create Post"}
+          </Text>
         </Pressable>
       </View>
     </ScrollView>

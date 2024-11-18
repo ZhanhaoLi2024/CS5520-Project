@@ -15,6 +15,8 @@ import {
   arrayRemove,
 } from "firebase/firestore";
 import { db } from "./firebaseSetup";
+import { storage } from "./firebaseSetup";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 // Generic CRUD Operations
 // ----------------------
@@ -415,4 +417,27 @@ export const getAllPostsWithStats = async () => {
     })
   );
   return posts;
+};
+
+// Image Upload Operations
+export const uploadImage = async (uri) => {
+  try {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    const filename = uri.substring(uri.lastIndexOf("/") + 1);
+    const storageRef = ref(storage, `post-images/${filename}`);
+
+    const uploadTask = await uploadBytesResumable(storageRef, blob);
+    const downloadUrl = await getDownloadURL(uploadTask.ref);
+
+    return {
+      success: true,
+      url: downloadUrl,
+      path: uploadTask.ref.fullPath,
+    };
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    throw error;
+  }
 };
