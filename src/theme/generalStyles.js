@@ -378,6 +378,7 @@ export const generalStyles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
     borderRadius: 8,
     overflow: "hidden",
+    position: "relative",
   },
 
   mapPreview: {
@@ -393,5 +394,29 @@ export const generalStyles = StyleSheet.create({
   errorText: {
     color: "#FF6B6B",
     textAlign: "center",
+  },
+
+  locationPreview: {
+    width: "100%",
+    height: "100%",
+  },
+
+  addressText: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    color: "white",
+    padding: 8,
+    fontSize: 12,
+    textAlign: "center",
+  },
+
+  mapButtons: {
+    padding: 16,
+    backgroundColor: "white",
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
   },
 });
