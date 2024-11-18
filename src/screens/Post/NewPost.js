@@ -7,15 +7,14 @@ import {
   Text,
   Alert,
 } from "react-native";
-import { createPost } from "../../Firebase/firebaseHelper";
-import { auth } from "../../Firebase/firebaseSetup";
-import { storage } from "../../Firebase/firebaseSetup";
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { createPost, uploadPostImage } from "../../Firebase/firebaseHelper";
+import { auth, storage } from "../../Firebase/firebaseSetup";
 import LocationPicker from "../../components/Location/LocationPicker";
 import ImageManager from "../../components/Image/ImageManager";
 import { generalStyles } from "../../theme/generalStyles";
 import { inputStyles } from "../../theme/inputStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import { ref, uploadBytesResumable } from "firebase/storage";
 
 export default function NewPost({ navigation, route }) {
   const [title, setTitle] = useState("");
@@ -33,24 +32,9 @@ export default function NewPost({ navigation, route }) {
   const handleLocationPicked = (pickedLocation) => {
     setLocation(pickedLocation);
   };
+
   const handleImageTaken = (uri) => {
     setImageUri(uri);
-  };
-
-  const uploadImage = async (uri) => {
-    try {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-
-      const imageName = uri.substring(uri.lastIndexOf("/") + 1);
-      const imageRef = ref(storage, `images/${imageName}`);
-      const uploadResult = await uploadBytesResumable(imageRef, blob);
-
-      return uploadResult.metadata.fullPath;
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      throw error;
-    }
   };
 
   const handleSubmit = async () => {
@@ -66,19 +50,32 @@ export default function NewPost({ navigation, route }) {
 
     try {
       setSubmitting(true);
-      let imageUrl = null;
 
+      const locationData = location
+        ? {
+            coords: {
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            },
+            address: location.address || null,
+          }
+        : null;
+
+      let imageUrl = null;
       if (imageUri) {
-        imageUrl = await uploadImage(imageUri);
+        imageUrl = await uploadPostImage(imageUri);
       }
 
       const postData = {
         title: title.trim(),
         description: description.trim(),
         userId: auth.currentUser.uid,
-        location: location,
+        location: locationData,
         imageUri: imageUrl,
         createdAt: new Date().toISOString(),
+        likesCount: 0,
+        likedBy: [],
+        commentsCount: 0,
       };
 
       const result = await createPost(postData);
@@ -121,8 +118,17 @@ export default function NewPost({ navigation, route }) {
 
         <LocationPicker onLocationPicked={handleLocationPicked} />
 
-        <Pressable style={buttonStyles.submitButton} onPress={handleSubmit}>
-          <Text style={buttonStyles.submitButtonText}>Create Post</Text>
+        <Pressable
+          style={[
+            buttonStyles.submitButton,
+            submitting && buttonStyles.buttonDisabled,
+          ]}
+          onPress={handleSubmit}
+          disabled={submitting}
+        >
+          <Text style={buttonStyles.submitButtonText}>
+            {submitting ? "Creating..." : "Create Post"}
+          </Text>
         </Pressable>
       </View>
     </ScrollView>

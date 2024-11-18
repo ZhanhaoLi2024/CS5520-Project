@@ -30,7 +30,7 @@ Implemented three main collections in Firestore:
 ```typescript
 users: {
   userId: string,            // Auth UID as document ID
-  displayName: string,       // User's display name
+  username: string,       // User's name
   email: string,            // User's email address
   updatedAt: timestamp,     // Last profile update timestamp
 }

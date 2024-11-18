@@ -15,6 +15,8 @@ import {
   arrayRemove,
 } from "firebase/firestore";
 import { db } from "./firebaseSetup";
+import { storage } from "./firebaseSetup";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 // Generic CRUD Operations
 // ----------------------
@@ -164,12 +166,15 @@ export const getAllPosts = async () => {
 export const getUserPosts = async (userId) => {
   try {
     const postsRef = collection(db, "posts");
+    console.log("User ID:", userId);
+    console.log("Posts Ref:", postsRef);
     const primaryQuery = query(
       postsRef,
       where("userId", "==", userId),
       orderBy("createdAt", "desc")
     );
     const fallbackQuery = query(postsRef, where("userId", "==", userId));
+    console.log("Primary Query:", primaryQuery);
     return await executeQueryWithFallback(primaryQuery, fallbackQuery);
   } catch (error) {
     console.error("Error fetching user posts:", error);
@@ -297,15 +302,47 @@ export const getComments = async (postId) => {
 
 // User Profile Operations
 // --------------------
-export const updateUserProfile = async (userId, profileData) => {
-  return await updateDocument("users", userId, profileData);
+export const createUserInFirestore = async (userId, userData) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await setDoc(userRef, {
+      userId,
+      ...userData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error creating user document:", error);
+    throw error;
+  }
 };
 
 export const getUserProfile = async (userId) => {
-  const documents = await getDocuments("users", [
-    where("userId", "==", userId),
-  ]);
-  return documents[0];
+  try {
+    const userDoc = await getDoc(doc(db, "users", userId));
+    if (userDoc.exists()) {
+      return { success: true, data: userDoc.data() };
+    } else {
+      return { success: false, error: "User not found" };
+    }
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    throw error;
+  }
+};
+
+export const updateUserProfile = async (userId, updateData) => {
+  try {
+    await updateDoc(doc(db, "users", userId), {
+      ...updateData,
+      updatedAt: new Date().toISOString(),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
 };
 
 // Real-time Subscription Operations
@@ -383,4 +420,21 @@ export const getAllPostsWithStats = async () => {
     })
   );
   return posts;
+};
+
+// Image Upload Operations
+export const uploadPostImage = async (uri) => {
+  try {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    const imageName = uri.substring(uri.lastIndexOf("/") + 1);
+    const imageRef = ref(storage, `images/${imageName}`);
+    const uploadResult = await uploadBytesResumable(imageRef, blob);
+
+    return uploadResult.metadata.fullPath;
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    throw error;
+  }
 };

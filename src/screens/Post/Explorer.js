@@ -63,6 +63,7 @@ export default function Explorer({ navigation }) {
 
   const handlePostPress = (post) => {
     navigation.navigate("PostDetail", { post });
+    console.log("Post pressed:", post);
   };
 
   const handleLike = async (postId, increment) => {

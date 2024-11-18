@@ -7,15 +7,18 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
-import { auth } from "../../Firebase/firebaseSetup";
+import { auth, db } from "../../Firebase/firebaseSetup";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { generalStyles } from "../../theme/generalStyles";
 import { inputStyles } from "../../theme/inputStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import { createUserInFirestore } from "../../Firebase/firebaseHelper";
 
 export default function Signup({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState(""); // 新增用户名状态
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState({
     length: false,
@@ -45,7 +48,7 @@ export default function Signup({ navigation }) {
   };
 
   const handleSignup = async () => {
-    if (!email || !password || !confirmPassword) {
+    if (!email || !password || !confirmPassword || !username) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
@@ -64,10 +67,18 @@ export default function Signup({ navigation }) {
         email,
         password
       );
-      console.log("Account created for:", userCredential.user.email);
+
+      const result = await createUserInFirestore(userCredential.user.uid, {
+        username,
+        email,
+      });
+
+      if (result.success) {
+        console.log("Account created successfully for:", email);
+      }
     } catch (error) {
-      console.log(error);
-      Alert.alert("Error", error.message);
+      console.error("Signup error:", error);
+      Alert.alert("Error", error.message || "An error occurred during signup");
     }
   };
 
@@ -83,6 +94,14 @@ export default function Signup({ navigation }) {
     <View style={generalStyles.signupContainer}>
       <ScrollView>
         <Text style={generalStyles.signupTitle}>Join iCook Community</Text>
+
+        <TextInput
+          style={inputStyles.authInput}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+        />
 
         <TextInput
           style={inputStyles.authInput}

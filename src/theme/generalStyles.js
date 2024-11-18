@@ -440,4 +440,20 @@ export const generalStyles = StyleSheet.create({
     height: "100%",
     borderRadius: 6,
   },
+  imageContainer: {
+    alignItems: "center",
+    width: "10%",
+    height: "10%",
+    marginVertical: 10,
+  },
+  imageUri: {
+    width: "100%",
+    aspectRatio: 1,
+    marginBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    borderRadius: 6,
+    overflow: "hidden",
+  },
 });
