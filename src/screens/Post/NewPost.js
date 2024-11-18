@@ -7,7 +7,7 @@ import {
   Text,
   Alert,
 } from "react-native";
-import { createPost, uploadImage } from "../../Firebase/firebaseHelper";
+import { createPost, uploadPostImage } from "../../Firebase/firebaseHelper";
 import { auth, storage } from "../../Firebase/firebaseSetup";
 import LocationPicker from "../../components/Location/LocationPicker";
 import ImageManager from "../../components/Image/ImageManager";
@@ -37,22 +37,6 @@ export default function NewPost({ navigation, route }) {
     setImageUri(uri);
   };
 
-  const uploadImage = async (uri) => {
-    try {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-
-      const imageName = uri.substring(uri.lastIndexOf("/") + 1);
-      const imageRef = ref(storage, `images/${imageName}`);
-      const uploadResult = await uploadBytesResumable(imageRef, blob);
-
-      return uploadResult.metadata.fullPath;
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      throw error;
-    }
-  };
-
   const handleSubmit = async () => {
     if (!title.trim()) {
       Alert.alert("Error", "Please enter a title");
@@ -79,7 +63,7 @@ export default function NewPost({ navigation, route }) {
 
       let imageUrl = null;
       if (imageUri) {
-        imageUrl = await uploadImage(imageUri);
+        imageUrl = await uploadPostImage(imageUri);
       }
 
       const postData = {

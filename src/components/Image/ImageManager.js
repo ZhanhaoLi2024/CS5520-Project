@@ -33,7 +33,6 @@ const ImageManager = ({ onImageTaken }) => {
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.5,
-        mediaTypes: ImagePicker.MediaType.Images,
       });
 
       if (!result.canceled) {

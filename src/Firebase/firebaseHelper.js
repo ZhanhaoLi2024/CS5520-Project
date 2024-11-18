@@ -420,22 +420,16 @@ export const getAllPostsWithStats = async () => {
 };
 
 // Image Upload Operations
-export const uploadImage = async (uri) => {
+export const uploadPostImage = async (uri) => {
   try {
     const response = await fetch(uri);
     const blob = await response.blob();
 
-    const filename = uri.substring(uri.lastIndexOf("/") + 1);
-    const storageRef = ref(storage, `post-images/${filename}`);
+    const imageName = uri.substring(uri.lastIndexOf("/") + 1);
+    const imageRef = ref(storage, `images/${imageName}`);
+    const uploadResult = await uploadBytesResumable(imageRef, blob);
 
-    const uploadTask = await uploadBytesResumable(storageRef, blob);
-    const downloadUrl = await getDownloadURL(uploadTask.ref);
-
-    return {
-      success: true,
-      url: downloadUrl,
-      path: uploadTask.ref.fullPath,
-    };
+    return uploadResult.metadata.fullPath;
   } catch (error) {
     console.error("Error uploading image:", error);
     throw error;
