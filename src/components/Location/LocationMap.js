@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View } from "react-native";
-import MapView from "react-native-maps";
+import { View, Pressable, Text } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
-export default function LocationMap() {
+export default function LocationMap({ navigation }) {
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const initialRegion = {
@@ -18,13 +18,37 @@ export default function LocationMap() {
     setSelectedLocation({ latitude: lat, longitude: lng });
   };
 
+  const savePickedLocationHandler = () => {
+    if (!selectedLocation) {
+      return;
+    }
+    navigation.navigate("NewPost", { pickedLocation: selectedLocation });
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <MapView
         style={{ flex: 1 }}
         initialRegion={initialRegion}
         onPress={selectLocationHandler}
-      />
+      >
+        {selectedLocation && (
+          <Marker coordinate={selectedLocation} title="Picked Location" />
+        )}
+      </MapView>
+      <View style={{ padding: 10 }}>
+        <Pressable
+          style={{
+            backgroundColor: selectedLocation ? "blue" : "gray",
+            padding: 10,
+            alignItems: "center",
+          }}
+          onPress={savePickedLocationHandler}
+          disabled={!selectedLocation}
+        >
+          <Text style={{ color: "white" }}>Save Location</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
