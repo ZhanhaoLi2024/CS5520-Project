@@ -16,7 +16,8 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebaseSetup";
 
-// Generic CRUD operations
+// Generic CRUD Operations
+// ----------------------
 export const createDocument = async (collectionName, data) => {
   try {
     const docRef = await addDoc(collection(db, collectionName), {
@@ -33,11 +34,9 @@ export const createDocument = async (collectionName, data) => {
 export const getDocuments = async (collectionName, conditions = []) => {
   try {
     let q = collection(db, collectionName);
-
     if (conditions.length > 0) {
       q = query(q, ...conditions);
     }
-
     const querySnapshot = await getDocs(q);
     const documents = [];
     querySnapshot.forEach((doc) => {
@@ -77,44 +76,8 @@ export const deleteDocument = async (collectionName, documentId) => {
   }
 };
 
-// Meal Plans specific operations
-export const createMealPlan = async (mealPlanData) => {
-  return await createDocument("mealPlans", mealPlanData);
-};
-
-export const getUserMealPlans = async (userId) => {
-  try {
-    const conditions = [where("userId", "==", userId)];
-    const documents = await getDocuments("mealPlans", conditions);
-    return documents.sort(
-      (a, b) => new Date(b.plannedDate) - new Date(a.plannedDate)
-    );
-  } catch (error) {
-    console.error("Error fetching meal plans:", error);
-    throw error;
-  }
-};
-
-export const updateMealPlan = async (mealPlanId, updateData) => {
-  return await updateDocument("mealPlans", mealPlanId, updateData);
-};
-
-export const deleteMealPlan = async (mealPlanId) => {
-  return await deleteDocument("mealPlans", mealPlanId);
-};
-
-// User Profiles specific operations
-export const updateUserProfile = async (userId, profileData) => {
-  return await updateDocument("users", userId, profileData);
-};
-
-export const getUserProfile = async (userId) => {
-  const documents = await getDocuments("users", [
-    where("userId", "==", userId),
-  ]);
-  return documents[0];
-};
-
+// Query Helper
+// -----------
 const executeQueryWithFallback = async (primaryQuery, fallbackQuery) => {
   try {
     const querySnapshot = await getDocs(primaryQuery);
@@ -145,12 +108,52 @@ const executeQueryWithFallback = async (primaryQuery, fallbackQuery) => {
   }
 };
 
+// Meal Plan Operations
+// ------------------
+export const createMealPlan = async (mealPlanData) => {
+  return await createDocument("mealPlans", mealPlanData);
+};
+
+export const getUserMealPlans = async (userId) => {
+  try {
+    const conditions = [where("userId", "==", userId)];
+    const documents = await getDocuments("mealPlans", conditions);
+    return documents.sort(
+      (a, b) => new Date(b.plannedDate) - new Date(a.plannedDate)
+    );
+  } catch (error) {
+    console.error("Error fetching meal plans:", error);
+    throw error;
+  }
+};
+
+export const updateMealPlan = async (mealPlanId, updateData) => {
+  return await updateDocument("mealPlans", mealPlanId, updateData);
+};
+
+export const deleteMealPlan = async (mealPlanId) => {
+  return await deleteDocument("mealPlans", mealPlanId);
+};
+
+// Post Operations
+// -------------
+export const createPost = async (postData) => {
+  try {
+    if (!postData.userId) throw new Error("userId is required");
+    if (!postData.title) throw new Error("title is required");
+
+    return await createDocument("posts", postData);
+  } catch (error) {
+    console.error("Error creating post:", error);
+    throw error;
+  }
+};
+
 export const getAllPosts = async () => {
   try {
     const postsRef = collection(db, "posts");
     const primaryQuery = query(postsRef, orderBy("createdAt", "desc"));
     const fallbackQuery = query(postsRef);
-
     return await executeQueryWithFallback(primaryQuery, fallbackQuery);
   } catch (error) {
     console.error("Error fetching all posts:", error);
@@ -161,15 +164,12 @@ export const getAllPosts = async () => {
 export const getUserPosts = async (userId) => {
   try {
     const postsRef = collection(db, "posts");
-
-    // Define the primary and fallback queries
     const primaryQuery = query(
       postsRef,
       where("userId", "==", userId),
       orderBy("createdAt", "desc")
     );
     const fallbackQuery = query(postsRef, where("userId", "==", userId));
-
     return await executeQueryWithFallback(primaryQuery, fallbackQuery);
   } catch (error) {
     console.error("Error fetching user posts:", error);
@@ -177,60 +177,143 @@ export const getUserPosts = async (userId) => {
   }
 };
 
-
-export const createPost = async (postData) => {
-  try {
-    if (!postData.userId) {
-      throw new Error("userId is required");
-    }
-    if (!postData.title) {
-      throw new Error("title is required");
-    }
-
-    const docRef = await addDoc(collection(db, "posts"), {
-      ...postData,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-
-    return { success: true, id: docRef.id };
-  } catch (error) {
-    console.error("Error creating post:", error);
-    throw error;
-  }
-};
-
 export const updatePost = async (postId, updateData) => {
-  try {
-    const docRef = doc(db, "posts", postId);
-    const updates = {
-      ...updateData,
-      updatedAt: new Date().toISOString(),
-    };
-    await updateDoc(docRef, updates);
-    return { success: true };
-  } catch (error) {
-    console.error("Error updating post:", error);
-    throw error;
-  }
+  return await updateDocument("posts", postId, updateData);
 };
 
 export const deletePost = async (postId) => {
+  return await deleteDocument("posts", postId);
+};
+
+// Post Statistics & Interaction Operations
+// ------------------------------------
+export const toggleLikePost = async (postId, userId) => {
   try {
-    await deleteDoc(doc(db, "posts", postId));
-    return { success: true };
+    const postDocRef = doc(db, "posts", postId);
+    const postDocSnap = await getDoc(postDocRef);
+
+    if (postDocSnap.exists()) {
+      const postData = postDocSnap.data();
+      const alreadyLiked = postData.likedBy?.includes(userId);
+      let updatedLikesCount = postData.likesCount || 0;
+
+      if (alreadyLiked) {
+        await updateDoc(postDocRef, {
+          likedBy: arrayRemove(userId),
+          likesCount: updatedLikesCount - 1,
+        });
+        return { liked: false, likesCount: updatedLikesCount - 1 };
+      } else {
+        await updateDoc(postDocRef, {
+          likedBy: arrayUnion(userId),
+          likesCount: updatedLikesCount + 1,
+        });
+        return { liked: true, likesCount: updatedLikesCount + 1 };
+      }
+    }
   } catch (error) {
-    console.error("Error deleting post:", error);
+    console.error("Error toggling like:", error);
     throw error;
   }
 };
 
+export const hasUserLikedPost = async (postId, userId) => {
+  try {
+    const postDocRef = doc(db, "posts", postId);
+    const postDocSnap = await getDoc(postDocRef);
+    if (postDocSnap.exists()) {
+      const likedBy = postDocSnap.data().likedBy || [];
+      return likedBy.includes(userId);
+    }
+    return false;
+  } catch (error) {
+    console.error("Error checking if user liked the post:", error);
+    return false;
+  }
+};
+
+export const getPostStatistics = async (postId) => {
+  try {
+    const statsRef = doc(db, "postStatistics", postId);
+    const statsSnap = await getDoc(statsRef);
+    if (statsSnap.exists()) {
+      return statsSnap.data();
+    }
+    return { likesCount: 0, commentsCount: 0 };
+  } catch (error) {
+    console.error("Error fetching post statistics:", error);
+    throw error;
+  }
+};
+
+export const updatePostStatistics = async (postId, field, increment) => {
+  try {
+    const statsRef = doc(db, "postStatistics", postId);
+    const statsSnap = await getDoc(statsRef);
+    if (statsSnap.exists()) {
+      const currentValue = statsSnap.data()[field] || 0;
+      await updateDoc(statsRef, { [field]: currentValue + increment });
+    } else {
+      await setDoc(statsRef, { [field]: increment });
+    }
+  } catch (error) {
+    console.error("Error updating post statistics:", error);
+    throw error;
+  }
+};
+
+// Comment Operations
+// ---------------
+export const addComment = async (postId, userId, text) => {
+  try {
+    const commentData = {
+      userId,
+      text,
+      createdAt: new Date().toISOString(),
+    };
+    await addDoc(collection(db, `posts/${postId}/comments`), commentData);
+    await updatePostStatistics(postId, "commentsCount", 1);
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    throw error;
+  }
+};
+
+export const getComments = async (postId) => {
+  try {
+    const commentsRef = collection(db, `posts/${postId}/comments`);
+    const commentsQuery = query(commentsRef, orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(commentsQuery);
+    const comments = [];
+    querySnapshot.forEach((doc) => {
+      comments.push({ id: doc.id, ...doc.data() });
+    });
+    return comments;
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    throw error;
+  }
+};
+
+// User Profile Operations
+// --------------------
+export const updateUserProfile = async (userId, profileData) => {
+  return await updateDocument("users", userId, profileData);
+};
+
+export const getUserProfile = async (userId) => {
+  const documents = await getDocuments("users", [
+    where("userId", "==", userId),
+  ]);
+  return documents[0];
+};
+
+// Real-time Subscription Operations
+// -----------------------------
 export const subscribeToAllPosts = (onPostsUpdate, onError) => {
   try {
     const postsRef = collection(db, "posts");
     const q = query(postsRef, orderBy("createdAt", "desc"));
-
-    // Return the unsubscribe function
     return onSnapshot(
       q,
       (snapshot) => {
@@ -262,8 +345,6 @@ export const subscribeToUserPosts = (userId, onPostsUpdate, onError) => {
       where("userId", "==", userId),
       orderBy("createdAt", "desc")
     );
-
-    // Return the unsubscribe function
     return onSnapshot(
       q,
       (snapshot) => {
@@ -287,12 +368,11 @@ export const subscribeToUserPosts = (userId, onPostsUpdate, onError) => {
   }
 };
 
-
-
-// Fetch all posts along with their statistics
 export const getAllPostsWithStats = async () => {
   const postsRef = collection(db, "posts");
-  const postsSnapshot = await getDocs(query(postsRef, orderBy("createdAt", "desc")));
+  const postsSnapshot = await getDocs(
+    query(postsRef, orderBy("createdAt", "desc"))
+  );
 
   const posts = await Promise.all(
     postsSnapshot.docs.map(async (postDoc) => {
@@ -303,122 +383,4 @@ export const getAllPostsWithStats = async () => {
     })
   );
   return posts;
-};
-
-// Function to toggle like for a post
-// Toggle like for a post and update both posts and postStatistics collections
-export const toggleLikePost = async (postId, userId) => {
-  try {
-    const postDocRef = doc(db, "posts", postId);
-    const postDocSnap = await getDoc(postDocRef);
-
-    if (postDocSnap.exists()) {
-      const postData = postDocSnap.data();
-      const alreadyLiked = postData.likedBy?.includes(userId);
-      let updatedLikesCount = postData.likesCount || 0;
-
-      if (alreadyLiked) {
-        // Unlike the post
-        await updateDoc(postDocRef, {
-          likedBy: arrayRemove(userId),
-          likesCount: updatedLikesCount - 1,
-        });
-        return { liked: false, likesCount: updatedLikesCount - 1 };
-      } else {
-        // Like the post
-        await updateDoc(postDocRef, {
-          likedBy: arrayUnion(userId),
-          likesCount: updatedLikesCount + 1,
-        });
-        return { liked: true, likesCount: updatedLikesCount + 1 };
-      }
-    }
-  } catch (error) {
-    console.error("Error toggling like:", error);
-    throw error;
-  }
-};
-
-// Check if a user has already liked a specific post
-export const hasUserLikedPost = async (postId, userId) => {
-  try {
-    const postDocRef = doc(db, "posts", postId);
-    const postDocSnap = await getDoc(postDocRef);
-    if (postDocSnap.exists()) {
-      const likedBy = postDocSnap.data().likedBy || [];
-      return likedBy.includes(userId);
-    }
-    return false;
-  } catch (error) {
-    console.error("Error checking if user liked the post:", error);
-    return false;
-  }
-};
-
-// Function to add a comment to a post and update comment count
-export const addComment = async (postId, userId, text) => {
-  try {
-    const commentData = {
-      userId,
-      text,
-      createdAt: new Date().toISOString(),
-    };
-    await addDoc(collection(db, `posts/${postId}/comments`), commentData);
-    await updatePostStatistics(postId, "commentsCount", 1);
-  } catch (error) {
-    console.error("Error adding comment:", error);
-    throw error;
-  }
-};
-
-// Function to get comments for a specific post
-export const getComments = async (postId) => {
-  try {
-    const commentsRef = collection(db, `posts/${postId}/comments`);
-    const commentsQuery = query(commentsRef, orderBy("createdAt", "desc"));
-    const querySnapshot = await getDocs(commentsQuery);
-
-    const comments = [];
-    querySnapshot.forEach((doc) => {
-      comments.push({ id: doc.id, ...doc.data() });
-    });
-    return comments;
-  } catch (error) {
-    console.error("Error fetching comments:", error);
-    throw error;
-  }
-};
-
-// Function to update comment count in postStatistics collection
-export const updatePostStatistics = async (postId, field, increment) => {
-  try {
-    const statsRef = doc(db, "postStatistics", postId);
-    const statsSnap = await getDoc(statsRef);
-
-    if (statsSnap.exists()) {
-      const currentValue = statsSnap.data()[field] || 0;
-      await updateDoc(statsRef, { [field]: currentValue + increment });
-    } else {
-      await setDoc(statsRef, { [field]: increment });
-    }
-  } catch (error) {
-    console.error("Error updating post statistics:", error);
-    throw error;
-  }
-};
-
-// Get post statistics (likes and comments count)
-export const getPostStatistics = async (postId) => {
-  try {
-    const statsRef = doc(db, "postStatistics", postId);
-    const statsSnap = await getDoc(statsRef);
-
-    if (statsSnap.exists()) {
-      return statsSnap.data();
-    }
-    return { likesCount: 0, commentsCount: 0 };
-  } catch (error) {
-    console.error("Error fetching post statistics:", error);
-    throw error;
-  }
 };
