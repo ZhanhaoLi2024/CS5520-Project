@@ -172,4 +172,22 @@ export const buttonStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+
+  buttonPressed: {
+    opacity: 0.7,
+  },
+
+  locationButton: {
+    backgroundColor: "#FF6B6B",
+    padding: 12,
+    borderRadius: 8,
+    width: "100%",
+    alignItems: "center",
+  },
+
+  locationButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
 });
