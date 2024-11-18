@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { View, Alert, Pressable, Text } from "react-native";
+import React, { useState, useCallback } from "react";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { auth } from "../../Firebase/firebaseSetup";
 import {
@@ -10,80 +9,42 @@ import {
   updatePostStatistics,
 } from "../../Firebase/firebaseHelper";
 import PostList from "../../components/Post/PostList";
-import { AntDesign } from "@expo/vector-icons";
 
-const Tab = createMaterialTopTabNavigator();
-
-// Screen to display all posts
-const AllPostsScreen = ({ navigation }) => {
-  const [posts, setPosts] = useState([]);
+export default function Explorer({ navigation }) {
+  const [activeTab, setActiveTab] = useState("all");
+  const [allPosts, setAllPosts] = useState([]);
+  const [myPosts, setMyPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const loadPosts = async () => {
+    setLoading(true);
+    try {
+      const [loadedAllPosts, loadedMyPosts] = await Promise.all([
+        getAllPostsWithStats(),
+        getUserPosts(auth.currentUser?.uid),
+      ]);
+      setAllPosts(loadedAllPosts);
+      setMyPosts(loadedMyPosts);
+    } catch (error) {
+      console.error("Error loading posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       loadPosts();
     }, [])
   );
 
-  const loadPosts = async () => {
-    setLoading(true);
-    const loadedPosts = await getAllPostsWithStats();
-    setPosts(loadedPosts);
-    setLoading(false);
-  };
-
-  const handlePostPress = (post) => {
-    navigation.navigate("PostDetail", { post });
-  };
-
-  const handleLike = async (postId, increment) => {
-    await updatePostStatistics(postId, "likesCount", increment);
-    loadPosts();
-  };
-
-  return (
-    <PostList
-      posts={posts}
-      loading={loading}
-      onRefresh={loadPosts}
-      onPress={handlePostPress}
-      onLike={handleLike}
-      showDeleteButton={false}
-      emptyMessage="No posts available"
-    />
-  );
-};
-
-// Screen to display posts created by the current user
-const MyPostsScreen = ({ navigation }) => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      loadMyPosts();
-    }, [])
-  );
-
-  const loadMyPosts = async () => {
-    setLoading(true);
-    const loadedPosts = await getUserPosts(auth.currentUser.uid);
-    setPosts(loadedPosts);
-    setLoading(false);
-  };
-
   const handleDeletePost = async (postId) => {
-    Alert.alert("Delete Post", "Are you sure you want to delete this post?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        onPress: async () => {
-          await deletePost(postId);
-          await loadMyPosts();
-        },
-        style: "destructive",
-      },
-    ]);
+    try {
+      await deletePost(postId);
+      await loadPosts();
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
   };
 
   const handlePostPress = (post) => {
@@ -91,58 +52,95 @@ const MyPostsScreen = ({ navigation }) => {
   };
 
   const handleLike = async (postId, increment) => {
-    await updatePostStatistics(postId, "likesCount", increment);
-    loadMyPosts();
+    try {
+      await updatePostStatistics(postId, "likesCount", increment);
+      await loadPosts();
+    } catch (error) {
+      console.error("Error updating likes:", error);
+    }
   };
 
-  return (
-    <PostList
-      posts={posts}
-      loading={loading}
-      onRefresh={loadMyPosts}
-      onDelete={handleDeletePost}
-      onPress={handlePostPress}
-      onLike={handleLike}
-      showDeleteButton={true}
-      emptyMessage="No posts created yet"
-    />
-  );
-};
-
-// Main Explorer component with tab navigation and "Add New Post" button
-export default function Explorer({ navigation }) {
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Pressable
-          onPress={() => navigation.navigate("NewPost")}
-          style={{ marginRight: 15 }}
-        >
-          <AntDesign name="plus" size={24} color="#FF6B6B" />
-        </Pressable>
-      ),
-    });
-  }, [navigation]);
-
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: "#FF6B6B",
-        tabBarInactiveTintColor: "#999999",
-        tabBarIndicatorStyle: { backgroundColor: "#FF6B6B" },
-        tabBarLabelStyle: { fontSize: 14, fontWeight: "600" },
-      }}
+  const TabButton = ({ title, isActive, onPress }) => (
+    <Pressable
+      style={[styles.tabButton, isActive && styles.activeTabButton]}
+      onPress={onPress}
     >
-      <Tab.Screen
-        name="AllPosts"
-        component={AllPostsScreen}
-        options={{ tabBarLabel: "All" }}
-      />
-      <Tab.Screen
-        name="MyPosts"
-        component={MyPostsScreen}
-        options={{ tabBarLabel: "My Posts" }}
-      />
-    </Tab.Navigator>
+      <Text
+        style={[styles.tabButtonText, isActive && styles.activeTabButtonText]}
+      >
+        {title}
+      </Text>
+    </Pressable>
+  );
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.tabBar}>
+        <TabButton
+          title="All Posts"
+          isActive={activeTab === "all"}
+          onPress={() => setActiveTab("all")}
+        />
+        <TabButton
+          title="My Posts"
+          isActive={activeTab === "my"}
+          onPress={() => setActiveTab("my")}
+        />
+      </View>
+
+      {activeTab === "all" ? (
+        <PostList
+          posts={allPosts}
+          loading={loading}
+          onRefresh={loadPosts}
+          onPress={handlePostPress}
+          onLike={handleLike}
+          showDeleteButton={false}
+          emptyMessage="No posts available"
+        />
+      ) : (
+        <PostList
+          posts={myPosts}
+          loading={loading}
+          onRefresh={loadPosts}
+          onDelete={handleDeletePost}
+          onPress={handlePostPress}
+          onLike={handleLike}
+          showDeleteButton={true}
+          emptyMessage="No posts created yet"
+        />
+      )}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  tabBar: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    backgroundColor: "#fff",
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: "center",
+    borderBottomWidth: 2,
+    borderBottomColor: "transparent",
+  },
+  activeTabButton: {
+    borderBottomColor: "#FF6B6B",
+  },
+  tabButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#999999",
+  },
+  activeTabButtonText: {
+    color: "#FF6B6B",
+  },
+});
