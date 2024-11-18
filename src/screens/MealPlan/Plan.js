@@ -9,10 +9,12 @@ import { PlanItem } from "../../components/MealPlan/PlanItem";
 import { useFocusEffect } from "@react-navigation/native";
 import { generalStyles } from "../../theme/generalStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import WeatherComponent from "../../components/Weather/WeatherComponent";
 
 export default function Plan({ navigation }) {
   const [mealPlans, setMealPlans] = useState([]);
   const [loading, setLoading] = useState(true);
+  // const WEATHERSTACK_API_KEY = process.env.EXPO_PUBLIC_WEATHERSTACK_API_KEY;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -82,6 +84,7 @@ export default function Plan({ navigation }) {
 
   return (
     <View style={generalStyles.planContainer}>
+      {/* <WeatherComponent apiKey={WEATHERSTACK_API_KEY} /> */}
       {mealPlans.length === 0 ? (
         <View style={generalStyles.centered}>
           <Text style={generalStyles.emptyText}>No meal plans yet</Text>
