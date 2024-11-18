@@ -9,7 +9,10 @@ import {
 } from "react-native";
 import { createPost } from "../../Firebase/firebaseHelper";
 import { auth } from "../../Firebase/firebaseSetup";
+import { storage } from "../../Firebase/firebaseSetup";
+import { ref, uploadBytesResumable } from "firebase/storage";
 import LocationPicker from "../../components/Location/LocationPicker";
+import ImageManager from "../../components/Image/ImageManager";
 import { generalStyles } from "../../theme/generalStyles";
 import { inputStyles } from "../../theme/inputStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
@@ -18,9 +21,9 @@ export default function NewPost({ navigation, route }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState(null);
+  const [imageUri, setImageUri] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Listen for location updates from map
   useEffect(() => {
     if (route.params?.pickedLocation) {
       setLocation(route.params.pickedLocation);
@@ -30,9 +33,24 @@ export default function NewPost({ navigation, route }) {
   const handleLocationPicked = (pickedLocation) => {
     setLocation(pickedLocation);
   };
+  const handleImageTaken = (uri) => {
+    setImageUri(uri);
+  };
 
-  const pickImage = async () => {
-    // Placeholder for image picker functionality
+  const uploadImage = async (uri) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+
+      const imageName = uri.substring(uri.lastIndexOf("/") + 1);
+      const imageRef = ref(storage, `images/${imageName}`);
+      const uploadResult = await uploadBytesResumable(imageRef, blob);
+
+      return uploadResult.metadata.fullPath;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
   };
 
   const handleSubmit = async () => {
@@ -48,11 +66,18 @@ export default function NewPost({ navigation, route }) {
 
     try {
       setSubmitting(true);
+      let imageUrl = null;
+
+      if (imageUri) {
+        imageUrl = await uploadImage(imageUri);
+      }
+
       const postData = {
         title: title.trim(),
         description: description.trim(),
         userId: auth.currentUser.uid,
         location: location,
+        imageUri: imageUrl,
         createdAt: new Date().toISOString(),
       };
 
@@ -92,11 +117,7 @@ export default function NewPost({ navigation, route }) {
           editable={!submitting}
         />
 
-        <Pressable style={buttonStyles.imageButton} onPress={pickImage}>
-          <Text style={buttonStyles.imageButtonText}>
-            iteration1 has not yet added camera functionality
-          </Text>
-        </Pressable>
+        <ImageManager onImageTaken={handleImageTaken} />
 
         <LocationPicker onLocationPicked={handleLocationPicked} />
 

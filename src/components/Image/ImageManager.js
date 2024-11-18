@@ -1,22 +1,20 @@
 import React, { useState } from "react";
-import { View, Text, Image, Pressable, Alert } from "react-native";
+import { View, Image, Pressable, Text, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { generalStyles } from "../../theme/generalStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
 
-export default function ImageManager({ onImageTaken }) {
+const ImageManager = ({ onImageTaken }) => {
   const [imageUri, setImageUri] = useState();
+  const [cameraPermission] = ImagePicker.useCameraPermissions();
 
   const verifyPermissions = async () => {
-    const [permissionResponse, requestPermission] =
-      ImagePicker.useCameraPermissions();
-
-    if (permissionResponse.granted) {
+    if (cameraPermission?.granted) {
       return true;
     }
 
-    const result = await requestPermission();
-    return result.granted;
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    return permissionResult.granted;
   };
 
   const takeImageHandler = async () => {
@@ -33,8 +31,9 @@ export default function ImageManager({ onImageTaken }) {
 
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
-        aspect: [16, 9],
+        aspect: [1, 1], // 改为1:1正方形
         quality: 0.5,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
       });
 
       if (!result.canceled) {
@@ -51,7 +50,11 @@ export default function ImageManager({ onImageTaken }) {
     <View style={generalStyles.imageContainer}>
       <View style={generalStyles.imagePreview}>
         {imageUri ? (
-          <Image source={{ uri: imageUri }} style={generalStyles.image} />
+          <Image
+            source={{ uri: imageUri }}
+            style={generalStyles.image}
+            resizeMode="cover"
+          />
         ) : (
           <Text>No image taken yet</Text>
         )}
@@ -61,4 +64,6 @@ export default function ImageManager({ onImageTaken }) {
       </Pressable>
     </View>
   );
-}
+};
+
+export default ImageManager;
