@@ -419,4 +419,25 @@ export const generalStyles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#eee",
   },
+
+  imageContainer: {
+    alignItems: "center",
+    marginVertical: 10,
+    width: "100%",
+  },
+  imagePreview: {
+    width: "100%",
+    aspectRatio: 1,
+    marginBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    borderRadius: 6,
+    overflow: "hidden",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 6,
+  },
 });
