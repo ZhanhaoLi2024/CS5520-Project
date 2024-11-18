@@ -362,7 +362,6 @@ export const generalStyles = StyleSheet.create({
     marginBottom: 20,
   },
 
-
   loginLinkText: {
     color: "#FF6B6B",
     textAlign: "center",
@@ -370,4 +369,29 @@ export const generalStyles = StyleSheet.create({
     marginTop: 20,
   },
 
+  mapPreviewContainer: {
+    width: "100%",
+    height: 200,
+    marginBottom: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+
+  mapPreview: {
+    width: "100%",
+    height: "100%",
+  },
+
+  mapButtons: {
+    padding: 16,
+    backgroundColor: "white",
+  },
+
+  errorText: {
+    color: "#FF6B6B",
+    textAlign: "center",
+  },
 });
