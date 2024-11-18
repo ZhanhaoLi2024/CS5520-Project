@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { auth } from "../../Firebase/firebaseSetup";
@@ -9,12 +9,26 @@ import {
   updatePostStatistics,
 } from "../../Firebase/firebaseHelper";
 import PostList from "../../components/Post/PostList";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function Explorer({ navigation }) {
   const [activeTab, setActiveTab] = useState("all");
   const [allPosts, setAllPosts] = useState([]);
   const [myPosts, setMyPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable
+          onPress={() => navigation.navigate("NewPost")}
+          style={{ marginRight: 15 }}
+        >
+          <AntDesign name="plus" size={24} color="#FF6B6B" />
+        </Pressable>
+      ),
+    });
+  }, [navigation]);
 
   const loadPosts = async () => {
     setLoading(true);
