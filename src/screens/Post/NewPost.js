@@ -66,6 +66,16 @@ export default function NewPost({ navigation, route }) {
 
     try {
       setSubmitting(true);
+      const locationData = location
+        ? {
+            coords: {
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            },
+            address: location.address || null,
+          }
+        : null;
+
       let imageUrl = null;
 
       if (imageUri) {
@@ -76,9 +86,12 @@ export default function NewPost({ navigation, route }) {
         title: title.trim(),
         description: description.trim(),
         userId: auth.currentUser.uid,
-        location: location,
+        location: locationData,
         imageUri: imageUrl,
         createdAt: new Date().toISOString(),
+        likesCount: 0,
+        likedBy: [],
+        commentsCount: 0,
       };
 
       const result = await createPost(postData);

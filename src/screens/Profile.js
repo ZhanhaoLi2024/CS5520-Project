@@ -21,7 +21,7 @@ import { inputStyles } from "../theme/inputStyles";
 import { buttonStyles } from "../theme/buttonStyles";
 
 export default function Profile({ navigation }) {
-  const [username, setDisplayName] = useState("");
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -50,7 +50,7 @@ export default function Profile({ navigation }) {
       setEmail(user.email);
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
-        setDisplayName(userDoc.data().username || "");
+        setUserName(userDoc.data().username || "");
       }
     }
   };
@@ -119,7 +119,7 @@ export default function Profile({ navigation }) {
             <TextInput
               style={inputStyles.profileInput}
               value={username}
-              onChangeText={setDisplayName}
+              onChangeText={setUserName}
               placeholder="Enter your name"
             />
           ) : (
