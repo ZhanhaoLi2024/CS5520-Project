@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { View, Pressable, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { generalStyles } from "../../theme/generalStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 
-export default function LocationMap({ navigation }) {
-  const [selectedLocation, setSelectedLocation] = useState(null);
-
-  const initialRegion = {
+const LocationMap = ({ navigation, route }) => {
+  // Get initial location from navigation params or use default
+  const initialLocation = route.params?.initialLocation || {
     latitude: 42.3601,
     longitude: -71.0589,
+  };
+
+  const [selectedLocation, setSelectedLocation] = useState(initialLocation);
+
+  const initialRegion = {
+    ...initialLocation,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
@@ -26,7 +33,7 @@ export default function LocationMap({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={generalStyles.container}>
       <MapView
         style={{ flex: 1 }}
         initialRegion={initialRegion}
@@ -36,19 +43,19 @@ export default function LocationMap({ navigation }) {
           <Marker coordinate={selectedLocation} title="Picked Location" />
         )}
       </MapView>
-      <View style={{ padding: 10 }}>
+      <View style={generalStyles.mapButtons}>
         <Pressable
-          style={{
-            backgroundColor: selectedLocation ? "blue" : "gray",
-            padding: 10,
-            alignItems: "center",
-          }}
+          style={({ pressed }) => [
+            buttonStyles.submitButton,
+            pressed && buttonStyles.buttonPressed,
+          ]}
           onPress={savePickedLocationHandler}
-          disabled={!selectedLocation}
         >
-          <Text style={{ color: "white" }}>Save Location</Text>
+          <Text style={buttonStyles.submitButtonText}>Confirm Location</Text>
         </Pressable>
       </View>
     </View>
   );
-}
+};
+
+export default LocationMap;
