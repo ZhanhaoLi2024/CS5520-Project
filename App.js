@@ -21,6 +21,7 @@ import PlanEdit from "./src/screens/MealPlan/PlanEdit";
 import NewPost from "./src/screens/Post/NewPost";
 import PostDetail from "./src/screens/Post/PostDetail";
 import EditPost from "./src/screens/Post/EditPost";
+import LocationMap from "./src/components/Location/LocationMap";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -151,6 +152,14 @@ const AppStack = () => (
       component={EditPost}
       options={{
         title: "Edit Post",
+        headerBackTitle: "Back",
+      }}
+    />
+    <Stack.Screen
+      name="LocationMap"
+      component={LocationMap}
+      options={{
+        title: "Pick Location",
         headerBackTitle: "Back",
       }}
     />
