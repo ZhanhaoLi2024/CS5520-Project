@@ -20,6 +20,8 @@ const PostItem = ({
   title,
   description,
   createdAt,
+  location,
+  imageUri,
   onDelete,
   id,
   showDeleteButton,
@@ -64,11 +66,26 @@ const PostItem = ({
         generalStyles.postItemContainer,
         pressed && generalStyles.postItemPressed,
       ]}
-      onPress={() => onPress({ title, description, createdAt, id, userId })}
+      onPress={() =>
+        onPress({
+          title,
+          description,
+          location,
+          imageUri,
+          createdAt,
+          id,
+          userId,
+          location,
+          imageUri,
+        })
+      }
     >
       <View style={generalStyles.textContainer}>
         <Text style={generalStyles.postTitle}>{title}</Text>
         <Text style={generalStyles.postDescription}>{description}</Text>
+        <Text style={generalStyles.postLocation}>
+          {location ? location.address : "No location provided"}
+        </Text>
         <Text style={generalStyles.postDate}>
           {new Date(createdAt).toLocaleDateString()}
         </Text>
@@ -143,6 +160,8 @@ const PostList = ({
               createdAt={item.createdAt}
               onDelete={onDelete}
               id={item.id}
+              location={item.location}
+              imageUri={item.imageUri}
               userId={item.userId}
               showDeleteButton={showDeleteButton}
               onPress={onPress}

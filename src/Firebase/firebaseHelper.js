@@ -166,12 +166,15 @@ export const getAllPosts = async () => {
 export const getUserPosts = async (userId) => {
   try {
     const postsRef = collection(db, "posts");
+    console.log("User ID:", userId);
+    console.log("Posts Ref:", postsRef);
     const primaryQuery = query(
       postsRef,
       where("userId", "==", userId),
       orderBy("createdAt", "desc")
     );
     const fallbackQuery = query(postsRef, where("userId", "==", userId));
+    console.log("Primary Query:", primaryQuery);
     return await executeQueryWithFallback(primaryQuery, fallbackQuery);
   } catch (error) {
     console.error("Error fetching user posts:", error);

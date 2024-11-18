@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Pressable, TextInput, FlatList } from "react-native";
+import {
+  Text,
+  View,
+  Pressable,
+  TextInput,
+  FlatList,
+  Image,
+} from "react-native";
 import { auth } from "../../Firebase/firebaseSetup";
 import { addComment, getComments } from "../../Firebase/firebaseHelper";
 import { generalStyles } from "../../theme/generalStyles";
 import { inputStyles } from "../../theme/inputStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import { storage } from "../../Firebase/firebaseSetup";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const PostDetail = ({ route, navigation }) => {
+  console.log("PostDetail.js", route);
+  console.log(route.params.post.location);
+  console.log(route.params.post.imageUri);
   const { post } = route.params;
   const currentUserId = auth.currentUser?.uid;
   const isAuthor = currentUserId === post.userId;
@@ -14,6 +26,27 @@ const PostDetail = ({ route, navigation }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [loadingComments, setLoadingComments] = useState(true);
+  const [imageUrl, setImageUrl] = useState(null);
+
+  useEffect(() => {
+    const loadImage = async () => {
+      console.log("Post object:", post);
+      if (post?.imageUri) {
+        try {
+          console.log("Attempting to load image from:", post.imageUri);
+          const reference = ref(storage, post.imageUri);
+          const url = await getDownloadURL(reference);
+          console.log("Image URL obtained:", url);
+          setImageUrl(url);
+        } catch (err) {
+          console.error("Error loading image:", err);
+        }
+      } else {
+        console.log("No imageUri found in post object");
+      }
+    };
+    loadImage();
+  }, [post, storage]);
 
   useEffect(() => {
     navigation.setOptions({ title: post.title });
@@ -49,6 +82,26 @@ const PostDetail = ({ route, navigation }) => {
       <View style={generalStyles.postSection}>
         <Text style={generalStyles.postLabel}>Description</Text>
         <Text style={generalStyles.postValue}>{post.description}</Text>
+      </View>
+
+      {/* Location */}
+      <View style={generalStyles.postSection}>
+        <Text style={generalStyles.postLabel}>Location</Text>
+        <Text style={generalStyles.postValue}>
+          {post.location.address || "No location provided"}
+        </Text>
+      </View>
+
+      {/* Image */}
+      {/** 显示imageUri-1 images/751AA981-32C5-45D0-8C35-6652004C5971.jpg图片 */}
+      <View style={generalStyles.imageContainer}>
+        <View style={generalStyles.imagePreview}>
+          <Image
+            source={{ uri: imageUrl }}
+            style={generalStyles.image}
+            resizeMode="cover"
+          />
+        </View>
       </View>
 
       {/* Comments Section */}

@@ -39,8 +39,6 @@ export default function Explorer({ navigation }) {
       ]);
       setAllPosts(loadedAllPosts);
       setMyPosts(loadedMyPosts);
-      console.log("All posts loaded:", loadedAllPosts);
-      console.log("My posts loaded:", loadedMyPosts);
     } catch (error) {
       console.error("Error loading posts:", error);
     } finally {
@@ -65,6 +63,7 @@ export default function Explorer({ navigation }) {
 
   const handlePostPress = (post) => {
     navigation.navigate("PostDetail", { post });
+    console.log("Post pressed:", post);
   };
 
   const handleLike = async (postId, increment) => {
