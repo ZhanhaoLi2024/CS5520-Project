@@ -78,7 +78,6 @@ const PostDetail = ({ route, navigation }) => {
         <Text style={generalStyles.postLabel}>Title</Text>
         <Text style={generalStyles.postValue}>{post.title}</Text>
       </View>
-
       <View style={generalStyles.postSection}>
         <Text style={generalStyles.postLabel}>Description</Text>
         <Text style={generalStyles.postValue}>{post.description}</Text>
@@ -93,16 +92,15 @@ const PostDetail = ({ route, navigation }) => {
       </View>
 
       {/* Image */}
-      {/** 显示imageUri-1 images/751AA981-32C5-45D0-8C35-6652004C5971.jpg图片 */}
-      <View style={generalStyles.imageContainer}>
-        <View style={generalStyles.imagePreview}>
+      {imageUrl && (
+        <View style={generalStyles.imageContainer}>
           <Image
             source={{ uri: imageUrl }}
             style={generalStyles.image}
             resizeMode="cover"
           />
         </View>
-      </View>
+      )}
 
       {/* Comments Section */}
       <View style={generalStyles.commentsSection}>
@@ -129,7 +127,6 @@ const PostDetail = ({ route, navigation }) => {
           />
         )}
       </View>
-
       {/* Add Comment Input */}
       <View style={generalStyles.addCommentContainer}>
         <TextInput
@@ -146,7 +143,6 @@ const PostDetail = ({ route, navigation }) => {
           <Text style={buttonStyles.addCommentButtonText}>Post</Text>
         </Pressable>
       </View>
-
       {/* Edit Button for the Author */}
       {isAuthor && (
         <View style={generalStyles.buttonContainer}>
