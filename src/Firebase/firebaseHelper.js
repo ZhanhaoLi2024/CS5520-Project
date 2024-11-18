@@ -297,15 +297,47 @@ export const getComments = async (postId) => {
 
 // User Profile Operations
 // --------------------
-export const updateUserProfile = async (userId, profileData) => {
-  return await updateDocument("users", userId, profileData);
+export const createUserInFirestore = async (userId, userData) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await setDoc(userRef, {
+      userId,
+      ...userData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error creating user document:", error);
+    throw error;
+  }
 };
 
 export const getUserProfile = async (userId) => {
-  const documents = await getDocuments("users", [
-    where("userId", "==", userId),
-  ]);
-  return documents[0];
+  try {
+    const userDoc = await getDoc(doc(db, "users", userId));
+    if (userDoc.exists()) {
+      return { success: true, data: userDoc.data() };
+    } else {
+      return { success: false, error: "User not found" };
+    }
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    throw error;
+  }
+};
+
+export const updateUserProfile = async (userId, updateData) => {
+  try {
+    await updateDoc(doc(db, "users", userId), {
+      ...updateData,
+      updatedAt: new Date().toISOString(),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
 };
 
 // Real-time Subscription Operations

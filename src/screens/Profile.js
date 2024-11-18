@@ -21,7 +21,7 @@ import { inputStyles } from "../theme/inputStyles";
 import { buttonStyles } from "../theme/buttonStyles";
 
 export default function Profile({ navigation }) {
-  const [displayName, setDisplayName] = useState("");
+  const [username, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -50,7 +50,7 @@ export default function Profile({ navigation }) {
       setEmail(user.email);
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
-        setDisplayName(userDoc.data().displayName || "");
+        setDisplayName(userDoc.data().username || "");
       }
     }
   };
@@ -60,10 +60,10 @@ export default function Profile({ navigation }) {
       const user = auth.currentUser;
       if (!user) return;
 
-      await updateProfile(user, { displayName });
+      await updateProfile(user, { username });
       await setDoc(
         doc(db, "users", user.uid),
-        { displayName, email: user.email, updatedAt: new Date().toISOString() },
+        { username, email: user.email, updatedAt: new Date().toISOString() },
         { merge: true }
       );
       setIsEditing(false);
@@ -109,22 +109,22 @@ export default function Profile({ navigation }) {
       <View style={generalStyles.profileSection}>
         <Text style={generalStyles.sectionTitle}>Profile Information</Text>
         <View style={generalStyles.infoContainer}>
-          <Text style={generalStyles.profileLabel}>Email</Text>
+          <Text style={generalStyles.profileLabel}>User's Email</Text>
           <Text style={generalStyles.profileText}>{email}</Text>
         </View>
 
         <View style={generalStyles.infoContainer}>
-          <Text style={generalStyles.profileLabel}>Display Name</Text>
+          <Text style={generalStyles.profileLabel}>User's Name</Text>
           {isEditing ? (
             <TextInput
               style={inputStyles.profileInput}
-              value={displayName}
+              value={username}
               onChangeText={setDisplayName}
               placeholder="Enter your name"
             />
           ) : (
             <Text style={generalStyles.profileText}>
-              {displayName || "Not set"}
+              {username || "Not set"}
             </Text>
           )}
         </View>

@@ -22,10 +22,6 @@ import NewPost from "./src/screens/Post/NewPost";
 import PostDetail from "./src/screens/Post/PostDetail";
 import EditPost from "./src/screens/Post/EditPost";
 import LocationMap from "./src/components/Location/LocationMap";
-import { LogBox } from "react-native";
-LogBox.ignoreLogs([
-  'Warning: A props object containing a "key" prop is being spread into JSX',
-]);
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
