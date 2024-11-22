@@ -23,12 +23,20 @@ import PostDetail from "./src/screens/Post/PostDetail";
 import EditPost from "./src/screens/Post/EditPost";
 import LocationMap from "./src/components/Location/LocationMap";
 import ResetPassword from "./src/screens/Auth/ResetPassword";
+import { promptLogin, getLoginPromptMessage } from "./src/utils/authUtils";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // Bottom tab navigator component for authenticated users
 const BottomTabs = () => {
+  const handleProfilePress = (navigation) => {
+    if (!auth.currentUser) {
+      promptLogin(navigation, getLoginPromptMessage("view-profile"));
+      return false;
+    }
+    return true;
+  };
   return (
     <Tab.Navigator
       screenOptions={{
@@ -76,6 +84,16 @@ const BottomTabs = () => {
         }}
       />
       {/* Profile Tab */}
+      {/* <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="user" color={color} size={size} />
+          ),
+          title: "Profile",
+        }}
+      /> */}
       <Tab.Screen
         name="Profile"
         component={Profile}
@@ -85,6 +103,13 @@ const BottomTabs = () => {
           ),
           title: "Profile",
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (!handleProfilePress(navigation)) {
+              e.preventDefault();
+            }
+          },
+        })}
       />
     </Tab.Navigator>
   );
