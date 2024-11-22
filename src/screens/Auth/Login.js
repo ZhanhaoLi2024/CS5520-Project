@@ -35,6 +35,40 @@ export default function Login({ navigation }) {
     return true;
   };
 
+  // const handleLogin = async () => {
+  //   if (!validateForm()) return;
+  //   try {
+  //     setIsSubmitting(true);
+  //     const userCredential = await signInWithEmailAndPassword(
+  //       auth,
+  //       email,
+  //       password
+  //     );
+  //     console.log("Logged in with:", userCredential.user.email);
+  //   } catch (error) {
+  //     console.error("Login error:", error);
+  //     let errorMessage = "An error occurred during login";
+  //     switch (error.code) {
+  //       case "auth/invalid-email":
+  //         errorMessage = "Invalid email address format";
+  //         break;
+  //       case "auth/user-disabled":
+  //         errorMessage = "This account has been disabled";
+  //         break;
+  //       case "auth/user-not-found":
+  //         errorMessage = "No account found with this email";
+  //         break;
+  //       case "auth/wrong-password":
+  //         errorMessage = "Incorrect password";
+  //         break;
+  //       default:
+  //         errorMessage = error.message;
+  //     }
+  //     Alert.alert("Login Error", errorMessage);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
   const handleLogin = async () => {
     if (!validateForm()) return;
     try {
@@ -46,8 +80,13 @@ export default function Login({ navigation }) {
       );
       console.log("Logged in with:", userCredential.user.email);
     } catch (error) {
+      // console.error("Login error:", error);
       let errorMessage = "An error occurred during login";
+
       switch (error.code) {
+        case "auth/invalid-credential":
+          errorMessage = "Invalid email or password";
+          break;
         case "auth/invalid-email":
           errorMessage = "Invalid email address format";
           break;
@@ -57,11 +96,18 @@ export default function Login({ navigation }) {
         case "auth/user-not-found":
           errorMessage = "No account found with this email";
           break;
-        case "auth/wrong-password":
-          errorMessage = "Incorrect password";
+        case "auth/too-many-requests":
+          errorMessage =
+            "Too many failed login attempts. Please try again later";
+          break;
+        case "auth/network-request-failed":
+          errorMessage = "Network error. Please check your internet connection";
+          break;
+        case "auth/internal-error":
+          errorMessage = "An internal error occurred. Please try again";
           break;
         default:
-          errorMessage = error.message;
+          errorMessage = "Failed to login. Please check your credentials";
       }
       Alert.alert("Login Error", errorMessage);
     } finally {
