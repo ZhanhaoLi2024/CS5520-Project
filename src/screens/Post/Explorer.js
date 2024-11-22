@@ -12,11 +12,12 @@ import PostList from "../../components/Post/PostList";
 import { AntDesign } from "@expo/vector-icons";
 import { promptLogin, getLoginPromptMessage } from "../../utils/authUtils";
 
-export default function Explorer({ navigation }) {
+export default function Explorer({ navigation, auth }) {
   const [activeTab, setActiveTab] = useState("all");
   const [allPosts, setAllPosts] = useState([]);
   const [myPosts, setMyPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { setIsGuest } = auth;
 
   // useEffect(() => {
   //   navigation.setOptions({
@@ -42,18 +43,33 @@ export default function Explorer({ navigation }) {
 
   const handleNewPost = () => {
     if (!auth.currentUser) {
-      promptLogin(navigation, getLoginPromptMessage("create-post"));
+      promptLogin(navigation, getLoginPromptMessage("create-plan"), setIsGuest);
       return;
     }
     navigation.navigate("NewPost");
   };
 
+  // const loadPosts = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const [loadedAllPosts, loadedMyPosts] = await Promise.all([
+  //       getAllPostsWithStats(),
+  //       getUserPosts(auth.currentUser?.uid),
+  //     ]);
+  //     setAllPosts(loadedAllPosts);
+  //     setMyPosts(loadedMyPosts);
+  //   } catch (error) {
+  //     console.error("Error loading posts:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const loadPosts = async () => {
     setLoading(true);
     try {
       const [loadedAllPosts, loadedMyPosts] = await Promise.all([
         getAllPostsWithStats(),
-        getUserPosts(auth.currentUser?.uid),
+        auth.currentUser ? getUserPosts(auth.currentUser.uid) : [],
       ]);
       setAllPosts(loadedAllPosts);
       setMyPosts(loadedMyPosts);
@@ -80,6 +96,10 @@ export default function Explorer({ navigation }) {
   };
 
   const handlePostPress = (post) => {
+    if (!auth.currentUser) {
+      promptLogin(navigation, getLoginPromptMessage("like-post"), setIsGuest);
+      return;
+    }
     navigation.navigate("PostDetail", { post });
     console.log("Post pressed:", post);
   };

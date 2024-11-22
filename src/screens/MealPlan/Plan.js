@@ -12,9 +12,10 @@ import { buttonStyles } from "../../theme/buttonStyles";
 import { promptLogin, getLoginPromptMessage } from "../../utils/authUtils";
 // import WeatherComponent from "../../components/Weather/WeatherComponent";
 
-export default function Plan({ navigation }) {
+export default function Plan({ navigation, auth }) {
   const [mealPlans, setMealPlans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { setIsGuest } = auth;
   // const WEATHERSTACK_API_KEY = process.env.EXPO_PUBLIC_WEATHERSTACK_API_KEY;
 
   useFocusEffect(
@@ -30,7 +31,11 @@ export default function Plan({ navigation }) {
           // onPress={() => navigation.navigate("MealPlanner")}
           onPress={() => {
             if (!auth.currentUser) {
-              promptLogin(navigation, getLoginPromptMessage("create-plan"));
+              promptLogin(
+                navigation,
+                getLoginPromptMessage("create-plan"),
+                setIsGuest
+              );
               return;
             }
             navigation.navigate("MealPlanner");
@@ -46,7 +51,7 @@ export default function Plan({ navigation }) {
     });
 
     loadMealPlans();
-  }, [navigation]);
+  }, [navigation, setIsGuest]);
 
   // const loadMealPlans = async () => {
   //   try {

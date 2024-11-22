@@ -1,21 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TextInput, Pressable, Alert, Image } from "react-native";
 import { auth } from "../../Firebase/firebaseSetup";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { generalStyles } from "../../theme/generalStyles";
 import { inputStyles } from "../../theme/inputStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import { AuthContext } from "../../../App";
 
-// Import the logo image
 import logo from "../../../assets/Logo.png";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setIsGuest } = useContext(AuthContext);
 
-  const handleSkip = () => {
-    navigation.navigate("MainTabs");
+  const handleGuestMode = () => {
+    setIsGuest(true);
   };
 
   const validateForm = () => {
@@ -59,6 +60,8 @@ export default function Login({ navigation }) {
         case "auth/wrong-password":
           errorMessage = "Incorrect password";
           break;
+        default:
+          errorMessage = error.message;
       }
       Alert.alert("Login Error", errorMessage);
     } finally {
@@ -104,18 +107,17 @@ export default function Login({ navigation }) {
         </Text>
       </Pressable>
 
-      <Pressable style={[buttonStyles.skipButton]} onPress={handleSkip}>
+      <Pressable style={[buttonStyles.skipButton]} onPress={handleGuestMode}>
         <Text style={buttonStyles.skipButtonText}>Continue as Guest</Text>
       </Pressable>
 
-      {/* Add Forgot Password Link */}
-      <Pressable onPress={() => navigation.navigate("ResetPassword")}>
+      <Pressable onPress={() => navigation.navigate("ResetPasswordScreen")}>
         <Text style={[generalStyles.linkText, { marginBottom: 20 }]}>
           Forgot Password?
         </Text>
       </Pressable>
 
-      <Pressable onPress={() => navigation.replace("Signup")}>
+      <Pressable onPress={() => navigation.navigate("SignupScreen")}>
         <Text style={generalStyles.loginLinkText}>
           Don't have an account? Sign up
         </Text>

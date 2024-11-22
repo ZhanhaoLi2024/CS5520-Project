@@ -1,6 +1,11 @@
 import { Alert } from "react-native";
 
-export const promptLogin = (navigation, message) => {
+export const promptLogin = (navigation, message, setIsGuest) => {
+  if (!setIsGuest) {
+    console.warn("setIsGuest function is not provided to promptLogin");
+    return;
+  }
+
   Alert.alert(
     "Login Required",
     message,
@@ -10,8 +15,13 @@ export const promptLogin = (navigation, message) => {
         style: "cancel",
       },
       {
-        text: "Login",
-        onPress: () => navigation.navigate("Login"),
+        text: "Sign Up",
+        onPress: () => {
+          setIsGuest(false);
+          setTimeout(() => {
+            navigation.replace("Auth", { screen: "SignupScreen" });
+          }, 100);
+        },
       },
     ],
     { cancelable: true }

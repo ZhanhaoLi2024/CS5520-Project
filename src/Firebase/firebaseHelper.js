@@ -176,18 +176,34 @@ export const getAllPosts = async () => {
   }
 };
 
+// export const getUserPosts = async (userId) => {
+//   try {
+//     const postsRef = collection(db, "posts");
+//     console.log("User ID:", userId);
+//     console.log("Posts Ref:", postsRef);
+//     const primaryQuery = query(
+//       postsRef,
+//       where("userId", "==", userId),
+//       orderBy("createdAt", "desc")
+//     );
+//     const fallbackQuery = query(postsRef, where("userId", "==", userId));
+//     console.log("Primary Query:", primaryQuery);
+//     return await executeQueryWithFallback(primaryQuery, fallbackQuery);
+//   } catch (error) {
+//     console.error("Error fetching user posts:", error);
+//     throw error;
+//   }
+// };
 export const getUserPosts = async (userId) => {
   try {
+    if (!userId) return [];
     const postsRef = collection(db, "posts");
-    console.log("User ID:", userId);
-    console.log("Posts Ref:", postsRef);
     const primaryQuery = query(
       postsRef,
       where("userId", "==", userId),
       orderBy("createdAt", "desc")
     );
     const fallbackQuery = query(postsRef, where("userId", "==", userId));
-    console.log("Primary Query:", primaryQuery);
     return await executeQueryWithFallback(primaryQuery, fallbackQuery);
   } catch (error) {
     console.error("Error fetching user posts:", error);
@@ -299,17 +315,35 @@ export const addComment = async (postId, userId, text) => {
 
 export const getComments = async (postId) => {
   try {
+    if (!postId) {
+      console.warn("No postId provided to getComments");
+      return [];
+    }
+
+    // const commentsRef = collection(db, `posts/${postId}/comments`);
+    // const commentsQuery = query(commentsRef, orderBy("createdAt", "desc"));
+    // const querySnapshot = await getDocs(commentsQuery);
+    // const comments = [];
+    // querySnapshot.forEach((doc) => {
+    //   comments.push({ id: doc.id, ...doc.data() });
+    // });
+    // return comments;
     const commentsRef = collection(db, `posts/${postId}/comments`);
     const commentsQuery = query(commentsRef, orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(commentsQuery);
+
     const comments = [];
     querySnapshot.forEach((doc) => {
-      comments.push({ id: doc.id, ...doc.data() });
+      comments.push({
+        id: doc.id,
+        ...doc.data(),
+      });
     });
+
     return comments;
   } catch (error) {
     console.error("Error fetching comments:", error);
-    throw error;
+    return [];
   }
 };
 
@@ -418,21 +452,50 @@ export const subscribeToUserPosts = (userId, onPostsUpdate, onError) => {
   }
 };
 
-export const getAllPostsWithStats = async () => {
-  const postsRef = collection(db, "posts");
-  const postsSnapshot = await getDocs(
-    query(postsRef, orderBy("createdAt", "desc"))
-  );
+// export const getAllPostsWithStats = async () => {
+//   const postsRef = collection(db, "posts");
+//   const postsSnapshot = await getDocs(
+//     query(postsRef, orderBy("createdAt", "desc"))
+//   );
 
-  const posts = await Promise.all(
-    postsSnapshot.docs.map(async (postDoc) => {
-      const postData = postDoc.data();
-      const postId = postDoc.id;
-      const stats = await getPostStatistics(postId);
-      return { id: postId, ...postData, ...stats };
-    })
-  );
-  return posts;
+//   const posts = await Promise.all(
+//     postsSnapshot.docs.map(async (postDoc) => {
+//       const postData = postDoc.data();
+//       const postId = postDoc.id;
+//       const stats = await getPostStatistics(postId);
+//       return { id: postId, ...postData, ...stats };
+//     })
+//   );
+//   return posts;
+// };
+export const getAllPostsWithStats = async () => {
+  try {
+    const postsRef = collection(db, "posts");
+    const postsSnapshot = await getDocs(
+      query(postsRef, orderBy("createdAt", "desc"))
+    );
+
+    const posts = await Promise.all(
+      postsSnapshot.docs.map(async (postDoc) => {
+        const postData = postDoc.data();
+        const postId = postDoc.id;
+        let stats = { likesCount: 0, commentsCount: 0 };
+
+        try {
+          const fetchedStats = await getPostStatistics(postId);
+          stats = fetchedStats;
+        } catch (error) {
+          console.warn(`Could not fetch stats for post ${postId}:`, error);
+        }
+
+        return { id: postId, ...postData, ...stats };
+      })
+    );
+    return posts;
+  } catch (error) {
+    console.error("Error fetching all posts:", error);
+    throw error;
+  }
 };
 
 // Image Upload Operations
