@@ -53,8 +53,16 @@ export default function Map() {
           coordinate={post.location.coords}
           title={post.title}
         >
-          <Callout>
-            <Text>{post.title}</Text>
+          <Callout onPress={() => navigation.navigate("PostDetail", { post })}>
+            <View style={{ width: 200 }}>
+              <Text>{post.title}</Text>
+              <Text>
+                {post.description.length > 50
+                  ? `${post.description.substring(0, 50)}...`
+                  : post.description}
+              </Text>
+              <Text>Tap to view details</Text>
+            </View>
           </Callout>
         </Marker>
       ))}
