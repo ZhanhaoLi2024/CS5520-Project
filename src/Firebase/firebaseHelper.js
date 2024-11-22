@@ -116,8 +116,21 @@ export const createMealPlan = async (mealPlanData) => {
   return await createDocument("mealPlans", mealPlanData);
 };
 
+// export const getUserMealPlans = async (userId) => {
+//   try {
+//     const conditions = [where("userId", "==", userId)];
+//     const documents = await getDocuments("mealPlans", conditions);
+//     return documents.sort(
+//       (a, b) => new Date(b.plannedDate) - new Date(a.plannedDate)
+//     );
+//   } catch (error) {
+//     console.error("Error fetching meal plans:", error);
+//     throw error;
+//   }
+// };
 export const getUserMealPlans = async (userId) => {
   try {
+    if (!userId) return []; // Return empty array for guest users
     const conditions = [where("userId", "==", userId)];
     const documents = await getDocuments("mealPlans", conditions);
     return documents.sort(

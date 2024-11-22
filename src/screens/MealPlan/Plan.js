@@ -48,9 +48,26 @@ export default function Plan({ navigation }) {
     loadMealPlans();
   }, [navigation]);
 
+  // const loadMealPlans = async () => {
+  //   try {
+  //     const userId = auth.currentUser.uid;
+  //     const plans = await getUserMealPlans(userId);
+  //     setMealPlans(plans);
+  //   } catch (error) {
+  //     console.error("Error loading meal plans:", error);
+  //     Alert.alert("Error", "Failed to load meal plans");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const loadMealPlans = async () => {
     try {
-      const userId = auth.currentUser.uid;
+      const userId = auth.currentUser?.uid; // Use optional chaining
+      if (!userId) {
+        setMealPlans([]); // Set empty array for guest users
+        setLoading(false);
+        return;
+      }
       const plans = await getUserMealPlans(userId);
       setMealPlans(plans);
     } catch (error) {
