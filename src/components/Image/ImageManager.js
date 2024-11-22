@@ -33,6 +33,8 @@ const ImageManager = ({ onImageTaken }) => {
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.5,
+        presentationStyle: "overFullScreen",
+        exif: false,
       });
 
       if (!result.canceled) {
