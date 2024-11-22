@@ -22,6 +22,7 @@ import NewPost from "./src/screens/Post/NewPost";
 import PostDetail from "./src/screens/Post/PostDetail";
 import EditPost from "./src/screens/Post/EditPost";
 import LocationMap from "./src/components/Location/LocationMap";
+import ResetPassword from "./src/screens/Auth/ResetPassword";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

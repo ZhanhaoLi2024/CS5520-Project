@@ -12,6 +12,7 @@ import logo from "../../../assets/Logo.png";
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = () => {
     if (!email.trim()) {
@@ -32,6 +33,7 @@ export default function Login({ navigation }) {
   const handleLogin = async () => {
     if (!validateForm()) return;
     try {
+      setIsSubmitting(true);
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -55,12 +57,13 @@ export default function Login({ navigation }) {
           break;
       }
       Alert.alert("Login Error", errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <View style={generalStyles.loginContainer}>
-      {/* Display the logo */}
       <Image source={logo} style={generalStyles.logo} />
 
       <Text style={generalStyles.title}>Welcome to iCook!</Text>
@@ -72,6 +75,7 @@ export default function Login({ navigation }) {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        editable={!isSubmitting}
       />
 
       <TextInput
@@ -80,10 +84,27 @@ export default function Login({ navigation }) {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        editable={!isSubmitting}
       />
 
-      <Pressable style={buttonStyles.authButton} onPress={handleLogin}>
-        <Text style={buttonStyles.authButtonText}>Login</Text>
+      <Pressable
+        style={[
+          buttonStyles.authButton,
+          isSubmitting && buttonStyles.authButtonDisabled,
+        ]}
+        onPress={handleLogin}
+        disabled={isSubmitting}
+      >
+        <Text style={buttonStyles.authButtonText}>
+          {isSubmitting ? "Logging in..." : "Login"}
+        </Text>
+      </Pressable>
+
+      {/* Add Forgot Password Link */}
+      <Pressable onPress={() => navigation.navigate("ResetPassword")}>
+        <Text style={[generalStyles.linkText, { marginBottom: 20 }]}>
+          Forgot Password?
+        </Text>
       </Pressable>
 
       <Pressable onPress={() => navigation.replace("Signup")}>
