@@ -174,6 +174,7 @@ const AppStack = () => (
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -183,9 +184,45 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
+  const getInitialRouteName = () => {
+    if (user) return "MainTabs";
+    if (isAnonymous) return "MainTabs";
+    return "Login";
+  };
+
   return (
+    // <NavigationContainer>
+    //   <Stack.Navigator>{user ? AppStack() : AuthStack()}</Stack.Navigator>
+    // </NavigationContainer>
     <NavigationContainer>
-      <Stack.Navigator>{user ? AppStack() : AuthStack()}</Stack.Navigator>
+      <Stack.Navigator>
+        {!user && !isAnonymous ? (
+          // Auth Stack
+          <>
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Signup"
+              component={Signup}
+              options={{ title: "Create Account" }}
+            />
+            <Stack.Screen
+              name="ResetPassword"
+              component={ResetPassword}
+              options={{ title: "Reset Password" }}
+            />
+          </>
+        ) : null}
+        {/* Always include MainTabs in the navigator */}
+        <Stack.Screen
+          name="MainTabs"
+          component={BottomTabs}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

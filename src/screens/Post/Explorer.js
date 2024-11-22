@@ -10,6 +10,7 @@ import {
 } from "../../Firebase/firebaseHelper";
 import PostList from "../../components/Post/PostList";
 import { AntDesign } from "@expo/vector-icons";
+import { promptLogin, getLoginPromptMessage } from "../../utils/authUtils";
 
 export default function Explorer({ navigation }) {
   const [activeTab, setActiveTab] = useState("all");
@@ -17,18 +18,35 @@ export default function Explorer({ navigation }) {
   const [myPosts, setMyPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <Pressable
+  //         onPress={() => navigation.navigate("NewPost")}
+  //         style={{ marginRight: 15 }}
+  //       >
+  //         <AntDesign name="plus" size={24} color="#FF6B6B" />
+  //       </Pressable>
+  //     ),
+  //   });
+  // }, [navigation]);
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Pressable
-          onPress={() => navigation.navigate("NewPost")}
-          style={{ marginRight: 15 }}
-        >
+        <Pressable onPress={handleNewPost} style={{ marginRight: 15 }}>
           <AntDesign name="plus" size={24} color="#FF6B6B" />
         </Pressable>
       ),
     });
   }, [navigation]);
+
+  const handleNewPost = () => {
+    if (!auth.currentUser) {
+      promptLogin(navigation, getLoginPromptMessage("create-post"));
+      return;
+    }
+    navigation.navigate("NewPost");
+  };
 
   const loadPosts = async () => {
     setLoading(true);
@@ -67,6 +85,10 @@ export default function Explorer({ navigation }) {
   };
 
   const handleLike = async (postId, increment) => {
+    if (!auth.currentUser) {
+      promptLogin(navigation, getLoginPromptMessage("like-post"));
+      return;
+    }
     try {
       await updatePostStatistics(postId, "likesCount", increment);
       await loadPosts();

@@ -15,10 +15,7 @@ export default function Login({ navigation }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSkip = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "MainTabs" }],
-    });
+    navigation.navigate("MainTabs");
   };
 
   const validateForm = () => {
@@ -94,10 +91,6 @@ export default function Login({ navigation }) {
         editable={!isSubmitting}
       />
 
-      <Pressable style={[buttonStyles.skipButton]} onPress={handleSkip}>
-        <Text style={buttonStyles.skipButtonText}>Continue as Guest</Text>
-      </Pressable>
-
       <Pressable
         style={[
           buttonStyles.authButton,
@@ -109,6 +102,10 @@ export default function Login({ navigation }) {
         <Text style={buttonStyles.authButtonText}>
           {isSubmitting ? "Logging in..." : "Login"}
         </Text>
+      </Pressable>
+
+      <Pressable style={[buttonStyles.skipButton]} onPress={handleSkip}>
+        <Text style={buttonStyles.skipButtonText}>Continue as Guest</Text>
       </Pressable>
 
       {/* Add Forgot Password Link */}
