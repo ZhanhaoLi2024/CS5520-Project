@@ -9,7 +9,7 @@ import { PlanItem } from "../../components/MealPlan/PlanItem";
 import { useFocusEffect } from "@react-navigation/native";
 import { generalStyles } from "../../theme/generalStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
-import WeatherComponent from "../../components/Weather/WeatherComponent";
+// import WeatherComponent from "../../components/Weather/WeatherComponent";
 
 export default function Plan({ navigation }) {
   const [mealPlans, setMealPlans] = useState([]);

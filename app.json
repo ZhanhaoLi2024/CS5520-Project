@@ -25,6 +25,12 @@
           "photosPermission": "The app needs access to your photos to let you share them with your friends.",
           "cameraPermission": "The app needs access to your camera to let you take photos to share."
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
       ]
     ],
     "ios": {
