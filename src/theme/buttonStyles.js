@@ -190,4 +190,48 @@ export const buttonStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+
+  skipButton: {
+    backgroundColor: "transparent",
+    padding: 15,
+    borderRadius: 5,
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: "#FF6B6B",
+  },
+  skipButtonText: {
+    color: "#FF6B6B",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  skipButton: {
+    backgroundColor: "transparent",
+    padding: 15,
+    borderRadius: 5,
+    marginBottom: 15,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#FF6B6B",
+  },
+  skipButtonText: {
+    color: "#FF6B6B",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  authButton: {
+    backgroundColor: "#FF6B6B",
+    padding: 15,
+    borderRadius: 5,
+    marginBottom: 15,
+    alignItems: "center",
+  },
+  authButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  authButtonDisabled: {
+    backgroundColor: "#ffb3b3",
+  },
 });

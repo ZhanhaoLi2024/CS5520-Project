@@ -9,11 +9,13 @@ import { PlanItem } from "../../components/MealPlan/PlanItem";
 import { useFocusEffect } from "@react-navigation/native";
 import { generalStyles } from "../../theme/generalStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import { promptLogin, getLoginPromptMessage } from "../../utils/authUtils";
 // import WeatherComponent from "../../components/Weather/WeatherComponent";
 
-export default function Plan({ navigation }) {
+export default function Plan({ navigation, auth }) {
   const [mealPlans, setMealPlans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { setIsGuest } = auth;
   // const WEATHERSTACK_API_KEY = process.env.EXPO_PUBLIC_WEATHERSTACK_API_KEY;
 
   useFocusEffect(
@@ -26,7 +28,18 @@ export default function Plan({ navigation }) {
     navigation.setOptions({
       headerRight: () => (
         <Pressable
-          onPress={() => navigation.navigate("MealPlanner")}
+          // onPress={() => navigation.navigate("MealPlanner")}
+          onPress={() => {
+            if (!auth.currentUser) {
+              promptLogin(
+                navigation,
+                getLoginPromptMessage("create-plan"),
+                setIsGuest
+              );
+              return;
+            }
+            navigation.navigate("MealPlanner");
+          }}
           style={({ pressed }) => [
             buttonStyles.headerAddButton,
             pressed && buttonStyles.buttonPressed,
@@ -38,11 +51,28 @@ export default function Plan({ navigation }) {
     });
 
     loadMealPlans();
-  }, [navigation]);
+  }, [navigation, setIsGuest]);
 
+  // const loadMealPlans = async () => {
+  //   try {
+  //     const userId = auth.currentUser.uid;
+  //     const plans = await getUserMealPlans(userId);
+  //     setMealPlans(plans);
+  //   } catch (error) {
+  //     console.error("Error loading meal plans:", error);
+  //     Alert.alert("Error", "Failed to load meal plans");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const loadMealPlans = async () => {
     try {
-      const userId = auth.currentUser.uid;
+      const userId = auth.currentUser?.uid; // Use optional chaining
+      if (!userId) {
+        setMealPlans([]); // Set empty array for guest users
+        setLoading(false);
+        return;
+      }
       const plans = await getUserMealPlans(userId);
       setMealPlans(plans);
     } catch (error) {

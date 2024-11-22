@@ -15,7 +15,7 @@ import { inputStyles } from "../../theme/inputStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
 import { createUserInFirestore } from "../../Firebase/firebaseHelper";
 
-export default function Signup({ navigation }) {
+export default function Signup({ navigation, onGuestMode }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState(""); // 新增用户名状态
@@ -28,6 +28,11 @@ export default function Signup({ navigation }) {
     hasSpecialChar: false,
     passwordsMatch: false,
   });
+
+  const handleSkip = () => {
+    onGuestMode();
+    navigation.navigate("MainTabs");
+  };
 
   useEffect(() => {
     setPasswordStrength({
@@ -169,7 +174,7 @@ export default function Signup({ navigation }) {
           <Text style={buttonStyles.authButtonText}>Sign Up</Text>
         </Pressable>
 
-        <Pressable onPress={() => navigation.replace("Login")}>
+        <Pressable onPress={() => navigation.replace("LoginScreen")}>
           <Text style={generalStyles.linkText}>
             Already have an account? Log in
           </Text>
