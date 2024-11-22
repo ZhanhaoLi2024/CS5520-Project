@@ -102,6 +102,11 @@ const AuthStack = () => (
       component={Signup}
       options={{ title: "Create Account" }}
     />
+    <Stack.Screen
+      name="ResetPassword"
+      component={ResetPassword}
+      options={{ title: "Reset Password" }}
+    />
   </>
 );
 
