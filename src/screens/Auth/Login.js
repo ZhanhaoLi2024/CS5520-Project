@@ -14,6 +14,13 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleSkip = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "MainTabs" }],
+    });
+  };
+
   const validateForm = () => {
     if (!email.trim()) {
       Alert.alert("Error", "Please enter your email");
@@ -86,6 +93,10 @@ export default function Login({ navigation }) {
         secureTextEntry
         editable={!isSubmitting}
       />
+
+      <Pressable style={[buttonStyles.skipButton]} onPress={handleSkip}>
+        <Text style={buttonStyles.skipButtonText}>Continue as Guest</Text>
+      </Pressable>
 
       <Pressable
         style={[
