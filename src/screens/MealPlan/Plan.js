@@ -9,6 +9,7 @@ import { PlanItem } from "../../components/MealPlan/PlanItem";
 import { useFocusEffect } from "@react-navigation/native";
 import { generalStyles } from "../../theme/generalStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import { promptLogin, getLoginPromptMessage } from "../../utils/authUtils";
 // import WeatherComponent from "../../components/Weather/WeatherComponent";
 
 export default function Plan({ navigation }) {
@@ -26,7 +27,14 @@ export default function Plan({ navigation }) {
     navigation.setOptions({
       headerRight: () => (
         <Pressable
-          onPress={() => navigation.navigate("MealPlanner")}
+          // onPress={() => navigation.navigate("MealPlanner")}
+          onPress={() => {
+            if (!auth.currentUser) {
+              promptLogin(navigation, getLoginPromptMessage("create-plan"));
+              return;
+            }
+            navigation.navigate("MealPlanner");
+          }}
           style={({ pressed }) => [
             buttonStyles.headerAddButton,
             pressed && buttonStyles.buttonPressed,
