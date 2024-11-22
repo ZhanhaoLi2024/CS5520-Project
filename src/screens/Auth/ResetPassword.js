@@ -73,7 +73,7 @@ export default function ResetPassword({ navigation }) {
         </Text>
       </Pressable>
 
-      <Pressable onPress={() => navigation.navigate("Login")}>
+      <Pressable onPress={() => navigation.replace("LoginScreen")}>
         <Text style={generalStyles.linkText}>Back to Login</Text>
       </Pressable>
     </View>

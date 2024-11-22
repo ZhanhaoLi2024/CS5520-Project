@@ -157,7 +157,7 @@ export default function Login({ navigation }) {
         <Text style={buttonStyles.skipButtonText}>Continue as Guest</Text>
       </Pressable>
 
-      <Pressable onPress={() => navigation.navigate("ResetPasswordScreen")}>
+      <Pressable onPress={() => navigation.replace("ResetPasswordScreen")}>
         <Text style={[generalStyles.linkText, { marginBottom: 20 }]}>
           Forgot Password?
         </Text>
