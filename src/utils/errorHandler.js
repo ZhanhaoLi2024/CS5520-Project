@@ -1,153 +1,121 @@
-const ERROR_MESSAGES = {
-  "auth/email-already-in-use": {
-    title: "Email Already Registered",
-    message:
-      "This email is already registered. Please try logging in or use a different email address.",
-    actionLabel: "Go to Login",
-    action: "navigateToLogin",
+// User guidance constants for different scenarios
+export const USER_GUIDANCE = {
+  login: {
+    title: "Welcome back!",
+    message: "Sign in to continue sharing your culinary journey.",
+    tips: [
+      "Use your registered email address",
+      "Password is case sensitive",
+      "Check your email for any verification links",
+    ],
   },
+  signup: {
+    title: "Join iCook Community",
+    message: "Create an account to start sharing your recipes.",
+    tips: [
+      "Use a valid email address you can access",
+      "Choose a strong password that's easy to remember",
+      "Your username will be visible to other users",
+    ],
+    passwordRequirements: [
+      "At least 6 characters long",
+      "Includes uppercase and lowercase letters",
+      "Contains at least one number",
+      "Contains at least one special character",
+    ],
+  },
+};
+
+// Error codes mapping to user-friendly messages
+const ERROR_MESSAGES = {
   "auth/invalid-email": {
     title: "Invalid Email",
     message: "Please enter a valid email address.",
     actionLabel: "Try Again",
   },
-  "auth/operation-not-allowed": {
-    title: "Operation Not Allowed",
-    message:
-      "This authentication method is not enabled. Please contact support.",
-    actionLabel: "OK",
-  },
-  "auth/weak-password": {
-    title: "Weak Password",
-    message:
-      "Password should be at least 6 characters long and include a mix of letters, numbers and symbols.",
-    actionLabel: "Try Again",
-  },
   "auth/user-disabled": {
     title: "Account Disabled",
-    message:
-      "This account has been disabled. Please contact support for assistance.",
-    actionLabel: "OK",
+    message: "Your account has been disabled. Please contact support.",
+    actionLabel: "Contact Support",
   },
   "auth/user-not-found": {
     title: "Account Not Found",
-    message:
-      "No account found with this email address. Would you like to create a new account?",
+    message: "No account found with this email. Would you like to create one?",
     actionLabel: "Sign Up",
-    action: "navigateToSignup",
+    navigateTo: "Signup",
   },
   "auth/wrong-password": {
     title: "Incorrect Password",
     message:
-      "The password you entered is incorrect. Please try again or reset your password.",
+      "The password you entered is incorrect. Would you like to reset it?",
     actionLabel: "Reset Password",
-    action: "navigateToReset",
+    navigateTo: "ResetPassword",
   },
-  "auth/too-many-requests": {
-    title: "Too Many Attempts",
+  "auth/email-already-in-use": {
+    title: "Email Already Registered",
     message:
-      "Access to this account has been temporarily disabled due to many failed login attempts. Please try again later.",
+      "This email is already registered. Would you like to login instead?",
+    actionLabel: "Login",
+    navigateTo: "Login",
+  },
+  "auth/weak-password": {
+    title: "Weak Password",
+    message: "Please choose a stronger password. See the requirements below.",
     actionLabel: "OK",
   },
-
-  "permission-denied": {
-    title: "Permission Denied",
-    message:
-      "You don't have permission to perform this action. Please log in again.",
-    actionLabel: "Login",
-    action: "navigateToLogin",
-  },
-  "not-found": {
-    title: "Not Found",
-    message: "The requested resource was not found.",
-    actionLabel: "Go Back",
-  },
-
-  "network-error": {
+  "auth/network-request-failed": {
     title: "Network Error",
-    message:
-      "Unable to connect to the server. Please check your internet connection and try again.",
+    message: "Please check your internet connection and try again.",
     actionLabel: "Retry",
   },
+};
 
-  default: {
+/**
+ * Handles Firebase authentication errors and returns user-friendly error information
+ * @param {Error} error - The error object from Firebase
+ * @param {Object} navigation - React Navigation navigation object
+ * @returns {Object} Error information including title, message, and action
+ */
+export const handleError = (error, navigation) => {
+  console.error("Auth error:", error.code, error.message);
+
+  const errorInfo = ERROR_MESSAGES[error.code] || {
     title: "Error",
     message: "An unexpected error occurred. Please try again.",
     actionLabel: "OK",
-  },
-};
-
-const getErrorCode = (error) => {
-  if (error.code) return error.code;
-  if (error.message && error.message.includes("network"))
-    return "network-error";
-  return "default";
-};
-
-export const handleError = (error, navigation = null) => {
-  const errorCode = getErrorCode(error);
-  const errorInfo = ERROR_MESSAGES[errorCode] || ERROR_MESSAGES.default;
-
-  const handleAction = () => {
-    if (!navigation) return;
-
-    switch (errorInfo.action) {
-      case "navigateToLogin":
-        navigation.replace("Login");
-        break;
-      case "navigateToSignup":
-        navigation.replace("Signup");
-        break;
-      case "navigateToReset":
-        break;
-      default:
-        break;
-    }
   };
 
   return {
     ...errorInfo,
-    handleAction,
+    handleAction: () => {
+      if (errorInfo.navigateTo) {
+        navigation.navigate(errorInfo.navigateTo);
+      }
+    },
   };
 };
 
-export const USER_GUIDANCE = {
-  login: {
-    title: "Welcome Back!",
-    message: "Enter your credentials to access your account.",
-    tips: [
-      "Make sure your password is correct",
-      "Check if Caps Lock is turned on",
-      "Verify your internet connection",
-    ],
-  },
-  signup: {
-    title: "Create Your Account",
-    message: "Join our community to share and discover delicious recipes.",
-    tips: [
-      "Use a strong password with mixed characters",
-      "Double-check your email address",
-      "Remember your login details",
-    ],
-  },
-  posting: {
-    title: "Share Your Recipe",
-    message: "Help others discover your culinary creations.",
-    tips: [
-      "Add clear, descriptive titles",
-      "Include detailed cooking steps",
-      "Add photos to showcase your dish",
-      "Share cooking tips and tricks",
-    ],
-  },
-  mealPlanning: {
-    title: "Plan Your Meals",
-    message: "Organize your weekly menu efficiently.",
-    tips: [
-      "Plan ahead for the whole week",
-      "Consider prep time for each meal",
-      "Balance your meal types",
-      "Check your ingredient inventory",
-    ],
-  },
+/**
+ * Validates password strength
+ * @param {string} password - The password to validate
+ * @returns {Object} Validation result with specific criteria met
+ */
+export const validatePassword = (password) => {
+  return {
+    length: password.length >= 6,
+    hasUpperCase: /[A-Z]/.test(password),
+    hasLowerCase: /[a-z]/.test(password),
+    hasNumber: /[0-9]/.test(password),
+    hasSpecialChar: /[!@#$%^&*]/.test(password),
+  };
+};
+
+/**
+ * Validates email format
+ * @param {string} email - The email to validate
+ * @returns {boolean} Whether the email is valid
+ */
+export const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 };
