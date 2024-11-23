@@ -544,4 +544,13 @@ export const generalStyles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
+
+  reminderInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 16,
+    marginVertical: 10,
+  },
 });

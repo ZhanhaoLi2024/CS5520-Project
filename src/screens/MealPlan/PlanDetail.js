@@ -83,7 +83,7 @@ export default function PlanDetail({ route, navigation }) {
         <View style={generalStyles.section}>
           <Text style={generalStyles.label}>Set a Reminder</Text>
           <TextInput
-            style={generalStyles.input}
+            style={generalStyles.reminderInput}
             placeholder="Customize your reminder message"
             value={reminderMessage}
             onChangeText={setReminderMessage}
