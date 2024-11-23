@@ -50,7 +50,7 @@ export default function PlanDetail({ route, navigation }) {
       triggerDate
     );
 
-    Alert.alert("Reminder Set", `We’ll remind you to start cooking at ${triggerDate.toLocaleTimeString()}`);
+    Alert.alert("Reminder Set", `We’ll remind you to start cooking at ${triggerDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`);
   };
 
   return (
@@ -93,7 +93,7 @@ export default function PlanDetail({ route, navigation }) {
             onPress={() => setShowDatePicker(true)}
           >
             <Text style={buttonStyles.dateButtonText}>
-              {reminderTime.toLocaleTimeString()}
+              {reminderTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </Text>
           </Pressable>
         </View>
