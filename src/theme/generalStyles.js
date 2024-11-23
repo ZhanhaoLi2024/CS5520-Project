@@ -522,4 +522,26 @@ export const generalStyles = StyleSheet.create({
   activeExplorerTabButtonText: {
     color: "#FF6B6B", // Renamed from "activeTabButtonText"
   },
+
+
+  searchContainer: {
+    padding: 10,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  searchInput: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    fontSize: 16,
+  },
+  sortContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
 });

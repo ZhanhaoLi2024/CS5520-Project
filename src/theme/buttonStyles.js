@@ -239,4 +239,21 @@ export const buttonStyles = StyleSheet.create({
   headerAddButton: {
     marginRight: 15,
   },
+
+  sortButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  activeSortButton: {
+    backgroundColor: "#FF6B6B",
+    borderColor: "#FF6B6B",
+  },
+  sortButtonText: {
+    color: "#333",
+    fontSize: 14,
+    fontWeight: "600",
+  },
 });
