@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, Alert } from "react-native";
 import MapView, { Marker, Callout } from "react-native-maps";
 import * as Location from "expo-location";
 import { getAllPostsWithStats } from "../Firebase/firebaseHelper";
@@ -18,7 +18,7 @@ export default function Map({ navigation }) {
     longitudeDelta: 0.0421,
   };
 
-  // get user location permission and current location
+  // Get user location permission and current location
   useEffect(() => {
     (async () => {
       try {
@@ -46,7 +46,7 @@ export default function Map({ navigation }) {
     })();
   }, []);
 
-  // load all posts with location information
+  // Load all posts with location information
   const loadPosts = async () => {
     try {
       const allPosts = await getAllPostsWithStats();
@@ -75,12 +75,12 @@ export default function Map({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={generalStyles.mapContainer}>
       <MapView
-        style={styles.map}
+        style={generalStyles.map}
         initialRegion={location || defaultRegion}
-        showsUserLocation={true} // show user current location
-        showsMyLocationButton={true} // add a button to go back to current location
+        showsUserLocation={true} // Show user current location
+        showsMyLocationButton={true} // Add a button to go back to current location
       >
         {location && (
           <Marker
@@ -104,14 +104,16 @@ export default function Map({ navigation }) {
             <Callout
               onPress={() => navigation.navigate("PostDetail", { post })}
             >
-              <View style={styles.callout}>
-                <Text style={styles.calloutTitle}>{post.title}</Text>
-                <Text style={styles.calloutDescription}>
+              <View style={generalStyles.calloutContainer}>
+                <Text style={generalStyles.calloutTitle}>{post.title}</Text>
+                <Text style={generalStyles.calloutDescription}>
                   {post.description.length > 50
                     ? `${post.description.substring(0, 50)}...`
                     : post.description}
                 </Text>
-                <Text style={styles.calloutTap}>Tap to view details</Text>
+                <Text style={generalStyles.calloutTapMessage}>
+                  Tap to view details
+                </Text>
               </View>
             </Callout>
           </Marker>
@@ -119,52 +121,10 @@ export default function Map({ navigation }) {
       </MapView>
 
       {errorMsg && (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{errorMsg}</Text>
+        <View style={generalStyles.errorBox}>
+          <Text style={generalStyles.errorMessage}>{errorMsg}</Text>
         </View>
       )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-  },
-  callout: {
-    width: 200,
-    padding: 10,
-  },
-  calloutTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 4,
-    color: "#FF6B6B",
-  },
-  calloutDescription: {
-    fontSize: 12,
-    color: "#666",
-    marginBottom: 4,
-  },
-  calloutTap: {
-    fontSize: 10,
-    color: "#999",
-    fontStyle: "italic",
-  },
-  errorContainer: {
-    position: "absolute",
-    bottom: 20,
-    left: 20,
-    right: 20,
-    backgroundColor: "rgba(255, 107, 107, 0.9)",
-    padding: 10,
-    borderRadius: 5,
-  },
-  errorText: {
-    color: "white",
-    textAlign: "center",
-  },
-});

@@ -456,4 +456,44 @@ export const generalStyles = StyleSheet.create({
     borderRadius: 6,
     overflow: "hidden",
   },
+  // reusable styles for the map
+  mapContainer: {
+    flex: 1, // Renamed from "container" to "mapContainer"
+  },
+  map: {
+    flex: 1,
+  },
+  calloutContainer: {
+    width: 200,
+    padding: 10, // Renamed from "callout"
+  },
+  calloutTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+    color: "#FF6B6B",
+  },
+  calloutDescription: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 4,
+  },
+  calloutTapMessage: {
+    fontSize: 10,
+    color: "#999",
+    fontStyle: "italic", // Renamed from "calloutTap"
+  },
+  errorBox: {
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: "rgba(255, 107, 107, 0.9)",
+    padding: 10,
+    borderRadius: 5,
+  },
+  errorMessage: {
+    color: "white",
+    textAlign: "center",
+  },
 });
