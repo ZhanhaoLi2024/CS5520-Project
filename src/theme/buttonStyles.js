@@ -234,4 +234,9 @@ export const buttonStyles = StyleSheet.create({
   authButtonDisabled: {
     backgroundColor: "#ffb3b3",
   },
+
+  // for the header of Explorer screen
+  headerAddButton: {
+    marginRight: 15,
+  },
 });

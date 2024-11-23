@@ -496,4 +496,30 @@ export const generalStyles = StyleSheet.create({
     color: "white",
     textAlign: "center",
   },
+
+  // reusable styles for Explorer screen
+  explorerTabBar: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    backgroundColor: "#fff", // Renamed from "tabBar"
+  },
+  explorerTabButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: "center",
+    borderBottomWidth: 2,
+    borderBottomColor: "transparent", // Renamed from "tabButton"
+  },
+  activeExplorerTabButton: {
+    borderBottomColor: "#FF6B6B", // Renamed from "activeTabButton"
+  },
+  explorerTabButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#999999", // Renamed from "tabButtonText"
+  },
+  activeExplorerTabButtonText: {
+    color: "#FF6B6B", // Renamed from "activeTabButtonText"
+  },
 });
