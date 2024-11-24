@@ -17,6 +17,7 @@ export default function PlanDetail({ route, navigation }) {
   const { plan } = route.params;
   const [reminderTime, setReminderTime] = useState(new Date());
   const [reminderMessage, setReminderMessage] = useState(`Time to start cooking ${plan.dishName}!`);
+  const [expoPushToken, setExpoPushToken] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
@@ -24,8 +25,13 @@ export default function PlanDetail({ route, navigation }) {
       title: plan.dishName,
     });
 
-    // Request notification permissions on mount
-    NotificationManager.requestPermissions();
+    // Request permissions and fetch the Expo push token
+    const setupNotifications = async () => {
+      const token = await NotificationManager.getExpoPushToken();
+      setExpoPushToken(token);
+    };
+
+    setupNotifications();
   }, [navigation, plan.dishName]);
 
   const formatDate = (dateString) => {
@@ -50,7 +56,25 @@ export default function PlanDetail({ route, navigation }) {
       triggerDate
     );
 
-    Alert.alert("Reminder Set", `We’ll remind you to start cooking at ${triggerDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`);
+    Alert.alert(
+      "Reminder Set",
+      `We’ll remind you to start cooking at ${triggerDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+    );
+  };
+
+  const handleSendPushNotification = async () => {
+    if (!expoPushToken) {
+      Alert.alert("Error", "No push token available.");
+      return;
+    }
+
+    await NotificationManager.sendPushNotification(
+      expoPushToken,
+      "Cooking Reminder",
+      reminderMessage
+    );
+
+    Alert.alert("Notification Sent", "A push notification has been sent.");
   };
 
   return (
@@ -128,9 +152,9 @@ export default function PlanDetail({ route, navigation }) {
           buttonStyles.submitButton,
           pressed && buttonStyles.submitButtonPressed,
         ]}
-        onPress={() => navigation.navigate("PlanEdit", { plan })}
+        onPress={handleSendPushNotification}
       >
-        <Text style={buttonStyles.submitButtonText}>Edit Plan</Text>
+        <Text style={buttonStyles.submitButtonText}>Send Push Notification</Text>
       </Pressable>
     </View>
   );
