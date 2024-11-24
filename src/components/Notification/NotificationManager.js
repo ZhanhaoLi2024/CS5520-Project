@@ -39,15 +39,28 @@ export const NotificationManager = {
 
   scheduleNotification: async (title, body, triggerDate) => {
     try {
+      // Ensure triggerDate is in the future
+      if (triggerDate <= new Date()) {
+        Alert.alert("Invalid Time", "Please select a future time for the notification.");
+        return;
+      }
+
+      const trigger = {
+        type: "date", // Correct type for date-based scheduling
+        date: triggerDate, // Specify the exact date and time
+      };
+
+      console.log("Scheduling notification with trigger:", trigger);
+
       await Notifications.scheduleNotificationAsync({
         content: {
           title,
           body,
         },
-        trigger: {
-          date: triggerDate, // Schedule at a specific date and time
-        },
+        trigger, // Use the updated trigger configuration
       });
+
+      console.log("Notification scheduled successfully");
     } catch (error) {
       console.error("Error scheduling notification:", error);
     }
