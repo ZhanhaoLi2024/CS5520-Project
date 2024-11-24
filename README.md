@@ -98,14 +98,14 @@ service cloud.firestore {
 
 ### Authentication Flow
 
-![Login Screen](path/to/login-screenshot.png)
+![Login Screen](path/README/login-screenshot.png)
 
 - Email/password login
 - Guest mode option
 - Password reset link
 - Sign up navigation
 
-![Signup Screen](path/to/signup-screenshot.png)
+![Signup Screen](path/README/signup-screenshot.png)
 
 - Email/password registration
 - Password strength indicators
@@ -114,7 +114,7 @@ service cloud.firestore {
 
 ### Location Features
 
-![Map View](path/to/map-screenshot.png)
+![Map View](path/README/map-screenshot.png)
 
 - Interactive map with post markers
 - Current location display
@@ -123,7 +123,7 @@ service cloud.firestore {
 
 ### Camera Integration
 
-![Image Capture](path/to/camera-screenshot.png)
+![Image Capture](path/README/camera-screenshot.png)
 
 - Camera permission handling
 - Image preview
