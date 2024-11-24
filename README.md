@@ -130,6 +130,42 @@ service cloud.firestore {
 - Retake option
 - Upload progress indicator
 
+### Reminder Setup
+
+![Image Capture](assets/README/SolganSetup.png)
+![Image Capture](assets/README/Timepicker.png)
+- User can set up reminder time and type the alert text they want
+
+### Reminder Confirmation
+
+![Image Capture](assets/README/ReminderConfirm.png)
+
+- User will receive an alert that the reminder is created successfully
+
+### Notification
+
+![Image Capture](assets/README/Notification1.png)
+![Image Capture](assets/README/Notification2.png)
+![Image Capture](assets/README/Notification3.png)
+
+- User will receive a notification from server will a alert message they created before and with two options to interact on physical device
+
+### Sort and Search 
+![Image Capture](assets/README/NewestSort.png)
+- User can sort the posts and plans from latest to older
+
+![Image Capture](assets/README/OldestSort.png)
+- User can sort the posts and plans from oldest to latest
+
+![Image Capture](assets/README/MostLikedSort.png)
+- User can sort the posts from most liked to poorest liked
+
+![Image Capture](assets/README/DishNameSort.png)
+- User can sort plans from A to Z order
+
+![Image Capture](assets/README/Search.png)
+- User can search posts and plans with a search bar and type the input
+
 ## Environment Variables
 
 Add the following to your .env file:
@@ -273,7 +309,7 @@ EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 1. Install new dependencies:
 
 ```bash
-npx expo install expo-image-picker expo-location react-native-maps @react-native-async-storage/async-storage
+npx expo install expo-image-picker expo-location react-native-maps @react-native-async-storage/async-storage @react-native-community/datetimepicker expo-notifications expo-constants
 ```
 
 2. Configure environment variables in .env file
