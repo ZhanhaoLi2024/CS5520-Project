@@ -17,7 +17,6 @@ export default function PlanDetail({ route, navigation }) {
   const { plan } = route.params;
   const [reminderTime, setReminderTime] = useState(new Date());
   const [reminderMessage, setReminderMessage] = useState(`Time to start cooking ${plan.dishName}!`);
-  const [expoPushToken, setExpoPushToken] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
@@ -25,13 +24,7 @@ export default function PlanDetail({ route, navigation }) {
       title: plan.dishName,
     });
 
-    // Request permissions and fetch the Expo push token
-    const setupNotifications = async () => {
-      const token = await NotificationManager.getExpoPushToken();
-      setExpoPushToken(token);
-    };
-
-    setupNotifications();
+    NotificationManager.getExpoPushToken(); // Ensure token permissions are requested
   }, [navigation, plan.dishName]);
 
   const formatDate = (dateString) => {
@@ -43,38 +36,32 @@ export default function PlanDetail({ route, navigation }) {
     });
   };
 
-  const handleSetReminder = () => {
+  const handleSetReminder = async () => {
     const triggerDate = new Date(reminderTime);
     if (triggerDate <= new Date()) {
       Alert.alert("Invalid Time", "Please select a future time for the reminder.");
       return;
     }
 
+    const notificationData = {
+      planId: plan.id,
+      plan,
+    };
+
     NotificationManager.scheduleNotification(
       "Cooking Reminder",
       reminderMessage,
-      triggerDate
+      triggerDate,
+      notificationData
     );
 
     Alert.alert(
       "Reminder Set",
-      `We’ll remind you to start cooking at ${triggerDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+      `We’ll remind you to start cooking at ${triggerDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}`
     );
-  };
-
-  const handleSendPushNotification = async () => {
-    if (!expoPushToken) {
-      Alert.alert("Error", "No push token available.");
-      return;
-    }
-
-    await NotificationManager.sendPushNotification(
-      expoPushToken,
-      "Cooking Reminder",
-      reminderMessage
-    );
-
-    Alert.alert("Notification Sent", "A push notification has been sent.");
   };
 
   return (
@@ -140,21 +127,22 @@ export default function PlanDetail({ route, navigation }) {
       {/* Buttons */}
       <Pressable
         style={({ pressed }) => [
-          buttonStyles.submitButton,
+          buttonStyles.submitButton, // Same style as the Edit Plan button
           pressed && buttonStyles.submitButtonPressed,
         ]}
         onPress={handleSetReminder}
       >
         <Text style={buttonStyles.submitButtonText}>Set Reminder</Text>
       </Pressable>
+
       <Pressable
         style={({ pressed }) => [
           buttonStyles.submitButton,
           pressed && buttonStyles.submitButtonPressed,
         ]}
-        onPress={handleSendPushNotification}
+        onPress={() => navigation.navigate("PlanEdit", { plan })}
       >
-        <Text style={buttonStyles.submitButtonText}>Send Push Notification</Text>
+        <Text style={buttonStyles.submitButtonText}>Edit Plan</Text>
       </Pressable>
     </View>
   );

@@ -1,14 +1,11 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { auth } from "./src/Firebase/firebaseSetup";
 import { onAuthStateChanged } from "firebase/auth";
-import {
-  Feather,
-  MaterialIcons,
-  FontAwesome5,
-} from "react-native-vector-icons";
+import { Feather, MaterialIcons, FontAwesome5 } from "react-native-vector-icons";
+import { setupNotificationResponseListener } from "./src/components/Notification/NotificationManager";
 
 // Import screens
 import Login from "./src/screens/Auth/Login";
@@ -31,7 +28,6 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const AuthStack = createNativeStackNavigator();
 
-// Create and export AuthContext with default values
 export const AuthContext = React.createContext({
   isGuest: false,
   setIsGuest: () => {},
@@ -40,7 +36,6 @@ export const AuthContext = React.createContext({
   isGuestMode: () => false,
 });
 
-// Higher-order component for auth context
 const withAuth = (Component) => {
   return function WithAuthComponent(props) {
     const auth = React.useContext(AuthContext);
@@ -48,13 +43,11 @@ const withAuth = (Component) => {
   };
 };
 
-// Wrap components that need auth context
 const ExplorerWithAuth = withAuth(Explorer);
 const ProfileWithAuth = withAuth(Profile);
 const PlanWithAuth = withAuth(Plan);
 const MapWithAuth = withAuth(Map);
 
-// Bottom tabs navigator component
 function BottomTabs() {
   const { setIsGuest } = React.useContext(AuthContext);
 
@@ -126,7 +119,6 @@ function BottomTabs() {
   );
 }
 
-// Auth navigator for authentication flow
 function AuthNavigator() {
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: true }}>
@@ -149,7 +141,6 @@ function AuthNavigator() {
   );
 }
 
-// App navigator for main app flow
 function AppNavigator() {
   return (
     <Stack.Navigator>
@@ -212,7 +203,6 @@ function AppNavigator() {
   );
 }
 
-// Root navigator to handle auth state
 function RootNavigator() {
   const { user, isGuest } = React.useContext(AuthContext);
 
@@ -230,6 +220,7 @@ function RootNavigator() {
 export default function App() {
   const [user, setUser] = useState(null);
   const [isGuest, setIsGuest] = useState(false);
+  const navigationRef = useRef(null); // Reference for navigation
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -239,6 +230,12 @@ export default function App() {
       }
     });
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (navigationRef.current) {
+      setupNotificationResponseListener(navigationRef.current); // Pass navigationRef here
+    }
   }, []);
 
   const authContext = {
@@ -252,7 +249,7 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <RootNavigator />
       </NavigationContainer>
     </AuthContext.Provider>

@@ -1,7 +1,7 @@
 import React from "react";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
-import { Alert, Platform } from "react-native";
+import { Alert } from "react-native";
 
 // Configure notification behavior for foreground notifications
 Notifications.setNotificationHandler({
@@ -12,9 +12,23 @@ Notifications.setNotificationHandler({
   }),
 });
 
+// Define action categories for interactive buttons
+Notifications.setNotificationCategoryAsync("reminder", [
+  {
+    identifier: "CONFIRM",
+    buttonTitle: "Confirm",
+    options: { opensAppToForeground: true },
+  },
+  {
+    identifier: "IGNORE",
+    buttonTitle: "Ignore",
+    options: { isDestructive: true },
+  },
+]);
+
 export const NotificationManager = {
   getExpoPushToken: async () => {
-    if (!Constants.isDevice && !__DEV__) {
+    if (!Constants.isDevice) {
       Alert.alert("Error", "Push notifications are only supported on physical devices.");
       return null;
     }
@@ -37,27 +51,26 @@ export const NotificationManager = {
     return tokenData.data;
   },
 
-  scheduleNotification: async (title, body, triggerDate) => {
+  scheduleNotification: async (title, body, triggerDate, notificationData) => {
     try {
-      // Ensure triggerDate is in the future
       if (triggerDate <= new Date()) {
         Alert.alert("Invalid Time", "Please select a future time for the notification.");
         return;
       }
 
       const trigger = {
-        type: "date", // Correct type for date-based scheduling
-        date: triggerDate, // Specify the exact date and time
+        type: "date",
+        date: triggerDate,
       };
-
-      console.log("Scheduling notification with trigger:", trigger);
 
       await Notifications.scheduleNotificationAsync({
         content: {
           title,
           body,
+          categoryIdentifier: "reminder",
+          data: notificationData, // Attach custom data (e.g., plan details)
         },
-        trigger, // Use the updated trigger configuration
+        trigger,
       });
 
       console.log("Notification scheduled successfully");
@@ -66,13 +79,15 @@ export const NotificationManager = {
     }
   },
 
-  sendPushNotification: async (expoPushToken, title, body) => {
+  sendPushNotification: async (expoPushToken, title, body, notificationData) => {
     try {
       const message = {
         to: expoPushToken,
         sound: "default",
         title,
         body,
+        categoryId: "reminder",
+        data: notificationData,
       };
 
       const response = await fetch("https://exp.host/--/api/v2/push/send", {
@@ -92,4 +107,24 @@ export const NotificationManager = {
       console.error("Error sending push notification:", error);
     }
   },
+};
+
+// Register and handle notification responses
+export const setupNotificationResponseListener = (navigation) => {
+  Notifications.addNotificationResponseReceivedListener((response) => {
+    const actionId = response.actionIdentifier;
+
+    if (actionId === "CONFIRM") {
+      const plan = response.notification.request.content.data.plan;
+      if (plan) {
+        navigation.navigate("PlanDetail", { plan }); // Use navigation to go to the PlanDetail screen
+      } else {
+        Alert.alert("Error", "Plan details not found!");
+      }
+    } else if (actionId === "IGNORE") {
+      console.log("Notification ignored.");
+    } else {
+      console.log("Notification tapped without action.");
+    }
+  });
 };
