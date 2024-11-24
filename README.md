@@ -98,23 +98,31 @@ service cloud.firestore {
 
 ### Authentication Flow
 
-![Login Screen](assets/README/Login.png)
+### Login Screen
+
+<img src="assets/README/Login.png" alt="Login Screen Screenshot" width="500">
 
 - Email/password login
 - Guest mode option
 - Password reset link
-- Sign up navigation
+- Sign-up navigation
 
-![Signup Screen](assets/README/Signup.png)
+---
+
+### Signup Screen
+
+<img src="assets/README/Signup.png" alt="Signup Screen Screenshot" width="500">
 
 - Email/password registration
 - Password strength indicators
 - Form validation
 - Error feedback
 
+---
+
 ### Location Features
 
-![Map View](assets/README/map-screenshot.png)
+<img src="assets/README/map-screenshot.png" alt="Map View Screenshot" width="500">
 
 - Interactive map with post markers
 - Current location display
@@ -132,39 +140,48 @@ service cloud.firestore {
 
 ### Reminder Setup
 
-![Image Capture](assets/README/SolganSetup.png)
-![Image Capture](assets/README/Timepicker.png)
-- User can set up reminder time and type the alert text they want
+<img src="assets/README/SolganSetup.png" alt="Reminder Setup Screenshot" width="500">
+<img src="assets/README/Timepicker.png" alt="Time Picker Screenshot" width="500">
+
+- Users can set a reminder time and input the alert text they want.
+
+---
 
 ### Reminder Confirmation
 
-![Image Capture](assets/README/ReminderConfirm.png)
+<img src="assets/README/ReminderConfirm.png" alt="Reminder Confirmation Screenshot" width="500">
 
-- User will receive an alert that the reminder is created successfully
+- Users will receive an alert confirming that the reminder was created successfully.
+
+---
 
 ### Notification
 
-![Image Capture](assets/README/Notification1.png)
-![Image Capture](assets/README/Notification2.png)
-![Image Capture](assets/README/Notification3.png)
+<img src="assets/README/Notification1.png" alt="Notification Example 1" width="500">
+<img src="assets/README/Notification2.png" alt="Notification Example 2" width="500">
+<img src="assets/README/Notification3.png" alt="Notification Example 3" width="500">
 
-- User will receive a notification from server will a alert message they created before and with two options to interact on physical device
+- Users will receive a notification from the server containing the alert message they created earlier. The notification will include two interactive options available on their physical device.
+
+---
 
 ### Sort and Search 
-![Image Capture](assets/README/NewestSort.png)
-- User can sort the posts and plans from latest to older
 
-![Image Capture](assets/README/OldestSort.png)
-- User can sort the posts and plans from oldest to latest
+<img src="assets/README/NewestSort.png" alt="Sort by Newest Screenshot" width="500">
+- Users can sort the posts and plans from newest to oldest.
 
-![Image Capture](assets/README/MostLikedSort.png)
-- User can sort the posts from most liked to poorest liked
+<img src="assets/README/OldestSort.png" alt="Sort by Oldest Screenshot" width="500">
+- Users can sort the posts and plans from oldest to newest.
 
-![Image Capture](assets/README/DishNameSort.png)
-- User can sort plans from A to Z order
+<img src="assets/README/MostLikedSort.png" alt="Sort by Most Liked Screenshot" width="500">
+- Users can sort the posts from most liked to least liked.
 
-![Image Capture](assets/README/Search.png)
-- User can search posts and plans with a search bar and type the input
+<img src="assets/README/DishNameSort.png" alt="Sort by Dish Name Screenshot" width="500">
+- Users can sort plans alphabetically from A to Z.
+
+<img src="assets/README/Search.png" alt="Search Functionality Screenshot" width="500">
+- Users can search posts and plans using a search bar and type their input.
+
 
 ## Environment Variables
 
