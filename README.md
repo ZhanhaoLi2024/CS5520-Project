@@ -138,6 +138,53 @@ service cloud.firestore {
 - Retake option
 - Upload progress indicator
 
+
+### Reminder Setup
+
+<img src="assets/README/SloganSetup.png" alt="Reminder Setup Screenshot" width="500">
+<img src="assets/README/Timepicker.png" alt="Time Picker Screenshot" width="500">
+
+- Users can set a reminder time and input the alert text they want.
+
+---
+
+### Reminder Confirmation
+
+<img src="assets/README/ReminderConfirm.png" alt="Reminder Confirmation Screenshot" width="500">
+
+- Users will receive an alert confirming that the reminder was created successfully.
+
+---
+
+### Notification
+
+<img src="assets/README/Notification1.png" alt="Notification Example 1" width="500">
+<img src="assets/README/Notification2.jpg" alt="Notification Example 2" width="500">
+<img src="assets/README/Notification3.png" alt="Notification Example 3" width="500">
+
+- Users will receive a notification from the server containing the alert message they created earlier. The notification will include two interactive options available on their physical device.
+
+---
+
+### Sort and Search 
+
+<img src="assets/README/NewestSort.png" alt="Sort by Newest Screenshot" width="500">
+- Users can sort the posts and plans from newest to oldest.
+
+<img src="assets/README/OldestSort.png" alt="Sort by Oldest Screenshot" width="500">
+- Users can sort the posts and plans from oldest to newest.
+
+<img src="assets/README/MostLikedSort.png" alt="Sort by Most Liked Screenshot" width="500">
+- Users can sort the posts from most liked to least liked.
+
+<img src="assets/README/DishNameSort.png" alt="Sort by Dish Name Screenshot" width="500">
+- Users can sort plans alphabetically from A to Z.
+
+<img src="assets/README/Search.png" alt="Search Functionality Screenshot" width="500">
+- Users can search posts and plans using a search bar and type their input.
+
+
+
 ## Environment Variables
 
 Add the following to your .env file:
