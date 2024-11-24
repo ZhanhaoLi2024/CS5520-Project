@@ -98,7 +98,7 @@ service cloud.firestore {
 
 ### Authentication Flow
 
-![Login Screen](assets/README/login-screenshot.png)
+![Login Screen](assets/README/Login.png)
 
 - Email/password login
 - Guest mode option
