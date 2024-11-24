@@ -28,7 +28,7 @@ Notifications.setNotificationCategoryAsync("reminder", [
 
 export const NotificationManager = {
   getExpoPushToken: async () => {
-    if (!Constants.isDevice) {
+    if (!Constants.isDevice && !__DEV__) {
       Alert.alert("Error", "Push notifications are only supported on physical devices.");
       return null;
     }
