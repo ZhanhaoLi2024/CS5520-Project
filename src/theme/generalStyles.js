@@ -456,4 +456,101 @@ export const generalStyles = StyleSheet.create({
     borderRadius: 6,
     overflow: "hidden",
   },
+  // reusable styles for the map
+  mapContainer: {
+    flex: 1, // Renamed from "container" to "mapContainer"
+  },
+  map: {
+    flex: 1,
+  },
+  calloutContainer: {
+    width: 200,
+    padding: 10, // Renamed from "callout"
+  },
+  calloutTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+    color: "#FF6B6B",
+  },
+  calloutDescription: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 4,
+  },
+  calloutTapMessage: {
+    fontSize: 10,
+    color: "#999",
+    fontStyle: "italic", // Renamed from "calloutTap"
+  },
+  errorBox: {
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: "rgba(255, 107, 107, 0.9)",
+    padding: 10,
+    borderRadius: 5,
+  },
+  errorMessage: {
+    color: "white",
+    textAlign: "center",
+  },
+
+  // reusable styles for Explorer screen
+  explorerTabBar: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    backgroundColor: "#fff", // Renamed from "tabBar"
+  },
+  explorerTabButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: "center",
+    borderBottomWidth: 2,
+    borderBottomColor: "transparent", // Renamed from "tabButton"
+  },
+  activeExplorerTabButton: {
+    borderBottomColor: "#FF6B6B", // Renamed from "activeTabButton"
+  },
+  explorerTabButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#999999", // Renamed from "tabButtonText"
+  },
+  activeExplorerTabButtonText: {
+    color: "#FF6B6B", // Renamed from "activeTabButtonText"
+  },
+
+
+  searchContainer: {
+    padding: 10,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  searchInput: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    fontSize: 16,
+  },
+  sortContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+
+  reminderInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 16,
+    marginVertical: 10,
+  },
 });

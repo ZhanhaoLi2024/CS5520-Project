@@ -1,15 +1,30 @@
-import { Text, View, ScrollView, Pressable } from "react-native";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  Text,
+  View,
+  ScrollView,
+  Pressable,
+  TextInput,
+  Alert,
+  Platform,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { generalStyles } from "../../theme/generalStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import { NotificationManager } from "../../components/Notification/NotificationManager";
 
 export default function PlanDetail({ route, navigation }) {
   const { plan } = route.params;
+  const [reminderTime, setReminderTime] = useState(new Date());
+  const [reminderMessage, setReminderMessage] = useState(`Time to start cooking ${plan.dishName}!`);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
       title: plan.dishName,
     });
+
+    NotificationManager.getExpoPushToken(); // Ensure token permissions are requested
   }, [navigation, plan.dishName]);
 
   const formatDate = (dateString) => {
@@ -19,6 +34,34 @@ export default function PlanDetail({ route, navigation }) {
       month: "long",
       day: "numeric",
     });
+  };
+
+  const handleSetReminder = async () => {
+    const triggerDate = new Date(reminderTime);
+    if (triggerDate <= new Date()) {
+      Alert.alert("Invalid Time", "Please select a future time for the reminder.");
+      return;
+    }
+
+    const notificationData = {
+      planId: plan.id,
+      plan,
+    };
+
+    NotificationManager.scheduleNotification(
+      "Cooking Reminder",
+      reminderMessage,
+      triggerDate,
+      notificationData
+    );
+
+    Alert.alert(
+      "Reminder Set",
+      `We’ll remind you to start cooking at ${triggerDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}`
+    );
   };
 
   return (
@@ -33,9 +76,7 @@ export default function PlanDetail({ route, navigation }) {
         {/* Planned Date Section */}
         <View style={generalStyles.section}>
           <Text style={generalStyles.label}>Planned Date</Text>
-          <Text style={generalStyles.value}>
-            {formatDate(plan.plannedDate)}
-          </Text>
+          <Text style={generalStyles.value}>{formatDate(plan.plannedDate)}</Text>
         </View>
 
         {/* Cooking Steps Section */}
@@ -48,9 +89,52 @@ export default function PlanDetail({ route, navigation }) {
             </View>
           ))}
         </View>
+
+        {/* Reminder Section */}
+        <View style={generalStyles.section}>
+          <Text style={generalStyles.label}>Set a Reminder</Text>
+          <TextInput
+            style={generalStyles.reminderInput}
+            placeholder="Customize your reminder message"
+            value={reminderMessage}
+            onChangeText={setReminderMessage}
+          />
+          <Pressable
+            style={buttonStyles.dateButton}
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text style={buttonStyles.dateButtonText}>
+              {reminderTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </Text>
+          </Pressable>
+        </View>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={reminderTime}
+            mode="time"
+            display={Platform.OS === "ios" ? "spinner" : "default"}
+            onChange={(event, selectedDate) => {
+              setShowDatePicker(false);
+              if (selectedDate) {
+                setReminderTime(selectedDate);
+              }
+            }}
+          />
+        )}
       </ScrollView>
 
-      {/* Edit Button */}
+      {/* Buttons */}
+      <Pressable
+        style={({ pressed }) => [
+          buttonStyles.submitButton, // Same style as the Edit Plan button
+          pressed && buttonStyles.submitButtonPressed,
+        ]}
+        onPress={handleSetReminder}
+      >
+        <Text style={buttonStyles.submitButtonText}>Set Reminder</Text>
+      </Pressable>
+
       <Pressable
         style={({ pressed }) => [
           buttonStyles.submitButton,

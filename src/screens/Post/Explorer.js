@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, TextInput } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
 import { auth } from "../../Firebase/firebaseSetup";
 import {
   getAllPostsWithStats,
@@ -9,7 +10,8 @@ import {
   updatePostStatistics,
 } from "../../Firebase/firebaseHelper";
 import PostList from "../../components/Post/PostList";
-import { AntDesign } from "@expo/vector-icons";
+import { generalStyles } from "../../theme/generalStyles";
+import { buttonStyles } from "../../theme/buttonStyles";
 import { promptLogin, getLoginPromptMessage } from "../../utils/authUtils";
 
 export default function Explorer({ navigation, auth }) {
@@ -17,24 +19,14 @@ export default function Explorer({ navigation, auth }) {
   const [allPosts, setAllPosts] = useState([]);
   const [myPosts, setMyPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("newest"); // Default sort option
   const { setIsGuest } = auth;
 
-  // useEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <Pressable
-  //         onPress={() => navigation.navigate("NewPost")}
-  //         style={{ marginRight: 15 }}
-  //       >
-  //         <AntDesign name="plus" size={24} color="#FF6B6B" />
-  //       </Pressable>
-  //     ),
-  //   });
-  // }, [navigation]);
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={handleNewPost} style={{ marginRight: 15 }}>
+        <Pressable onPress={handleNewPost} style={buttonStyles.headerAddButton}>
           <AntDesign name="plus" size={24} color="#FF6B6B" />
         </Pressable>
       ),
@@ -49,21 +41,6 @@ export default function Explorer({ navigation, auth }) {
     navigation.navigate("NewPost");
   };
 
-  // const loadPosts = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const [loadedAllPosts, loadedMyPosts] = await Promise.all([
-  //       getAllPostsWithStats(),
-  //       getUserPosts(auth.currentUser?.uid),
-  //     ]);
-  //     setAllPosts(loadedAllPosts);
-  //     setMyPosts(loadedMyPosts);
-  //   } catch (error) {
-  //     console.error("Error loading posts:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const loadPosts = async () => {
     setLoading(true);
     try {
@@ -101,7 +78,6 @@ export default function Explorer({ navigation, auth }) {
       return;
     }
     navigation.navigate("PostDetail", { post });
-    console.log("Post pressed:", post);
   };
 
   const handleLike = async (postId, increment) => {
@@ -117,13 +93,36 @@ export default function Explorer({ navigation, auth }) {
     }
   };
 
+  // Filter posts based on search query
+  const filteredPosts = allPosts.filter((post) =>
+    post.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Sort posts based on selected sort option
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    if (sortOption === "newest") {
+      return new Date(b.createdAt) - new Date(a.createdAt); // Sort by newest
+    } else if (sortOption === "oldest") {
+      return new Date(a.createdAt) - new Date(b.createdAt); // Sort by oldest
+    } else if (sortOption === "likes") {
+      return b.likesCount - a.likesCount; // Sort by likes
+    }
+    return 0;
+  });
+
   const TabButton = ({ title, isActive, onPress }) => (
     <Pressable
-      style={[styles.tabButton, isActive && styles.activeTabButton]}
+      style={[
+        generalStyles.explorerTabButton,
+        isActive && generalStyles.activeExplorerTabButton,
+      ]}
       onPress={onPress}
     >
       <Text
-        style={[styles.tabButtonText, isActive && styles.activeTabButtonText]}
+        style={[
+          generalStyles.explorerTabButtonText,
+          isActive && generalStyles.activeExplorerTabButtonText,
+        ]}
       >
         {title}
       </Text>
@@ -131,8 +130,50 @@ export default function Explorer({ navigation, auth }) {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.tabBar}>
+    <View style={generalStyles.container}>
+      {/* Search Bar */}
+      <View style={generalStyles.searchContainer}>
+        <TextInput
+          style={generalStyles.searchInput}
+          placeholder="Search posts..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+      </View>
+
+      {/* Sort Buttons */}
+      <View style={generalStyles.sortContainer}>
+        <Pressable
+          style={[
+            buttonStyles.sortButton,
+            sortOption === "newest" && buttonStyles.activeSortButton,
+          ]}
+          onPress={() => setSortOption("newest")}
+        >
+          <Text style={buttonStyles.sortButtonText}>Newest</Text>
+        </Pressable>
+        <Pressable
+          style={[
+            buttonStyles.sortButton,
+            sortOption === "oldest" && buttonStyles.activeSortButton,
+          ]}
+          onPress={() => setSortOption("oldest")}
+        >
+          <Text style={buttonStyles.sortButtonText}>Oldest</Text>
+        </Pressable>
+        <Pressable
+          style={[
+            buttonStyles.sortButton,
+            sortOption === "likes" && buttonStyles.activeSortButton,
+          ]}
+          onPress={() => setSortOption("likes")}
+        >
+          <Text style={buttonStyles.sortButtonText}>Most Liked</Text>
+        </Pressable>
+      </View>
+
+      {/* Tab Buttons */}
+      <View style={generalStyles.explorerTabBar}>
         <TabButton
           title="All Posts"
           isActive={activeTab === "all"}
@@ -145,9 +186,10 @@ export default function Explorer({ navigation, auth }) {
         />
       </View>
 
+      {/* Post List */}
       {activeTab === "all" ? (
         <PostList
-          posts={allPosts}
+          posts={sortedPosts}
           loading={loading}
           onRefresh={loadPosts}
           onPress={handlePostPress}
@@ -170,34 +212,3 @@ export default function Explorer({ navigation, auth }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  tabBar: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    backgroundColor: "#fff",
-  },
-  tabButton: {
-    flex: 1,
-    paddingVertical: 12,
-    alignItems: "center",
-    borderBottomWidth: 2,
-    borderBottomColor: "transparent",
-  },
-  activeTabButton: {
-    borderBottomColor: "#FF6B6B",
-  },
-  tabButtonText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#999999",
-  },
-  activeTabButtonText: {
-    color: "#FF6B6B",
-  },
-});

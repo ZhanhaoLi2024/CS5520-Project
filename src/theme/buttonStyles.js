@@ -234,4 +234,39 @@ export const buttonStyles = StyleSheet.create({
   authButtonDisabled: {
     backgroundColor: "#ffb3b3",
   },
+
+  // for the header of Explorer screen
+  headerAddButton: {
+    marginRight: 15,
+  },
+
+  sortButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  activeSortButton: {
+    backgroundColor: "#FF6B6B",
+    borderColor: "#FF6B6B",
+  },
+  sortButtonText: {
+    color: "#333",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+
+  dateButton: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 12,
+    backgroundColor: "#f5f5f5",
+    marginVertical: 10,
+  },
+  dateButtonText: {
+    fontSize: 16,
+    color: "#333",
+  },
 });
