@@ -105,7 +105,7 @@ service cloud.firestore {
 - Password reset link
 - Sign up navigation
 
-![Signup Screen](assets/README/signup-screenshot.png)
+![Signup Screen](assets/README/Signup.png)
 
 - Email/password registration
 - Password strength indicators
