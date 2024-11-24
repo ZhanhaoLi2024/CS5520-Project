@@ -111,20 +111,28 @@ export const NotificationManager = {
 
 // Register and handle notification responses
 export const setupNotificationResponseListener = (navigation) => {
-  Notifications.addNotificationResponseReceivedListener((response) => {
+  Notifications.addNotificationResponseReceivedListener(async (response) => {
     const actionId = response.actionIdentifier;
+    const notificationId = response.notification.request.identifier; // Get the notification ID
 
-    if (actionId === "CONFIRM") {
-      const plan = response.notification.request.content.data.plan;
-      if (plan) {
-        navigation.navigate("PlanDetail", { plan }); // Use navigation to go to the PlanDetail screen
+    try {
+      if (actionId === "CONFIRM") {
+        const plan = response.notification.request.content.data.plan;
+        if (plan) {
+          navigation.navigate("PlanDetail", { plan }); // Use navigation to go to the PlanDetail screen
+        } else {
+          Alert.alert("Error", "Plan details not found!");
+        }
+      } else if (actionId === "IGNORE") {
+        console.log("Notification ignored.");
       } else {
-        Alert.alert("Error", "Plan details not found!");
+        console.log("Notification tapped without action.");
       }
-    } else if (actionId === "IGNORE") {
-      console.log("Notification ignored.");
-    } else {
-      console.log("Notification tapped without action.");
+
+      // Dismiss the notification after any action
+      await Notifications.dismissNotificationAsync(notificationId);
+    } catch (error) {
+      console.error("Error dismissing notification:", error);
     }
   });
 };
