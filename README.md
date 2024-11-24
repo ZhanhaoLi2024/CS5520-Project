@@ -67,6 +67,33 @@ service cloud.firestore {
 }
 ```
 
+
+### 5. Search and Sort Functionality
+
+- Added advanced search and sort features for meal plans
+  - **Search Functionality**: Users can dynamically filter meal plans by dish name in real-time.
+  - **Sort Functionality**: Included sorting options like newest, oldest, and alphabetical.
+  - Integrated user-friendly toggle buttons for sorting options.
+- Improved user experience:
+  - Smooth UI integration for responsive layouts.
+  - Intuitive feedback for search and sort actions.
+
+### 6. Notification System
+
+- Developed a flexible reminder system allowing users to schedule notifications for meal plans.
+- Features include:
+  - **Push Notification Integration**: Configured Expo Notifications for both local and remote notifications.
+  - **Interactive Notifications**: Added actionable options—**Confirm** and **Ignore**—to interact with reminders.
+    - **Confirm**: Navigates the user to the corresponding meal plan detail page.
+    - **Ignore**: Dismisses the notification without further action.
+  - Customizable reminder messages tied to meal plans.
+  - UI/UX enhancements:
+    - **Set Reminder** button styled consistently with other buttons for a cohesive design.
+    - Seamless integration with the Plan Detail screen.
+- Error handling:
+  - Validations for future time selection in reminders.
+  - Comprehensive fallback mechanisms for notification-related errors.
+
 ## Screenshots
 
 ### Authentication Flow
@@ -121,6 +148,33 @@ EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 
 ### Zihao Li
 
+#### Search and Sort Functionality
+
+| Feature          | Status | Description                                                                                                                                         |
+| ---------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Search Function  | ✅     | - Implemented a dynamic search bar for meal plans<br>- Allows users to filter meal plans by dish name in real-time<br>- Integrated with Plan screen |
+| Sort Function    | ✅     | - Added sorting options (e.g., newest, oldest, alphabetical)<br>- Implemented user-friendly buttons to toggle sorting<br>- Integrated seamlessly with search functionality |
+| User Experience  | ✅     | - Ensured smooth UI/UX integration<br>- Improved accessibility with responsive layouts<br>- Provided intuitive feedback for search and sort actions |
+
+#### Notification System
+
+| Feature                    | Status | Description                                                                                                                                                                  |
+| -------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Push Notification Setup    | ✅     | - Integrated Expo Notifications API<br>- Configured both local and remote notifications<br>- Enabled interactive notifications with options for **Confirm** and **Ignore** |
+| Interactive Notifications  | ✅     | - Created custom actions:<br> 1. **Confirm**: Opens the corresponding meal plan detail page<br> 2. **Ignore**: Dismisses the notification                                 |
+| Reminder Scheduling        | ✅     | - Developed a flexible reminder system allowing users to set future notifications<br>- Included custom reminder messages tied to meal plans                                |
+| UI/UX Integration          | ✅     | - Added **Set Reminder** button with a design consistent with the **Edit Plan** button<br>- Provided seamless interaction across Plan Detail and Plan screens              |
+| Error Handling             | ✅     | - Implemented comprehensive error handling for scheduling and interacting with notifications<br>- Ensured proper fallback for missing or invalid notification data         |
+
+#### Code Quality & Architecture
+
+| Feature                | Status | Description                                                                                                                                            |
+| ---------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Notification Manager   | ✅     | - Centralized notification logic in a reusable `NotificationManager` module<br>- Encapsulated Expo Notifications setup and scheduling functionality    |
+| Response Listener      | ✅     | - Added a global notification response listener<br>- Ensured navigation integration to Plan Detail screen with proper error handling                  |
+| Scalability            | ✅     | - Designed notification and search modules for easy extension<br>- Followed modular and reusable coding practices for future development              |
+
+
 ### Zhanhao Li
 
 #### Authentication Implementation
@@ -171,7 +225,10 @@ EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
   "expo-image-picker": "~14.3.2",
   "expo-location": "~16.1.0",
   "react-native-maps": "1.7.1",
-  "@react-native-async-storage/async-storage": "1.18.2"
+  "@react-native-async-storage/async-storage": "1.18.2",
+  "@react-native-community/datetimepicker": "8.2.0",
+  "expo-notifications": "~0.29.8",
+  "expo-constants": "~17.0.3"
 }
 ```
 
@@ -192,6 +249,24 @@ EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
    - `LocationMap.js`: Interactive map component
    - `LocationPicker.js`: Location selection interface
    - `MapView.js`: Posts map view
+
+4. Search and Sort:
+
+   - **Search and Sort Integration**:
+     - Integrated directly into the meal plan screen.
+     - Enhanced user experience with real-time feedback.
+   - **Components**:
+     - Search bar for dynamic filtering.
+     - Sort buttons for toggling between newest, oldest, and alphabetical options.
+
+5. Notification System:
+
+   - `NotificationManager.js`: Manages scheduling, sending, and handling push notifications.
+   - **Features**:
+     - Configures notification categories with interactive options like **Confirm** and **Ignore**.
+     - Registers listeners to handle notification actions dynamically.
+   - **Enhanced Plan Detail Integration**:
+     - Added **Set Reminder** functionality with dynamic messaging tied to meal plans.
 
 ## Setup Instructions
 
@@ -246,6 +321,20 @@ npx expo install expo-image-picker expo-location react-native-maps @react-native
    - Verify map marker placement
    - Test location picking functionality
    - Verify address display
+  
+4. Search and Sort:
+
+   - Test search bar functionality with different meal plan names
+   - Verify sorting buttons for newest, oldest, and alphabetical order
+   - Check combined search and sort results for accuracy
+
+5. Notification System:
+
+   - Test notification scheduling with future and invalid dates
+   - Verify push notifications display correct title, message, and actions
+   - Test **Confirm** action to navigate to the appropriate meal plan detail in a real phone/physical device!
+   - Test **Ignore** action to ensure the notification is dismissed in a real phone/physical device!
+   - Verify reminder customization options in the **Plan Detail** screen
 
 ## Known Issues and Future Improvements
 
