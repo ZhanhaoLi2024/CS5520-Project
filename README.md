@@ -175,7 +175,7 @@ EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 }
 ```
 
-### Key Classes/Components Added
+### Key Components Added
 
 1. Authentication Components:
 
