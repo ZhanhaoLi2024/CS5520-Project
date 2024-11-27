@@ -45,23 +45,66 @@ iCook is a mobile application designed to help international students connect th
 
 Updated Firestore security rules to protect user data:
 
+#### Firebase Data Rule
+
 ```javascript
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /goals/{goal} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.owner;
+
+      allow create: if request.auth != null;
+    }
+
     match /posts/{post} {
+      allow read: if true;
+
+      allow create: if request.auth != null &&
+                    request.resource.data.userId == request.auth.uid &&
+                    (!request.resource.data.location ||
+                     (request.resource.data.location.coords.latitude is number &&
+                      request.resource.data.location.coords.longitude is number));
+
+      allow update: if request.auth != null &&
+                    (resource.data.userId == request.auth.uid ||
+                     request.resource.data.diff(resource.data).affectedKeys()
+                     .hasOnly(['likesCount', 'likedBy', 'commentsCount']));
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+
+    match /postStatistics/{postId} {
+      allow read: if true;
+
+      allow update: if request.auth != null && request.auth.uid == get(/databases/$(database)/documents/posts/$(postId)).data.userId;
+
+      allow create: if request.auth != null;
+    }
+  }
+}
+```
+
+#### Storage Rule
+
+```javascript
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /post-images/{imageId} {
       allow read: if request.auth != null;
-      allow update: if request.auth != null && request.auth.uid in resource.data.likedBy;
-      allow create: if request.auth != null;
+      allow write: if request.auth != null
+                   && request.resource.size < 5 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
     }
 
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-
-    match /mealPlans/{mealPlanId} {
-      allow create: if request.auth != null;
-      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+    match /{allPaths=**} {
+      allow read, write: if request.time < timestamp.date(2024, 12, 18);
     }
   }
 }
