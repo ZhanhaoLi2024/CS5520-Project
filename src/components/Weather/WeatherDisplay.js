@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import * as Location from "expo-location";
+import { FontAwesome5 } from "@expo/vector-icons"; // Use FontAwesome5 icons
 
 export default function WeatherDisplay() {
   const [weather, setWeather] = useState(null);
@@ -23,7 +24,7 @@ export default function WeatherDisplay() {
 
       // Fetch weather data
       const apiKey = "beef6ed257861e81239489e1df671db0"; // Your API key
-      const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,daily,alerts&units=metric&appid=${apiKey}`;
+      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
       console.log("Fetching weather data from:", url);
 
       const response = await fetch(url);
@@ -37,7 +38,7 @@ export default function WeatherDisplay() {
 
       const data = await response.json();
       console.log("Weather data fetched successfully:", data);
-      setWeather(data.current); // Accessing 'current' data from the API response
+      setWeather(data); // Store the entire weather object
     } catch (err) {
       console.error("Error in fetchWeather:", err);
       setError(err.message || "An error occurred while fetching weather data.");
@@ -69,18 +70,46 @@ export default function WeatherDisplay() {
     );
   }
 
+  const temperature = weather?.main?.temp;
+  const weatherDescription = weather?.weather?.[0]?.description;
+  const humidity = weather?.main?.humidity;
+  const windSpeed = weather?.wind?.speed;
+  const cityName = weather?.name;
+
+  // Map weather descriptions to icons
+  const getWeatherIcon = (description) => {
+    const lowerDescription = description?.toLowerCase();
+    if (lowerDescription.includes("cloud")) {
+      return <FontAwesome5 name="cloud" size={50} color="#555" />;
+    }
+    if (lowerDescription.includes("rain")) {
+      return <FontAwesome5 name="cloud-rain" size={50} color="#007BFF" />;
+    }
+    if (lowerDescription.includes("sun") || lowerDescription.includes("clear")) {
+      return <FontAwesome5 name="sun" size={50} color="#FFA500" />;
+    }
+    if (lowerDescription.includes("snow")) {
+      return <FontAwesome5 name="snowflake" size={50} color="#00BFFF" />;
+    }
+    if (lowerDescription.includes("thunder")) {
+      return <FontAwesome5 name="bolt" size={50} color="#FF4500" />;
+    }
+    return <FontAwesome5 name="smog" size={50} color="#808080" />; // Default icon
+  };
+
   return (
     <View style={styles.container}>
       {weather ? (
         <>
-          <Text style={styles.city}>Your Location</Text>
-          <Text style={styles.temp}>{Math.round(weather.temp)}°C</Text>
+          <Text style={styles.city}>{cityName || "Your Location"}</Text>
+          {getWeatherIcon(weatherDescription)}
+          <Text style={styles.temp}>{temperature ? `${Math.round(temperature)}°C` : "N/A"}</Text>
           <Text style={styles.description}>
-            {weather.weather[0].description}
+            {weatherDescription || "No description available"}
           </Text>
-          <Text style={styles.details}>Humidity: {weather.humidity}%</Text>
+          <Text style={styles.details}>Humidity: {humidity || "N/A"}%</Text>
           <Text style={styles.details}>
-            Wind Speed: {weather.wind_speed} m/s
+            Wind Speed: {windSpeed || "N/A"} m/s
           </Text>
         </>
       ) : (
