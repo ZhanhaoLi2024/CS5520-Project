@@ -1,35 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, ActivityIndicator, TextInput, Button, StyleSheet, Alert } from "react-native";
 import * as Location from "expo-location";
-import { FontAwesome5 } from "@expo/vector-icons"; // Use FontAwesome5 icons
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function WeatherDisplay() {
   const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [city, setCity] = useState(""); // Input city
+  const [userCity, setUserCity] = useState(null); // User's current location weather
 
-  const fetchWeather = async () => {
+  const apiKey = "beef6ed257861e81239489e1df671db0"; // Replace with your OpenWeather API key
+
+  const fetchWeather = async (queryCity) => {
     try {
-      // Request location permissions
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        throw new Error("Permission to access location was denied.");
+      setLoading(true);
+      setError(null);
+
+      let url;
+      if (queryCity) {
+        url = `https://api.openweathermap.org/data/2.5/weather?q=${queryCity}&units=metric&appid=${apiKey}`;
+      } else {
+        // Use current location
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          throw new Error("Permission to access location was denied.");
+        }
+        const location = await Location.getCurrentPositionAsync({});
+        const { latitude, longitude } = location.coords;
+        url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
       }
 
-      // Get current location
-      const location = await Location.getCurrentPositionAsync({});
-      const { latitude, longitude } = location.coords;
-
-      console.log("Location data:", latitude, longitude);
-
-      // Fetch weather data
-      const apiKey = "beef6ed257861e81239489e1df671db0"; // Your API key
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
       console.log("Fetching weather data from:", url);
-
       const response = await fetch(url);
-      console.log("API response status:", response.status);
-
       if (!response.ok) {
         const errorData = await response.json();
         console.error("API response error:", errorData);
@@ -38,7 +41,7 @@ export default function WeatherDisplay() {
 
       const data = await response.json();
       console.log("Weather data fetched successfully:", data);
-      setWeather(data); // Store the entire weather object
+      queryCity ? setWeather(data) : setUserCity(data); // Update based on query type
     } catch (err) {
       console.error("Error in fetchWeather:", err);
       setError(err.message || "An error occurred while fetching weather data.");
@@ -48,8 +51,19 @@ export default function WeatherDisplay() {
   };
 
   useEffect(() => {
+    // Fetch user's current location weather on mount
     fetchWeather();
   }, []);
+
+  const getWeatherIcon = (description) => {
+    const lowerDescription = description?.toLowerCase();
+    if (lowerDescription.includes("cloud")) return <FontAwesome5 name="cloud" size={50} color="#555" />;
+    if (lowerDescription.includes("rain")) return <FontAwesome5 name="cloud-rain" size={50} color="#007BFF" />;
+    if (lowerDescription.includes("sun") || lowerDescription.includes("clear")) return <FontAwesome5 name="sun" size={50} color="#FFA500" />;
+    if (lowerDescription.includes("snow")) return <FontAwesome5 name="snowflake" size={50} color="#00BFFF" />;
+    if (lowerDescription.includes("thunder")) return <FontAwesome5 name="bolt" size={50} color="#FF4500" />;
+    return <FontAwesome5 name="smog" size={50} color="#808080" />;
+  };
 
   if (loading) {
     return (
@@ -63,58 +77,54 @@ export default function WeatherDisplay() {
     return (
       <View style={styles.center}>
         <Text style={styles.error}>{error}</Text>
-        <Text style={styles.errorHelp}>
-          Please check your internet connection or location permissions.
-        </Text>
+        <Text style={styles.errorHelp}>Please check your internet connection or location permissions.</Text>
       </View>
     );
   }
 
-  const temperature = weather?.main?.temp;
-  const weatherDescription = weather?.weather?.[0]?.description;
-  const humidity = weather?.main?.humidity;
-  const windSpeed = weather?.wind?.speed;
-  const cityName = weather?.name;
-
-  // Map weather descriptions to icons
-  const getWeatherIcon = (description) => {
-    const lowerDescription = description?.toLowerCase();
-    if (lowerDescription.includes("cloud")) {
-      return <FontAwesome5 name="cloud" size={50} color="#555" />;
-    }
-    if (lowerDescription.includes("rain")) {
-      return <FontAwesome5 name="cloud-rain" size={50} color="#007BFF" />;
-    }
-    if (lowerDescription.includes("sun") || lowerDescription.includes("clear")) {
-      return <FontAwesome5 name="sun" size={50} color="#FFA500" />;
-    }
-    if (lowerDescription.includes("snow")) {
-      return <FontAwesome5 name="snowflake" size={50} color="#00BFFF" />;
-    }
-    if (lowerDescription.includes("thunder")) {
-      return <FontAwesome5 name="bolt" size={50} color="#FF4500" />;
-    }
-    return <FontAwesome5 name="smog" size={50} color="#808080" />; // Default icon
-  };
+  const renderWeather = (data) => (
+    <>
+      <Text style={styles.city}>{data.name || "Your Location"}</Text>
+      {getWeatherIcon(data.weather?.[0]?.description)}
+      <Text style={styles.temp}>{data.main ? `${Math.round(data.main.temp)}°C` : "N/A"}</Text>
+      <Text style={styles.description}>{data.weather?.[0]?.description || "No description available"}</Text>
+      <Text style={styles.details}>Humidity: {data.main?.humidity || "N/A"}%</Text>
+      <Text style={styles.details}>Wind Speed: {data.wind?.speed || "N/A"} m/s</Text>
+    </>
+  );
 
   return (
     <View style={styles.container}>
-      {weather ? (
-        <>
-          <Text style={styles.city}>{cityName || "Your Location"}</Text>
-          {getWeatherIcon(weatherDescription)}
-          <Text style={styles.temp}>{temperature ? `${Math.round(temperature)}°C` : "N/A"}</Text>
-          <Text style={styles.description}>
-            {weatherDescription || "No description available"}
-          </Text>
-          <Text style={styles.details}>Humidity: {humidity || "N/A"}%</Text>
-          <Text style={styles.details}>
-            Wind Speed: {windSpeed || "N/A"} m/s
-          </Text>
-        </>
-      ) : (
-        <Text>No weather data available.</Text>
+      {userCity && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Current Location Weather:</Text>
+          {renderWeather(userCity)}
+        </View>
       )}
+
+      {weather && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Weather for {weather.name}:</Text>
+          {renderWeather(weather)}
+        </View>
+      )}
+
+      <View style={styles.inputSection}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter city name"
+          value={city}
+          onChangeText={setCity}
+        />
+        <Button
+          title="Get Weather"
+          color="#FF6B6B"
+          onPress={() => {
+            if (city.trim()) fetchWeather(city.trim());
+            else Alert.alert("Invalid Input", "Please enter a valid city name.");
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -122,8 +132,6 @@ export default function WeatherDisplay() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "#f5f5f5",
     padding: 20,
   },
@@ -131,6 +139,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  section: {
+    marginBottom: 20,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: "#ffffff",
+    elevation: 3,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   city: {
     fontSize: 28,
@@ -152,6 +172,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#555",
     marginTop: 5,
+  },
+  inputSection: {
+    marginTop: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginRight: 10,
   },
   error: {
     fontSize: 16,
