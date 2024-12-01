@@ -8,13 +8,13 @@ import {
   Alert,
 } from "react-native";
 import { createPost, uploadPostImage } from "../../Firebase/firebaseHelper";
-import { auth, storage } from "../../Firebase/firebaseSetup";
+import { auth } from "../../Firebase/firebaseSetup";
 import LocationPicker from "../../components/Location/LocationPicker";
 import ImageManager from "../../components/Image/ImageManager";
 import { generalStyles } from "../../theme/generalStyles";
 import { inputStyles } from "../../theme/inputStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { MaterialIcons } from "@expo/vector-icons"; // Import Material Icons for the check mark
 
 export default function NewPost({ navigation, route }) {
   const [title, setTitle] = useState("");
@@ -126,9 +126,19 @@ export default function NewPost({ navigation, route }) {
           onPress={handleSubmit}
           disabled={submitting}
         >
-          <Text style={buttonStyles.submitButtonText}>
-            {submitting ? "Creating..." : "Create Post"}
-          </Text>
+          <View style={buttonStyles.buttonContent}>
+            {!submitting && (
+              <MaterialIcons
+                name="check-circle"
+                size={20}
+                color="#FFF"
+                style={buttonStyles.iconSpacing}
+              />
+            )}
+            <Text style={buttonStyles.submitButtonText}>
+              {submitting ? "Creating..." : "Create Post"}
+            </Text>
+          </View>
         </Pressable>
       </View>
     </ScrollView>

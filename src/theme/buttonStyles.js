@@ -3,10 +3,29 @@ import { StyleSheet } from "react-native";
 export const buttonStyles = StyleSheet.create({
   submitButton: {
     backgroundColor: "#FF6B6B",
-    padding: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    justifyContent: "center",
+    marginTop: 15,
+    flexDirection: "row", // Align icon and text horizontally
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconSpacing: {
+    marginRight: 8, // Space between icon and text
+  },
+  submitButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  buttonDisabled: {
+    backgroundColor: "#ffb3b3",
   },
 
   removeButton: {
@@ -35,11 +54,7 @@ export const buttonStyles = StyleSheet.create({
   submitButtonPressed: {
     opacity: 0.7,
   },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
+
 
   deleteButton: {
     padding: 15,
@@ -112,6 +127,7 @@ export const buttonStyles = StyleSheet.create({
     backgroundColor: "#FF6B6B",
     padding: 15,
     borderRadius: 8,
+    width: "70%",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 16,
@@ -185,9 +201,10 @@ export const buttonStyles = StyleSheet.create({
   locationButton: {
     backgroundColor: "#FF6B6B",
     paddingVertical: 12,
+    width: "70%",
     paddingHorizontal: 20,
     borderRadius: 8,
-    width: "100%",
+    
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row", // Ensure icon and text are aligned horizontally
