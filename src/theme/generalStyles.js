@@ -626,10 +626,13 @@ export const generalStyles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 15,
+    marginTop: 10,
+    marginLeft: 15,
     color: "#333",
+    backgroundColor: "#f9f9f9",
   },
   modalImage: {
     width: "100%",
