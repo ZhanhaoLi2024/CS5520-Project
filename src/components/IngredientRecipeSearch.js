@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Pressable, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  Pressable,
+  Alert,
+} from "react-native";
 import { generalStyles } from "../theme/generalStyles";
 import { inputStyles } from "../theme/inputStyles";
 import { buttonStyles } from "../theme/buttonStyles";
@@ -31,6 +38,12 @@ const IngredientRecipeSearch = () => {
     }
   };
 
+  const renderRecipeItem = ({ item }) => (
+    <Pressable style={generalStyles.recipeItem}>
+      <Text>{item.title}</Text>
+    </Pressable>
+  );
+
   return (
     <View style={generalStyles.searchContainer}>
       <Text style={generalStyles.searchLabel}>
@@ -51,6 +64,13 @@ const IngredientRecipeSearch = () => {
           <Text style={buttonStyles.searchButtonText}>Search</Text>
         </Pressable>
       </View>
+
+      <FlatList
+        data={searchResults}
+        renderItem={renderRecipeItem}
+        keyExtractor={(item) => item.id.toString()}
+        style={generalStyles.resultsList}
+      />
     </View>
   );
 };
