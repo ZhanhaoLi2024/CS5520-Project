@@ -3,6 +3,7 @@ import { View, Image, Pressable, Text, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { generalStyles } from "../../theme/generalStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import { MaterialIcons } from "@expo/vector-icons"; // Import Material Icons
 
 const ImageManager = ({ onImageTaken }) => {
   const [imageUri, setImageUri] = useState();
@@ -57,11 +58,14 @@ const ImageManager = ({ onImageTaken }) => {
             resizeMode="cover"
           />
         ) : (
-          <Text>No image taken yet</Text>
+          <MaterialIcons name="image" size={24} color="#999" />
         )}
       </View>
       <Pressable style={buttonStyles.imageButton} onPress={takeImageHandler}>
-        <Text style={buttonStyles.imageButtonText}>Take Picture</Text>
+        <View style={buttonStyles.imageButtonContent}>
+          <MaterialIcons name="camera-alt" size={20} color="#FFF" />
+          <Text style={buttonStyles.imageButtonText}>Take Picture</Text>
+        </View>
       </Pressable>
     </View>
   );

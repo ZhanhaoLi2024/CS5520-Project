@@ -110,19 +110,23 @@ export const buttonStyles = StyleSheet.create({
 
   imageButton: {
     backgroundColor: "#FF6B6B",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    padding: 15,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 20,
-    marginBottom: 20,
-    elevation: 3,
+    marginBottom: 16,
+    flexDirection: "row",
+  },
+  imageButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   imageButtonText: {
     color: "#FFF",
     fontSize: 16,
     fontWeight: "600",
+    marginLeft: 8, // Space between icon and text
   },
   headerAddButton: {
     marginRight: 15,
