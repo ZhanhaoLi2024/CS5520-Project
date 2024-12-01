@@ -22,6 +22,7 @@ import NewPost from "./src/screens/Post/NewPost";
 import PostDetail from "./src/screens/Post/PostDetail";
 import EditPost from "./src/screens/Post/EditPost";
 import LocationMap from "./src/components/Location/LocationMap";
+import WeatherScreen from "./src/screens/WeatherScreen"; // Import the WeatherScreen
 import { promptLogin, getLoginPromptMessage } from "./src/utils/authUtils";
 
 const Stack = createNativeStackNavigator();
@@ -82,6 +83,15 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen
+        name="Weather"
+        component={WeatherScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="wb-sunny" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Explorer"
         component={ExplorerWithAuth}
         options={{
@@ -112,7 +122,7 @@ function BottomTabs() {
             if (!handleProtectedAction(navigation, "view-profile")) {
               e.preventDefault();
             }
-          },
+          }
         })}
       />
     </Tab.Navigator>
