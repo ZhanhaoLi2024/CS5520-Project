@@ -416,7 +416,7 @@ export const generalStyles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   imagePreview: {
-    width: 280,
+    width: '65%',
     height: 200,
     justifyContent: "center",
     alignItems: "center",

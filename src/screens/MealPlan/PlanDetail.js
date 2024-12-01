@@ -12,6 +12,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { generalStyles } from "../../theme/generalStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
 import { NotificationManager } from "../../components/Notification/NotificationManager";
+import { MaterialIcons, FontAwesome5 } from "react-native-vector-icons";
 
 export default function PlanDetail({ route, navigation }) {
   const { plan } = route.params;
@@ -124,25 +125,32 @@ export default function PlanDetail({ route, navigation }) {
         )}
       </ScrollView>
 
-      {/* Buttons */}
+      {/* Set Reminder Button */}
       <Pressable
         style={({ pressed }) => [
-          buttonStyles.submitButton, // Same style as the Edit Plan button
-          pressed && buttonStyles.submitButtonPressed,
+          buttonStyles.reminderButton,
+          pressed && buttonStyles.buttonPressed,
         ]}
         onPress={handleSetReminder}
       >
-        <Text style={buttonStyles.submitButtonText}>Set Reminder</Text>
+        <View style={buttonStyles.buttonContent}>
+          <FontAwesome5 name="clock" size={20} color="#FFF" />
+          <Text style={buttonStyles.reminderButtonText}>Set Reminder</Text>
+        </View>
       </Pressable>
 
+      {/* Edit Plan Button */}
       <Pressable
         style={({ pressed }) => [
-          buttonStyles.submitButton,
-          pressed && buttonStyles.submitButtonPressed,
+          buttonStyles.editButton,
+          pressed && buttonStyles.buttonPressed,
         ]}
         onPress={() => navigation.navigate("PlanEdit", { plan })}
       >
-        <Text style={buttonStyles.submitButtonText}>Edit Plan</Text>
+        <View style={buttonStyles.buttonContent}>
+          <MaterialIcons name="edit" size={20} color="#FFF" />
+          <Text style={buttonStyles.editButtonText}>Edit Plan</Text>
+        </View>
       </Pressable>
     </View>
   );

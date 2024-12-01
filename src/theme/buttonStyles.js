@@ -1,6 +1,64 @@
 import { StyleSheet } from "react-native";
 
 export const buttonStyles = StyleSheet.create({
+    // Reminder Button
+    reminderButton: {
+      backgroundColor: "#FF6B6B",
+      padding: 15,
+      borderRadius: 8,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 10,
+    },
+    reminderButtonText: {
+      color: "#FFF",
+      fontSize: 16,
+      fontWeight: "600",
+      marginLeft: 8,
+    },
+    timerIcon: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      backgroundColor: "#FFF",
+    },
+  
+    // Edit Button
+    editButton: {
+      backgroundColor: "#FFA500",
+      padding: 15,
+      borderRadius: 8,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 10,
+    },
+    editButtonText: {
+      color: "#FFF",
+      fontSize: 16,
+      fontWeight: "600",
+      marginLeft: 8,
+    },
+    pencilIcon: {
+      width: 20,
+      height: 20,
+      borderRadius: 3,
+      backgroundColor: "#FFF",
+    },
+  
+    // Date Button (from before)
+    dateButton: {
+      backgroundColor: "#FF6B6B",
+      padding: 12,
+      borderRadius: 8,
+      alignItems: "center",
+    },
+    dateButtonText: {
+      color: "#FFF",
+      fontSize: 16,
+    },
+    
   submitButton: {
     backgroundColor: "#FF6B6B",
     paddingVertical: 12,
@@ -80,9 +138,14 @@ export const buttonStyles = StyleSheet.create({
   editButton: {
     backgroundColor: "#FF6B6B",
     padding: 15,
+    //paddingVertical: 20,
+    justifyContent: "center",
     borderRadius: 8,
     alignItems: "center",
+    // flexDirection: "center",
+    // width: "100%",
     marginTop: 16,
+    marginBottom: 25,
   },
   editButtonPressed: {
     opacity: 0.8,
