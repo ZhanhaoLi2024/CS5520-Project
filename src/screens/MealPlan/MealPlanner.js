@@ -3,8 +3,22 @@ import { Alert } from "react-native";
 import MealPlanForm from "../../components/MealPlan/MealPlanForm";
 import { auth } from "../../Firebase/firebaseSetup";
 import { createMealPlan } from "../../Firebase/firebaseHelper";
+import IngredientRecipeSearch from "../../components/IngredientRecipeSearch";
 
 export default function MealPlanner({ navigation }) {
+  const [formData, setFormData] = React.useState({
+    dishName: "",
+    plannedDate: new Date(),
+    steps: [""],
+  });
+
+  const handleRecipeSelect = (recipe) => {
+    setFormData({
+      ...formData,
+      dishName: recipe.dishName,
+      steps: recipe.steps,
+    });
+  };
   const handleSubmit = async (formData) => {
     // Validate inputs
     if (!formData.dishName.trim()) {
@@ -40,6 +54,13 @@ export default function MealPlanner({ navigation }) {
   };
 
   return (
-    <MealPlanForm onSubmit={handleSubmit} submitButtonText="Create Meal Plan" />
+    <>
+      <IngredientRecipeSearch onRecipeSelect={handleRecipeSelect} />
+
+      <MealPlanForm
+        onSubmit={handleSubmit}
+        submitButtonText="Create Meal Plan"
+      />
+    </>
   );
 }

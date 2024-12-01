@@ -49,12 +49,6 @@ export const generalStyles = StyleSheet.create({
     lineHeight: 24,
     marginRight: 12,
   },
-  stepText: {
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
-    lineHeight: 24,
-  },
 
   planItemContainer: {
     flexDirection: "row",
@@ -314,12 +308,6 @@ export const generalStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#333",
-  },
   infoContainer: {
     marginBottom: 15,
   },
@@ -523,7 +511,6 @@ export const generalStyles = StyleSheet.create({
     color: "#FF6B6B", // Renamed from "activeTabButtonText"
   },
 
-
   searchContainer: {
     padding: 10,
     backgroundColor: "#fff",
@@ -552,5 +539,128 @@ export const generalStyles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     marginVertical: 10,
+  },
+
+  searchContainer: {
+    padding: 16,
+    backgroundColor: "#fff",
+  },
+  searchLabel: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 12,
+    color: "#333",
+  },
+  searchInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+    gap: 8,
+  },
+  recipeItem: {
+    flexDirection: "row",
+    padding: 12,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    marginBottom: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  recipeImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+  },
+  recipeInfo: {
+    flex: 1,
+    marginLeft: 12,
+    justifyContent: "center",
+  },
+  recipeTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 4,
+  },
+  recipeMissing: {
+    fontSize: 14,
+    color: "#666",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+    backgroundColor: "#fff",
+  },
+  pressed: {
+    opacity: 0.7,
+  },
+  modalContent: {
+    flex: 1,
+  },
+  resultsList: {
+    maxHeight: "80%",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalContainer: {
+    backgroundColor: "white",
+    width: "100%",
+    maxHeight: "80%",
+    borderRadius: 10,
+    overflow: "hidden",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: "#333",
+  },
+  modalImage: {
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
+    marginVertical: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginTop: 15,
+    marginBottom: 10,
+    color: "#333",
+  },
+  ingredientText: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: "#444",
+  },
+  stepText: {
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 8,
+    color: "#444",
+  },
+  modalButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 15,
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+    backgroundColor: "white",
   },
 });

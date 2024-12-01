@@ -64,4 +64,14 @@ export const inputStyles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: "#f5f5f5",
   },
+
+  searchInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: "#f5f5f5",
+  },
 });

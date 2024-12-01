@@ -269,4 +269,78 @@ export const buttonStyles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
   },
+  searchButton: {
+    backgroundColor: "#FF6B6B",
+    padding: 12,
+    borderRadius: 8,
+    minWidth: 80,
+    alignItems: "center",
+  },
+  searchButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  modalButton: {
+    flex: 1,
+    padding: 14,
+    borderRadius: 8,
+    alignItems: "center",
+    marginHorizontal: 4,
+  },
+  cancelButton: {
+    backgroundColor: "#f5f5f5",
+  },
+  modalButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  pressed: {
+    opacity: 0.7,
+  },
+  useRecipeButton: {
+    backgroundColor: "#FF6B6B",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 15,
+  },
+  useRecipeButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  selectButton: {
+    backgroundColor: "#FF6B6B",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    elevation: 2,
+  },
+  selectButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  backButton: {
+    backgroundColor: "#f0f0f0",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  backButtonText: {
+    color: "#333",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  closeButton: {
+    marginTop: 10,
+    padding: 15,
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: "#FF6B6B",
+    fontSize: 16,
+    fontWeight: "600",
+  },
 });
