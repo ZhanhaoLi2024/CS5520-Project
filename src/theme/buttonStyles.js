@@ -109,20 +109,21 @@ export const buttonStyles = StyleSheet.create({
   },
 
   imageButton: {
-    backgroundColor: "#f5f5f5",
-    padding: 15,
+    backgroundColor: "#FF6B6B",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 8,
     alignItems: "center",
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderStyle: "dashed",
+    justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 20,
+    elevation: 3,
   },
   imageButtonText: {
-    color: "#666",
+    color: "#FFF",
     fontSize: 16,
+    fontWeight: "600",
   },
-
   headerAddButton: {
     marginRight: 15,
   },

@@ -7,6 +7,7 @@ export const inputStyles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
+    marginBottom:15
   },
   dateButton: {
     borderWidth: 1,

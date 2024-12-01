@@ -408,31 +408,32 @@ export const generalStyles = StyleSheet.create({
     borderTopColor: "#eee",
   },
 
-  imageContainer: {
-    alignItems: "center",
-    marginVertical: 10,
-    width: "100%",
-  },
-  imagePreview: {
-    width: "100%",
-    aspectRatio: 1,
-    marginBottom: 10,
+  imageManagerContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
     backgroundColor: "#f5f5f5",
-    borderRadius: 6,
+  },
+  imagePreview: {
+    width: 280,
+    height: 200,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#e0e0e0",
+    borderRadius: 10,
+    marginBottom: 10,
+    marginTop: 10,
     overflow: "hidden",
   },
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 6,
   },
-  imageContainer: {
-    alignItems: "center",
-    width: "10%",
-    height: "10%",
-    marginVertical: 10,
+  noImageText: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
   },
   imageUri: {
     width: "100%",
