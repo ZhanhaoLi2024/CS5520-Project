@@ -184,16 +184,24 @@ export const buttonStyles = StyleSheet.create({
 
   locationButton: {
     backgroundColor: "#FF6B6B",
-    padding: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 8,
     width: "100%",
     alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row", // Ensure icon and text are aligned horizontally
   },
-
+  locationButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   locationButtonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "600",
+    marginLeft: 8, // Space between the icon and text
   },
 
   skipButton: {
