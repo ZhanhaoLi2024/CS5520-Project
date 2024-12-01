@@ -74,4 +74,16 @@ export const inputStyles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: "#f5f5f5",
   },
+
+  // input style prop for weather display
+  weatherInput: {
+    flex: 1,
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginRight: 10,
+  },
+  
 });

@@ -343,4 +343,34 @@ export const buttonStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+
+  // Button props for weather display
+  weatherDeleteButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+    backgroundColor: "#ffeded",
+    padding: 8,
+    borderRadius: 5,
+  },
+  weatherDeleteButtonText: {
+    fontSize: 16,
+    color: "#FF6B6B",
+    marginLeft: 5,
+  },
+
+  weatherAddButton: {
+    backgroundColor: "#FF6B6B",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  weatherAddButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
 });
