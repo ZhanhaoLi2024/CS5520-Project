@@ -1,7 +1,13 @@
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Animated,
+  StyleSheet,
+  Easing,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useState, useEffect, useRef } from "react";
 import { auth } from "./src/Firebase/firebaseSetup";
 import { onAuthStateChanged } from "firebase/auth";
 import { Feather, MaterialIcons, FontAwesome5 } from "react-native-vector-icons";
@@ -24,6 +30,8 @@ import EditPost from "./src/screens/Post/EditPost";
 import LocationMap from "./src/components/Location/LocationMap";
 import WeatherScreen from "./src/screens/WeatherScreen"; // Import the WeatherScreen
 import { promptLogin, getLoginPromptMessage } from "./src/utils/authUtils";
+
+import { animationStyles } from "./src/theme/animationStyles"; // Import animation styles
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,6 +59,24 @@ const MapWithAuth = withAuth(Map);
 
 function BottomTabs() {
   const { setIsGuest } = React.useContext(AuthContext);
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const animateIcon = () => {
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 1.3,
+        duration: 150,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 150,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
 
   const handleProtectedAction = (navigation, action) => {
     if (!auth.currentUser) {
@@ -63,11 +89,7 @@ function BottomTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: {
-          backgroundColor: "#ffffff",
-          borderTopWidth: 1,
-          borderTopColor: "#e5e5e5",
-        },
+        tabBarStyle: animationStyles.tabBarStyle,
         tabBarActiveTintColor: "#FF6B6B",
         tabBarInactiveTintColor: "#999999",
         headerShown: true,
@@ -78,8 +100,15 @@ function BottomTabs() {
         component={PlanWithAuth}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="calendar-today" color={color} size={size} />
+            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+              <MaterialIcons name="calendar-today" color={color} size={size} />
+            </Animated.View>
           ),
+        }}
+        listeners={{
+          tabPress: () => {
+            animateIcon();
+          },
         }}
       />
       <Tab.Screen
@@ -87,8 +116,15 @@ function BottomTabs() {
         component={WeatherScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="wb-sunny" color={color} size={size} />
+            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+              <MaterialIcons name="wb-sunny" color={color} size={size} />
+            </Animated.View>
           ),
+        }}
+        listeners={{
+          tabPress: () => {
+            animateIcon();
+          },
         }}
       />
       <Tab.Screen
@@ -96,8 +132,15 @@ function BottomTabs() {
         component={ExplorerWithAuth}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Feather name="compass" color={color} size={size} />
+            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+              <Feather name="compass" color={color} size={size} />
+            </Animated.View>
           ),
+        }}
+        listeners={{
+          tabPress: () => {
+            animateIcon();
+          },
         }}
       />
       <Tab.Screen
@@ -105,8 +148,15 @@ function BottomTabs() {
         component={MapWithAuth}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="map-marker-alt" color={color} size={size} />
+            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+              <FontAwesome5 name="map-marker-alt" color={color} size={size} />
+            </Animated.View>
           ),
+        }}
+        listeners={{
+          tabPress: () => {
+            animateIcon();
+          },
         }}
       />
       <Tab.Screen
@@ -114,15 +164,19 @@ function BottomTabs() {
         component={ProfileWithAuth}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Feather name="user" color={color} size={size} />
+            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+              <Feather name="user" color={color} size={size} />
+            </Animated.View>
           ),
         }}
         listeners={({ navigation }) => ({
           tabPress: (e) => {
             if (!handleProtectedAction(navigation, "view-profile")) {
               e.preventDefault();
+            } else {
+              animateIcon();
             }
-          }
+          },
         })}
       />
     </Tab.Navigator>
