@@ -145,16 +145,18 @@ const PostDetail = ({ route, navigation }) => {
     <View style={generalStyles.separator} />
   );
 
+  const renderCommentItem = ({ item }) => (
+    <View style={generalStyles.commentItem}>
+      <Text style={generalStyles.commentAuthor}>{item.authorName}</Text>
+      <Text style={generalStyles.commentText}>{item.text}</Text>
+    </View>
+  );
+
   return (
     <FlatList
       data={comments}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View style={generalStyles.commentItem}>
-          <Text style={generalStyles.commentAuthor}>{item.authorName}</Text>
-          <Text style={generalStyles.commentText}>{item.text}</Text>
-        </View>
-      )}
+      renderItem={renderCommentItem}
       ItemSeparatorComponent={renderSeparator}
       ListHeaderComponent={
         <>
