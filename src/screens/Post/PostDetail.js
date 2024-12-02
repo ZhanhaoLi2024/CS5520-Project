@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
 } from "react-native";
+import { MaterialIcons, Feather } from "@expo/vector-icons"; // Import icons
 import { auth } from "../../Firebase/firebaseSetup";
 import { addComment, getComments } from "../../Firebase/firebaseHelper";
 import { generalStyles } from "../../theme/generalStyles";
@@ -118,21 +119,28 @@ const PostDetail = ({ route, navigation }) => {
 
       {/* Add Comment Section */}
       <View style={generalStyles.commentInputContainer}>
-  <TextInput
-    style={inputStyles.prominentCommentInput} // Updated style for a more prominent input box
-    placeholder="Write a comment..."
-    value={newComment}
-    onChangeText={setNewComment}
-    placeholderTextColor="#FFF"
-  />
-  <Pressable
-    style={buttonStyles.addCommentButton}
-    onPress={handleAddComment}
-  >
-    <Text style={buttonStyles.addCommentButtonText}>Post</Text>
-  </Pressable>
-</View>
-
+        <TextInput
+          style={inputStyles.prominentCommentInput}
+          placeholder="Write a comment..."
+          value={newComment}
+          onChangeText={setNewComment}
+          placeholderTextColor="#FFF"
+        />
+        <Pressable
+          style={buttonStyles.addCommentButton}
+          onPress={handleAddComment}
+        >
+          <View style={buttonStyles.buttonContent}>
+            <Feather
+              name="send"
+              size={20}
+              color="#FFF"
+              style={buttonStyles.iconSpacing}
+            />
+            <Text style={buttonStyles.addCommentButtonText}>Post</Text>
+          </View>
+        </Pressable>
+      </View>
 
       {/* Edit Button for Author */}
       {isAuthor && (
@@ -144,7 +152,15 @@ const PostDetail = ({ route, navigation }) => {
             ]}
             onPress={() => navigation.navigate("EditPost", { post })}
           >
-            <Text style={buttonStyles.editButtonText}>Edit Post</Text>
+            <View style={buttonStyles.buttonContent}>
+              <Feather
+                name="edit-2"
+                size={20}
+                color="#FFF"
+                style={buttonStyles.iconSpacing}
+              />
+              <Text style={buttonStyles.editButtonText}>Edit Post</Text>
+            </View>
           </Pressable>
         </View>
       )}
