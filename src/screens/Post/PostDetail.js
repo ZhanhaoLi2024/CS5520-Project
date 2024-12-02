@@ -64,9 +64,8 @@ const PostDetail = ({ route, navigation }) => {
     setComments(updatedComments);
   };
 
-  return (
-    <View style={generalStyles.container}>
-      {/* Post Details */}
+  const renderPostHeader = () => (
+    <View>
       <View style={generalStyles.postSection}>
         <Text style={generalStyles.postLabel}>Title</Text>
         <Text style={generalStyles.postValue}>{post.title}</Text>
@@ -90,81 +89,100 @@ const PostDetail = ({ route, navigation }) => {
           />
         </View>
       )}
+    </View>
+  );
 
-      {/* Comments Section */}
-      <View style={generalStyles.commentsSection}>
-        <Text style={generalStyles.commentsHeader}>Comments</Text>
-        {loadingComments ? (
-          <Text style={generalStyles.loadingText}>Loading comments...</Text>
-        ) : (
-          <FlatList
-            data={comments}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={generalStyles.commentItem}>
-                <Text style={generalStyles.commentAuthor}>
-                  {item.authorName}
-                </Text>
-                <Text style={generalStyles.commentText}>{item.text}</Text>
-              </View>
-            )}
-            ListEmptyComponent={
-              <Text style={generalStyles.emptyCommentsText}>
-                No comments yet. Be the first to comment!
-              </Text>
-            }
+  const renderAddCommentInput = () => (
+    <View style={generalStyles.commentInputContainer}>
+      <TextInput
+        style={inputStyles.prominentCommentInput}
+        placeholder="Write a comment..."
+        value={newComment}
+        onChangeText={setNewComment}
+        placeholderTextColor="#FFF"
+      />
+      <Pressable
+        style={buttonStyles.addCommentButton}
+        onPress={handleAddComment}
+      >
+        <View style={buttonStyles.buttonContent}>
+          <Feather
+            name="send"
+            size={20}
+            color="#FFF"
+            style={buttonStyles.iconSpacing}
           />
-        )}
-      </View>
+          <Text style={buttonStyles.addCommentButtonText}>Post</Text>
+        </View>
+      </Pressable>
+    </View>
+  );
 
-      {/* Add Comment Section */}
-      <View style={generalStyles.commentInputContainer}>
-        <TextInput
-          style={inputStyles.prominentCommentInput}
-          placeholder="Write a comment..."
-          value={newComment}
-          onChangeText={setNewComment}
-          placeholderTextColor="#FFF"
-        />
+  const renderEditButton = () =>
+    isAuthor && (
+      <View style={generalStyles.buttonContainer}>
         <Pressable
-          style={buttonStyles.addCommentButton}
-          onPress={handleAddComment}
+          style={({ pressed }) => [
+            buttonStyles.editButton,
+            pressed && buttonStyles.editButtonPressed,
+          ]}
+          onPress={() => navigation.navigate("EditPost", { post })}
         >
           <View style={buttonStyles.buttonContent}>
             <Feather
-              name="send"
+              name="edit-2"
               size={20}
               color="#FFF"
               style={buttonStyles.iconSpacing}
             />
-            <Text style={buttonStyles.addCommentButtonText}>Post</Text>
+            <Text style={buttonStyles.editButtonText}>Edit Post</Text>
           </View>
         </Pressable>
       </View>
+    );
 
-      {/* Edit Button for Author */}
-      {isAuthor && (
-        <View style={generalStyles.buttonContainer}>
-          <Pressable
-            style={({ pressed }) => [
-              buttonStyles.editButton,
-              pressed && buttonStyles.editButtonPressed,
-            ]}
-            onPress={() => navigation.navigate("EditPost", { post })}
-          >
-            <View style={buttonStyles.buttonContent}>
-              <Feather
-                name="edit-2"
-                size={20}
-                color="#FFF"
-                style={buttonStyles.iconSpacing}
-              />
-              <Text style={buttonStyles.editButtonText}>Edit Post</Text>
-            </View>
-          </Pressable>
+  const renderSeparator = () => (
+    <View style={generalStyles.separator} />
+  );
+
+  return (
+    <FlatList
+      data={comments}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <View style={generalStyles.commentItem}>
+          <Text style={generalStyles.commentAuthor}>{item.authorName}</Text>
+          <Text style={generalStyles.commentText}>{item.text}</Text>
         </View>
       )}
-    </View>
+      ItemSeparatorComponent={renderSeparator}
+      ListHeaderComponent={
+        <>
+          {renderPostHeader()}
+          <View style={generalStyles.commentsSection}>
+            <Text style={generalStyles.commentsHeader}>Comments</Text>
+            {loadingComments && (
+              <Text style={generalStyles.loadingText}>
+                Loading comments...
+              </Text>
+            )}
+          </View>
+        </>
+      }
+      ListFooterComponent={
+        <>
+          {renderAddCommentInput()}
+          {renderEditButton()}
+        </>
+      }
+      ListEmptyComponent={
+        !loadingComments && (
+          <Text style={generalStyles.emptyCommentsText}>
+            No comments yet. Be the first to comment!
+          </Text>
+        )
+      }
+    />
   );
 };
 
