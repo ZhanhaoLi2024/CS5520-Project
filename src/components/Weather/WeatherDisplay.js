@@ -123,18 +123,27 @@ export default function WeatherDisplay() {
                 onChangeText={setCity}
               />
               <TouchableOpacity
-                style={buttonStyles.weatherAddButton}
-                onPress={() => {
-                  if (city.trim()) {
-                    fetchWeather(city.trim());
-                    setCity("");
-                  } else {
-                    Alert.alert("Invalid Input", "Please enter a valid city name.");
-                  }
-                }}
-              >
-                <Text style={buttonStyles.weatherAddButtonText}>Add City</Text>
-              </TouchableOpacity>
+  style={buttonStyles.weatherAddButton}
+  onPress={() => {
+    if (city.trim()) {
+      fetchWeather(city.trim());
+      setCity("");
+    } else {
+      Alert.alert("Invalid Input", "Please enter a valid city name.");
+    }
+  }}
+>
+  <View style={buttonStyles.weatherAddButtonContent}>
+    <MaterialIcons
+      name="location-city"
+      size={20}
+      color="#FFF"
+      style={buttonStyles.iconSpacing}
+    />
+    <Text style={buttonStyles.weatherAddButtonText}>Add City</Text>
+  </View>
+</TouchableOpacity>
+
             </View>
           </View>
         }

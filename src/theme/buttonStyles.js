@@ -467,4 +467,13 @@ export const buttonStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+
+  weatherAddButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconSpacing: {
+    marginRight: 8, // Space between icon and text
+  },
 });
