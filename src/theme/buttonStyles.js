@@ -124,9 +124,10 @@ export const buttonStyles = StyleSheet.create({
   },
 
   addCommentButton: {
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "orange",
     padding: 12,
     borderRadius: 8,
+    width:"100%",
     alignItems: "center",
     justifyContent: "center",
   },

@@ -66,6 +66,17 @@ export const inputStyles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
 
+  prominentCommentInput: {
+    borderWidth: 1,
+    borderColor: "#333", // Dark border for contrast
+    backgroundColor: "#666", // Deeper color for the input background
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: "#FFF", // Text color for contrast
+    marginBottom: 12,
+  },
+
   searchInput: {
     flex: 1,
     borderWidth: 1,
