@@ -408,31 +408,32 @@ export const generalStyles = StyleSheet.create({
     borderTopColor: "#eee",
   },
 
-  imageContainer: {
-    alignItems: "center",
-    marginVertical: 10,
-    width: "100%",
-  },
-  imagePreview: {
-    width: "100%",
-    aspectRatio: 1,
-    marginBottom: 10,
+  imageManagerContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
     backgroundColor: "#f5f5f5",
-    borderRadius: 6,
+  },
+  imagePreview: {
+    width: '65%',
+    height: 200,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#e0e0e0",
+    borderRadius: 10,
+    marginBottom: 10,
+    marginTop: 10,
     overflow: "hidden",
   },
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 6,
   },
-  imageContainer: {
-    alignItems: "center",
-    width: "10%",
-    height: "10%",
-    marginVertical: 10,
+  noImageText: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
   },
   imageUri: {
     width: "100%",
@@ -666,4 +667,84 @@ export const generalStyles = StyleSheet.create({
     borderTopColor: "#eee",
     backgroundColor: "white",
   },
+
+  // props for Weather display
+  weatherContainer: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
+    padding: 10,
+  },
+  weatherSection: {
+    marginBottom: 20,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: "#ffffff",
+    elevation: 3,
+  },
+  weatherSectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  weatherCard: {
+    marginBottom: 20,
+    padding: 15,
+    borderRadius: 8,
+    backgroundColor: "#ffffff",
+    elevation: 3,
+  },
+  weatherCity: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  weatherTemp: {
+    fontSize: 48,
+    fontWeight: "bold",
+    color: "#FF6B6B",
+    marginBottom: 10,
+  },
+  weatherDescription: {
+    fontSize: 18,
+    color: "#333",
+    textTransform: "capitalize",
+  },
+  weatherEmptyText: {
+    fontSize: 16,
+    color: "#777",
+    textAlign: "center",
+    marginTop: 20,
+  },
+  weatherLoadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
+  },
+  weatherErrorOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 0, 0, 0.2)",
+  },
+  weatherError: {
+    fontSize: 16,
+    color: "red",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  weatherErrorHelp: {
+    fontSize: 14,
+    color: "#555",
+    textAlign: "center",
+  },
+  
 });

@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { generalStyles } from "../../theme/generalStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import { MaterialIcons } from "@expo/vector-icons"; // Import Material Icons
 
 const LocationPicker = ({ onLocationPicked }) => {
   const navigation = useNavigation();
@@ -108,9 +109,12 @@ const LocationPicker = ({ onLocationPicked }) => {
         ]}
         onPress={pickOnMapHandler}
       >
-        <Text style={buttonStyles.locationButtonText}>
-          {location ? "Change Location" : "Pick on Map"}
-        </Text>
+        <View style={buttonStyles.locationButtonContent}>
+          <MaterialIcons name="location-on" size={20} color="#FFF" />
+          <Text style={buttonStyles.locationButtonText}>
+            {location ? "Change Location" : "Pick on Map"}
+          </Text>
+        </View>
       </Pressable>
     </View>
   );

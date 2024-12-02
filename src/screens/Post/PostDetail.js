@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
 } from "react-native";
+import { MaterialIcons, Feather } from "@expo/vector-icons"; // Import icons
 import { auth } from "../../Firebase/firebaseSetup";
 import { addComment, getComments } from "../../Firebase/firebaseHelper";
 import { generalStyles } from "../../theme/generalStyles";
@@ -16,9 +17,6 @@ import { storage } from "../../Firebase/firebaseSetup";
 import { getDownloadURL, ref } from "firebase/storage";
 
 const PostDetail = ({ route, navigation }) => {
-  console.log("PostDetail.js", route);
-  console.log(route.params.post.location);
-  console.log(route.params.post.imageUri);
   const { post } = route.params;
   const currentUserId = auth.currentUser?.uid;
   const isAuthor = currentUserId === post.userId;
@@ -30,23 +28,18 @@ const PostDetail = ({ route, navigation }) => {
 
   useEffect(() => {
     const loadImage = async () => {
-      console.log("Post object:", post);
       if (post?.imageUri) {
         try {
-          console.log("Attempting to load image from:", post.imageUri);
           const reference = ref(storage, post.imageUri);
           const url = await getDownloadURL(reference);
-          console.log("Image URL obtained:", url);
           setImageUrl(url);
         } catch (err) {
           console.error("Error loading image:", err);
         }
-      } else {
-        console.log("No imageUri found in post object");
       }
     };
     loadImage();
-  }, [post, storage]);
+  }, [post]);
 
   useEffect(() => {
     navigation.setOptions({ title: post.title });
@@ -73,7 +66,7 @@ const PostDetail = ({ route, navigation }) => {
 
   return (
     <View style={generalStyles.container}>
-      {/* Post Title and Description */}
+      {/* Post Details */}
       <View style={generalStyles.postSection}>
         <Text style={generalStyles.postLabel}>Title</Text>
         <Text style={generalStyles.postValue}>{post.title}</Text>
@@ -82,16 +75,12 @@ const PostDetail = ({ route, navigation }) => {
         <Text style={generalStyles.postLabel}>Description</Text>
         <Text style={generalStyles.postValue}>{post.description}</Text>
       </View>
-
-      {/* Location */}
       <View style={generalStyles.postSection}>
         <Text style={generalStyles.postLabel}>Location</Text>
         <Text style={generalStyles.postValue}>
           {post.location.address || "No location provided"}
         </Text>
       </View>
-
-      {/* Image */}
       {imageUrl && (
         <View style={generalStyles.imageContainer}>
           <Image
@@ -127,23 +116,33 @@ const PostDetail = ({ route, navigation }) => {
           />
         )}
       </View>
-      {/* Add Comment Input */}
-      <View style={generalStyles.addCommentContainer}>
+
+      {/* Add Comment Section */}
+      <View style={generalStyles.commentInputContainer}>
         <TextInput
-          style={inputStyles.commentInput}
+          style={inputStyles.prominentCommentInput}
           placeholder="Write a comment..."
           value={newComment}
           onChangeText={setNewComment}
-          placeholderTextColor="#999"
+          placeholderTextColor="#FFF"
         />
         <Pressable
           style={buttonStyles.addCommentButton}
           onPress={handleAddComment}
         >
-          <Text style={buttonStyles.addCommentButtonText}>Post</Text>
+          <View style={buttonStyles.buttonContent}>
+            <Feather
+              name="send"
+              size={20}
+              color="#FFF"
+              style={buttonStyles.iconSpacing}
+            />
+            <Text style={buttonStyles.addCommentButtonText}>Post</Text>
+          </View>
         </Pressable>
       </View>
-      {/* Edit Button for the Author */}
+
+      {/* Edit Button for Author */}
       {isAuthor && (
         <View style={generalStyles.buttonContainer}>
           <Pressable
@@ -153,7 +152,15 @@ const PostDetail = ({ route, navigation }) => {
             ]}
             onPress={() => navigation.navigate("EditPost", { post })}
           >
-            <Text style={buttonStyles.editButtonText}>Edit Post</Text>
+            <View style={buttonStyles.buttonContent}>
+              <Feather
+                name="edit-2"
+                size={20}
+                color="#FFF"
+                style={buttonStyles.iconSpacing}
+              />
+              <Text style={buttonStyles.editButtonText}>Edit Post</Text>
+            </View>
           </Pressable>
         </View>
       )}

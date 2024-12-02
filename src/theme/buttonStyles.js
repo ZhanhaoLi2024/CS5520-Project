@@ -1,12 +1,89 @@
 import { StyleSheet } from "react-native";
 
 export const buttonStyles = StyleSheet.create({
+    // Reminder Button
+    reminderButton: {
+      backgroundColor: "#FF6B6B",
+      padding: 15,
+      borderRadius: 8,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 10,
+    },
+    reminderButtonText: {
+      color: "#FFF",
+      fontSize: 16,
+      fontWeight: "600",
+      marginLeft: 8,
+    },
+    timerIcon: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      backgroundColor: "#FFF",
+    },
+  
+    // Edit Button
+    editButton: {
+      backgroundColor: "#FFA500",
+      padding: 15,
+      borderRadius: 8,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 10,
+    },
+    editButtonText: {
+      color: "#FFF",
+      fontSize: 16,
+      fontWeight: "600",
+      marginLeft: 8,
+    },
+    pencilIcon: {
+      width: 20,
+      height: 20,
+      borderRadius: 3,
+      backgroundColor: "#FFF",
+    },
+  
+    // Date Button (from before)
+    dateButton: {
+      backgroundColor: "#FF6B6B",
+      padding: 12,
+      borderRadius: 8,
+      alignItems: "center",
+    },
+    dateButtonText: {
+      color: "#FFF",
+      fontSize: 16,
+    },
+    
   submitButton: {
     backgroundColor: "#FF6B6B",
-    padding: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    justifyContent: "center",
+    marginTop: 15,
+    flexDirection: "row", // Align icon and text horizontally
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconSpacing: {
+    marginRight: 8, // Space between icon and text
+  },
+  submitButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  buttonDisabled: {
+    backgroundColor: "#ffb3b3",
   },
 
   removeButton: {
@@ -35,11 +112,7 @@ export const buttonStyles = StyleSheet.create({
   submitButtonPressed: {
     opacity: 0.7,
   },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
+
 
   deleteButton: {
     padding: 15,
@@ -51,9 +124,10 @@ export const buttonStyles = StyleSheet.create({
   },
 
   addCommentButton: {
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "orange",
     padding: 12,
     borderRadius: 8,
+    width:"100%",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -65,9 +139,14 @@ export const buttonStyles = StyleSheet.create({
   editButton: {
     backgroundColor: "#FF6B6B",
     padding: 15,
+    //paddingVertical: 20,
+    justifyContent: "center",
     borderRadius: 8,
     alignItems: "center",
+    // flexDirection: "center",
+    // width: "100%",
     marginTop: 16,
+    marginBottom: 25,
   },
   editButtonPressed: {
     opacity: 0.8,
@@ -109,20 +188,26 @@ export const buttonStyles = StyleSheet.create({
   },
 
   imageButton: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#FF6B6B",
     padding: 15,
     borderRadius: 8,
+    width: "70%",
     alignItems: "center",
+    justifyContent: "center",
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderStyle: "dashed",
+    flexDirection: "row",
+  },
+  imageButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   imageButtonText: {
-    color: "#666",
+    color: "#FFF",
     fontSize: 16,
+    fontWeight: "600",
+    marginLeft: 8, // Space between icon and text
   },
-
   headerAddButton: {
     marginRight: 15,
   },
@@ -179,16 +264,25 @@ export const buttonStyles = StyleSheet.create({
 
   locationButton: {
     backgroundColor: "#FF6B6B",
-    padding: 12,
+    paddingVertical: 12,
+    width: "70%",
+    paddingHorizontal: 20,
     borderRadius: 8,
-    width: "100%",
+    
     alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row", // Ensure icon and text are aligned horizontally
   },
-
+  locationButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   locationButtonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "600",
+    marginLeft: 8, // Space between the icon and text
   },
 
   skipButton: {
@@ -342,5 +436,44 @@ export const buttonStyles = StyleSheet.create({
     color: "#FF6B6B",
     fontSize: 16,
     fontWeight: "600",
+  },
+
+  // Button props for weather display
+  weatherDeleteButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+    backgroundColor: "#ffeded",
+    padding: 8,
+    borderRadius: 5,
+  },
+  weatherDeleteButtonText: {
+    fontSize: 16,
+    color: "#FF6B6B",
+    marginLeft: 5,
+  },
+
+  weatherAddButton: {
+    backgroundColor: "#FF6B6B",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  weatherAddButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  weatherAddButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconSpacing: {
+    marginRight: 8, // Space between icon and text
   },
 });

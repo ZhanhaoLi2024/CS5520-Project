@@ -4,14 +4,15 @@ import {
   Text,
   ActivityIndicator,
   TextInput,
-  Button,
-  StyleSheet,
-  Alert,
-  FlatList,
   TouchableOpacity,
+  FlatList,
+  Alert,
 } from "react-native";
 import * as Location from "expo-location";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { generalStyles } from "../../theme/generalStyles"; // Import general styles
+import { inputStyles } from "../../theme/inputStyles"; // Import input styles
+import { buttonStyles } from "../../theme/buttonStyles"; // Import button styles
 
 export default function WeatherDisplay() {
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -40,24 +41,19 @@ export default function WeatherDisplay() {
         url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
       }
 
-      console.log("Fetching weather data from:", url);
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("API response error:", errorData);
         throw new Error(errorData.message || "Failed to fetch weather data.");
       }
 
       const data = await response.json();
-      console.log("Weather data fetched successfully:", data);
-
       if (queryCity) {
         setCityWeatherList((prev) => [...prev, data]);
       } else {
         setCurrentWeather(data);
       }
     } catch (err) {
-      console.error("Error in fetchWeather:", err);
       setError(err.message || "An error occurred while fetching weather data.");
     } finally {
       setLoading(false);
@@ -83,27 +79,32 @@ export default function WeatherDisplay() {
   };
 
   const renderCityWeather = ({ item }) => (
-    <View style={styles.cityWeather}>
-      <Text style={styles.city}>{item.name}</Text>
-      {getWeatherIcon(item.weather?.[0]?.description)}
-      <Text style={styles.temp}>{Math.round(item.main.temp)}°C</Text>
-      <Text style={styles.description}>{item.weather?.[0]?.description}</Text>
-      <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteCity(item.id)}>
+    <View style={generalStyles.weatherCard}>
+      <View style={generalStyles.weatherDetails}>
+        <Text style={generalStyles.weatherCity}>{item.name}</Text>
+        {getWeatherIcon(item.weather?.[0]?.description)}
+        <Text style={generalStyles.weatherTemp}>{Math.round(item.main.temp)}°C</Text>
+        <Text style={generalStyles.weatherDescription}>{item.weather?.[0]?.description}</Text>
+      </View>
+      <TouchableOpacity
+        style={buttonStyles.weatherDeleteButton}
+        onPress={() => handleDeleteCity(item.id)}
+      >
         <MaterialIcons name="delete" size={24} color="#FF6B6B" />
-        <Text style={styles.deleteButtonText}>Delete</Text>
+        <Text style={buttonStyles.weatherDeleteButtonText}>Delete</Text>
       </TouchableOpacity>
     </View>
   );
 
   return (
-    <View style={styles.container}>
+    <View style={generalStyles.weatherContainer}>
       {currentWeather && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Current Location Weather:</Text>
-          <Text style={styles.city}>{currentWeather.name}</Text>
+        <View style={generalStyles.weatherSection}>
+          <Text style={generalStyles.weatherSectionTitle}>Current Location Weather:</Text>
+          <Text style={generalStyles.weatherCity}>{currentWeather.name}</Text>
           {getWeatherIcon(currentWeather.weather?.[0]?.description)}
-          <Text style={styles.temp}>{Math.round(currentWeather.main.temp)}°C</Text>
-          <Text style={styles.description}>{currentWeather.weather?.[0]?.description}</Text>
+          <Text style={generalStyles.weatherTemp}>{Math.round(currentWeather.main.temp)}°C</Text>
+          <Text style={generalStyles.weatherDescription}>{currentWeather.weather?.[0]?.description}</Text>
         </View>
       )}
 
@@ -113,129 +114,54 @@ export default function WeatherDisplay() {
         renderItem={renderCityWeather}
         ListHeaderComponent={
           <View>
-            <Text style={styles.sectionTitle}>Saved Cities:</Text>
-            <View style={styles.inputSection}>
+            <Text style={generalStyles.weatherSectionTitle}>Saved Cities:</Text>
+            <View style={generalStyles.weatherInputSection}>
               <TextInput
-                style={styles.input}
+                style={inputStyles.weatherInput}
                 placeholder="Enter city name"
                 value={city}
                 onChangeText={setCity}
               />
-              <Button
-                title="Add City"
-                color="#FF6B6B"
-                onPress={() => {
-                  if (city.trim()) {
-                    fetchWeather(city.trim());
-                    setCity("");
-                  } else {
-                    Alert.alert("Invalid Input", "Please enter a valid city name.");
-                  }
-                }}
-              />
+              <TouchableOpacity
+  style={buttonStyles.weatherAddButton}
+  onPress={() => {
+    if (city.trim()) {
+      fetchWeather(city.trim());
+      setCity("");
+    } else {
+      Alert.alert("Invalid Input", "Please enter a valid city name.");
+    }
+  }}
+>
+  <View style={buttonStyles.weatherAddButtonContent}>
+    <MaterialIcons
+      name="location-city"
+      size={20}
+      color="#FFF"
+      style={buttonStyles.iconSpacing}
+    />
+    <Text style={buttonStyles.weatherAddButtonText}>Add City</Text>
+  </View>
+</TouchableOpacity>
+
             </View>
           </View>
         }
-        ListEmptyComponent={<Text style={styles.emptyText}>No cities added yet.</Text>}
+        ListEmptyComponent={<Text style={generalStyles.weatherEmptyText}>No cities added yet.</Text>}
       />
 
       {loading && (
-        <View style={styles.loadingOverlay}>
+        <View style={generalStyles.weatherLoadingOverlay}>
           <ActivityIndicator size="large" color="#FF6B6B" />
         </View>
       )}
 
       {error && (
-        <View style={styles.errorOverlay}>
-          <Text style={styles.error}>{error}</Text>
-          <Text style={styles.errorHelp}>Please check your internet connection or location permissions.</Text>
+        <View style={generalStyles.weatherErrorOverlay}>
+          <Text style={generalStyles.weatherError}>{error}</Text>
+          <Text style={generalStyles.weatherErrorHelp}>Please check your internet connection or location permissions.</Text>
         </View>
       )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-    padding: 10,
-  },
-  section: {
-    marginBottom: 20,
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: "#ffffff",
-    elevation: 3,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  city: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  temp: {
-    fontSize: 48,
-    fontWeight: "bold",
-    color: "#FF6B6B",
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 18,
-    color: "#333",
-    textTransform: "capitalize",
-  },
-  inputSection: {
-    marginTop: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  input: {
-    flex: 1,
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginRight: 10,
-  },
-  cityWeather: {
-    marginBottom: 20,
-    padding: 15,
-    borderRadius: 8,
-    backgroundColor: "#ffffff",
-    elevation: 3,
-  },
-  deleteButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  deleteButtonText: {
-    fontSize: 16,
-    color: "#FF6B6B",
-    marginLeft: 5,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: "#777",
-    textAlign: "center",
-    marginTop: 20,
-  },
-  error: {
-    fontSize: 16,
-    color: "red",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  errorHelp: {
-    fontSize: 14,
-    color: "#555",
-    textAlign: "center",
-  },
-});

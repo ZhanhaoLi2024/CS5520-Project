@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -7,16 +7,36 @@ import {
   Text,
   Alert,
 } from "react-native";
-import { updatePost } from "../../Firebase/firebaseHelper";
+import { updatePost, uploadPostImage } from "../../Firebase/firebaseHelper";
 import { generalStyles } from "../../theme/generalStyles";
 import { inputStyles } from "../../theme/inputStyles";
 import { buttonStyles } from "../../theme/buttonStyles";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+ // Import Material Icons for the check mark
+import ImageManager from "../../components/Image/ImageManager";
+import LocationPicker from "../../components/Location/LocationPicker";
 
 export default function EditPost({ route, navigation }) {
   const { post } = route.params;
   const [title, setTitle] = useState(post.title);
   const [description, setDescription] = useState(post.description);
+  const [imageUri, setImageUri] = useState(post.imageUri || null);
+  const [location, setLocation] = useState(post.location || null);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (route.params?.pickedLocation) {
+      setLocation(route.params.pickedLocation);
+    }
+  }, [route.params]);
+
+  const handleLocationPicked = (pickedLocation) => {
+    setLocation(pickedLocation);
+  };
+
+  const handleImageTaken = (uri) => {
+    setImageUri(uri);
+  };
 
   const handleSubmit = async () => {
     if (!title.trim()) {
@@ -31,9 +51,27 @@ export default function EditPost({ route, navigation }) {
 
     try {
       setSubmitting(true);
+
+      const locationData = location
+        ? {
+            coords: {
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            },
+            address: location.address || null,
+          }
+        : null;
+
+      let imageUrl = post.imageUri;
+      if (imageUri && imageUri !== post.imageUri) {
+        imageUrl = await uploadPostImage(imageUri);
+      }
+
       const updateData = {
         title: title.trim(),
         description: description.trim(),
+        location: locationData,
+        imageUri: imageUrl,
       };
 
       const result = await updatePost(post.id, updateData);
@@ -42,10 +80,9 @@ export default function EditPost({ route, navigation }) {
           {
             text: "OK",
             onPress: () => {
-              navigation.navigate("MainTabs", {
-                screen: "Explorer",
-                params: { screen: "MyPosts" },
-              });
+              navigation.navigate("Explorer", {
+                screen: "MyPosts",
+              });              
             },
           },
         ]);
@@ -57,8 +94,6 @@ export default function EditPost({ route, navigation }) {
       setSubmitting(false);
     }
   };
-
-  const pickImage = () => {};
 
   return (
     <ScrollView style={generalStyles.container}>
@@ -82,19 +117,31 @@ export default function EditPost({ route, navigation }) {
           editable={!submitting}
         />
 
-        <Pressable style={buttonStyles.imageButton} onPress={pickImage}>
-          <Text style={[buttonStyles.imageButtonText, { color: "red" }]}>
-            iteration1 has not yet added camera functionality
-          </Text>
-        </Pressable>
-        <Pressable style={buttonStyles.imageButton} onPress={pickImage}>
-          <Text style={[buttonStyles.imageButtonText, { color: "red" }]}>
-            iteration1 has not yet added location functionality
-          </Text>
-        </Pressable>
+        <ImageManager onImageTaken={handleImageTaken} />
 
-        <Pressable style={buttonStyles.submitButton} onPress={handleSubmit}>
-          <Text style={buttonStyles.submitButtonText}>Update Post</Text>
+        <LocationPicker onLocationPicked={handleLocationPicked} />
+
+        <Pressable
+          style={[
+            buttonStyles.submitButton,
+            submitting && buttonStyles.buttonDisabled,
+          ]}
+          onPress={handleSubmit}
+          disabled={submitting}
+        >
+          <View style={buttonStyles.buttonContent}>
+            {!submitting && (
+              <MaterialIcons
+                name="check-circle"
+                size={20}
+                color="#FFF"
+                style={buttonStyles.iconSpacing}
+              />
+            )}
+            <Text style={buttonStyles.submitButtonText}>
+              {submitting ? "Updating..." : "Update Post"}
+            </Text>
+          </View>
         </Pressable>
       </View>
     </ScrollView>

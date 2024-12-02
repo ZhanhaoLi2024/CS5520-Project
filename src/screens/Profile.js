@@ -19,6 +19,7 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import { generalStyles } from "../theme/generalStyles";
 import { inputStyles } from "../theme/inputStyles";
 import { buttonStyles } from "../theme/buttonStyles";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function Profile({ navigation }) {
   const [username, setUserName] = useState("");
@@ -138,9 +139,17 @@ export default function Profile({ navigation }) {
             setIsEditing(!isEditing);
           }}
         >
-          <Text style={buttonStyles.profileButtonText}>
-            {isEditing ? "Save Profile" : "Edit Profile"}
-          </Text>
+          <View style={buttonStyles.buttonContent}>
+            <MaterialIcons
+              name={isEditing ? "save" : "edit"}
+              size={20}
+              color="#FFF"
+              style={buttonStyles.iconSpacing}
+            />
+            <Text style={buttonStyles.profileButtonText}>
+              {isEditing ? "Save Profile" : "Edit Profile"}
+            </Text>
+          </View>
         </Pressable>
       </View>
 
@@ -168,7 +177,15 @@ export default function Profile({ navigation }) {
           onPress={handleUpdatePassword}
           disabled={!currentPassword || !newPassword}
         >
-          <Text style={buttonStyles.profileButtonText}>Update Password</Text>
+          <View style={buttonStyles.buttonContent}>
+            <MaterialIcons
+              name="lock"
+              size={20}
+              color="#FFF"
+              style={buttonStyles.iconSpacing}
+            />
+            <Text style={buttonStyles.profileButtonText}>Update Password</Text>
+          </View>
         </Pressable>
       </View>
     </ScrollView>
