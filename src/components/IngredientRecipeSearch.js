@@ -69,33 +69,35 @@ const IngredientRecipeSearch = ({ onRecipeSelect }) => {
   };
 
   const getRecipeDetails = async (recipeId) => {
-    if (!recipeId || !SPOONACULAR_API_KEY) {
-      Alert.alert("Error", "Invalid request");
-      return;
-    }
+    console.log("Recipe ID:", recipeId);
+    // if (!recipeId || !SPOONACULAR_API_KEY) {
+    //   Alert.alert("Error", "Invalid request");
+    //   return;
+    // }
 
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${SPOONACULAR_API_KEY}`
-      );
+    // try {
+    //   setLoading(true);
+    //   const response = await fetch(
+    //     `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${SPOONACULAR_API_KEY}`
+    //   );
 
-      if (!response.ok) {
-        throw new Error(`API responded with status: ${response.status}`);
-      }
+    //   if (!response.ok) {
+    //     throw new Error(`API responded with status: ${response.status}`);
+    //   }
 
-      const data = await response.json();
-      if (!data || !data.title) {
-        throw new Error("Invalid recipe data received");
-      }
+    //   const data = await response.json();
+    //   console.log("Recipe details:", data);
+    //   if (!data || !data.title) {
+    //     throw new Error("Invalid recipe data received");
+    //   }
 
-      setSelectedRecipe(data);
-    } catch (error) {
-      console.error("Error fetching recipe details:", error);
-      Alert.alert("Error", `Failed to fetch recipe details: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
+    //   setSelectedRecipe(data);
+    // } catch (error) {
+    //   console.error("Error fetching recipe details:", error);
+    //   Alert.alert("Error", `Failed to fetch recipe details: ${error.message}`);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   const handleRecipeSelect = () => {
@@ -159,9 +161,9 @@ const IngredientRecipeSearch = ({ onRecipeSelect }) => {
         />
         <View style={generalStyles.recipeInfo}>
           <Text style={generalStyles.recipeTitle}>{item.title}</Text>
-          <Text style={generalStyles.recipeMissing}>
+          {/* <Text style={generalStyles.recipeMissing}>
             Missing ingredients: {item.missedIngredientCount || 0}
-          </Text>
+          </Text> */}
         </View>
       </Pressable>
     );
