@@ -22,7 +22,7 @@ export default function ResetPassword({ navigation }) {
       Alert.alert(
         "Success",
         "Password reset email sent. Please check your inbox.",
-        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
+        [{ text: "OK", onPress: () => navigation.replace("LoginScreen") }]
       );
     } catch (error) {
       let errorMessage = "An error occurred while resetting password";

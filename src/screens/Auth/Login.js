@@ -163,7 +163,7 @@ export default function Login({ navigation }) {
         </Text>
       </Pressable>
 
-      <Pressable onPress={() => navigation.navigate("SignupScreen")}>
+      <Pressable onPress={() => navigation.replace("SignupScreen")}>
         <Text style={generalStyles.loginLinkText}>
           Don't have an account? Sign up
         </Text>
