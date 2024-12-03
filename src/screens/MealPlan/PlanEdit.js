@@ -23,9 +23,7 @@ export default function PlanEdit({ route, navigation }) {
           //   },
           onPress: () => {
             // Navigate back to Explorer screen
-            navigation.navigate("MainTabs", {
-              screen: "Plan",
-            });
+            navigation.navigate("Plan");
           },
         },
       ]);
