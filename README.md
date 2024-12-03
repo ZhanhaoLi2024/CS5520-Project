@@ -223,6 +223,17 @@ The Weather Display Screen provides real-time weather updates for both the user'
 - Retake option
 - Upload progress indicator
 
+### Recipe Search Results
+
+<img src="assets/README/Recipe_Search_Results1.PNG" alt="Recipe Search Results List" width="500">
+<img src="assets/README/Recipe_Search_Results2.PNG" alt="Recipe Search Results List" width="500">
+
+- Displays search results based on entered ingredients
+- Shows recipe titles
+- Each recipe card includes:
+  - Recipe image
+  - Title
+
 ### Reminder Setup
 
 <img src="assets/README/SloganSetup.png" alt="Reminder Setup Screenshot" width="500">
