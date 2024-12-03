@@ -4,7 +4,7 @@
 
 iCook is a mobile application designed to help international students connect through their shared love of cooking. The app enables students to share recipes, find fellow food enthusiasts in their area, and combat feelings of loneliness and cultural isolation through food-based social connections.
 
-## New Features Implemented in Iteration 2
+## New Features Implemented in Iteration 2 and 3
 
 ### 1. Authentication System
 
@@ -136,6 +136,31 @@ service firebase.storage {
   - Validations for future time selection in reminders.
   - Comprehensive fallback mechanisms for notification-related errors.
 
+### 7. Weather Display Screen
+
+#### Features:
+
+The Weather Display Screen provides real-time weather updates for both the user's current location and user-specified cities. Leveraging OpenWeather API and Expo Location, this feature is designed to enhance the user's experience by connecting food activities to weather conditions.
+
+- **Current Location Weather**:
+  - Automatically fetches and displays the weather for the user's current location using GPS.
+  - Provides a detailed weather overview, including:
+    - Temperature
+    - Weather description (e.g., cloudy, sunny, rainy)
+    - Real-time weather icons based on the current condition
+
+- **City Weather Search**:
+  - Users can manually search for cities and retrieve weather details.
+  - Adds searched cities to a list for easy reference.
+
+- **Saved Cities List**:
+  - Displays a scrollable list of cities with their current weather data.
+  - Includes options to delete cities from the saved list.
+
+- **Interactive Design**:
+  - Custom weather icons to visually represent conditions.
+  - User-friendly search input with validation for city names.
+
 ## Screenshots
 
 ### Authentication Flow
@@ -239,6 +264,26 @@ service firebase.storage {
 <img src="assets/README/Search.png" alt="Search Functionality Screenshot" width="500">
 - Users can search posts and plans using a search bar and type their input.
 
+### Weather:
+
+- Integrated OpenWeather API for weather data retrieval.
+- Utilized Expo Location for fetching the user's GPS-based location.
+- Ensured smooth UI integration with real-time updates and intuitive interaction.
+
+#### Screenshots:
+
+- **Current Weather Screen**:
+  
+  <img src="assets/README/Weather1.png" alt="Current Weather Screenshot" width="500">
+  
+- **City Weather Search**:
+  
+  <img src="assets/README/Weather2.png" alt="City Weather Search Screenshot" width="500">
+
+- **Saved Cities List**:
+  
+  <img src="assets/README/Weather3.png" alt="Saved Cities List Screenshot" width="500">
+
 ## Environment Variables
 
 Add the following to your .env file:
@@ -282,6 +327,26 @@ EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 | Notification Manager | ✅     | - Centralized notification logic in a reusable `NotificationManager` module<br>- Encapsulated Expo Notifications setup and scheduling functionality |
 | Response Listener    | ✅     | - Added a global notification response listener<br>- Ensured navigation integration to Plan Detail screen with proper error handling                |
 | Scalability          | ✅     | - Designed notification and search modules for easy extension<br>- Followed modular and reusable coding practices for future development            |
+
+### Weather Display Screen
+
+| Feature                     | Status | Description                                                                                                                                                          |
+| --------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current Location Weather    | ✅     | - Integrated GPS-based weather updates using OpenWeather API and Expo Location<br>- Displays current temperature, conditions, and dynamic weather icons               |
+| City Weather Search         | ✅     | - Added manual search functionality for cities<br>- Allows users to retrieve and save weather details for specific cities                                             |
+| Saved Cities List           | ✅     | - Implemented a scrollable list displaying saved cities with their current weather data<br>- Integrated delete functionality for removing cities from the saved list  |
+| UI/UX Enhancements          | ✅     | - Custom icons for real-time weather visualization<br>- User-friendly weather search input with validation                                                           |
+| Error Handling & Validation | ✅     | - Comprehensive validation for city names<br>- Proper error feedback for failed API calls                                                                            |
+
+#### Code Quality & Architecture
+
+| Feature              | Status | Description                                                                                                                                         |
+| -------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Weather Module       | ✅     | - Encapsulated weather API calls and GPS-based updates in a reusable module<br>- Ensured proper separation of concerns for data retrieval and UI rendering |
+| Scalability          | ✅     | - Designed the weather functionality to support additional cities and forecast features<br>- Followed modular and reusable coding practices            |
+| Error Handling       | ✅     | - Added comprehensive error handling for invalid inputs, API failures, and location permission issues                                                |
+
+
 
 ### Zhanhao Li
 
