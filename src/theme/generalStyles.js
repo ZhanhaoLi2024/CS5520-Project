@@ -746,5 +746,13 @@ export const generalStyles = StyleSheet.create({
     color: "#555",
     textAlign: "center",
   },
+
+
+  separator: {
+    height: 1,
+    backgroundColor: "#ddd",
+    marginVertical: 8,
+  },
+  
   
 });

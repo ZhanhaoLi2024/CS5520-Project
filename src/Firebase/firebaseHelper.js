@@ -300,18 +300,31 @@ export const updatePostStatistics = async (postId, field, increment) => {
 // ---------------
 export const addComment = async (postId, userId, text) => {
   try {
+    if (!userId) throw new Error("User ID is required to add a comment.");
+    if (!postId) throw new Error("Post ID is required to add a comment.");
+
+    // Fetch the user profile to get the username or fallback to userId
+    const userProfile = await getUserProfile(userId);
+    const authorName = userProfile?.data?.username || `User-${userId.slice(-4)}`;
+
     const commentData = {
       userId,
+      authorName,
       text,
       createdAt: new Date().toISOString(),
     };
+
+    // Add the comment to the Firestore collection
     await addDoc(collection(db, `posts/${postId}/comments`), commentData);
+
+    // Update the post's comments count
     await updatePostStatistics(postId, "commentsCount", 1);
   } catch (error) {
     console.error("Error adding comment:", error);
     throw error;
   }
 };
+
 
 export const getComments = async (postId) => {
   try {
