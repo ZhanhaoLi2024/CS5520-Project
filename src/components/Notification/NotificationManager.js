@@ -28,41 +28,49 @@ Notifications.setNotificationCategoryAsync("reminder", [
 
 export const NotificationManager = {
   getExpoPushToken: async () => {
-    if (!Constants.isDevice && !__DEV__) {
-      Alert.alert("Error", "Push notifications are only supported on physical devices.");
+    try {
+      if (!Constants.isDevice) {
+        Alert.alert("Error", "Push notifications are only supported on physical devices.");
+        return null;
+      }
+
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+
+      if (finalStatus !== "granted") {
+        Alert.alert("Permission Required", "You need to enable notifications to use this feature.");
+        return null;
+      }
+
+      const tokenData = await Notifications.getExpoPushTokenAsync();
+      console.log("Expo Push Token:", tokenData.data); // Log token for testing
+      return tokenData.data;
+    } catch (error) {
+      console.error("Error getting Expo Push Token:", error);
       return null;
     }
-
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-
-    if (finalStatus !== "granted") {
-      Alert.alert("Permission Required", "You need to enable notifications to use this feature.");
-      return null;
-    }
-
-    const tokenData = await Notifications.getExpoPushTokenAsync();
-    console.log("Expo Push Token:", tokenData.data); // Log token for testing
-    return tokenData.data;
   },
 
   scheduleNotification: async (title, body, triggerDate, notificationData) => {
     try {
+      // Ensure seconds and milliseconds are set to zero
+      triggerDate.setSeconds(0, 0);
+  
       if (triggerDate <= new Date()) {
         Alert.alert("Invalid Time", "Please select a future time for the notification.");
         return;
       }
-
+  
       const trigger = {
         type: "date",
-        date: triggerDate,
+        date: triggerDate, // Now this will have seconds and milliseconds as 0
       };
-
+  
       await Notifications.scheduleNotificationAsync({
         content: {
           title,
@@ -72,12 +80,14 @@ export const NotificationManager = {
         },
         trigger,
       });
-
-      console.log("Notification scheduled successfully");
+  
+      console.log("Notification scheduled successfully for:", triggerDate.toISOString());
     } catch (error) {
       console.error("Error scheduling notification:", error);
     }
   },
+  
+  
 
   sendPushNotification: async (expoPushToken, title, body, notificationData) => {
     try {
@@ -86,7 +96,7 @@ export const NotificationManager = {
         sound: "default",
         title,
         body,
-        categoryId: "reminder",
+        categoryIdentifier: "reminder", // Corrected property name
         data: notificationData,
       };
 
@@ -111,7 +121,7 @@ export const NotificationManager = {
 
 // Register and handle notification responses
 export const setupNotificationResponseListener = (navigation) => {
-  Notifications.addNotificationResponseReceivedListener(async (response) => {
+  const subscription = Notifications.addNotificationResponseReceivedListener(async (response) => {
     const actionId = response.actionIdentifier;
     const notificationId = response.notification.request.identifier; // Get the notification ID
 
@@ -135,4 +145,9 @@ export const setupNotificationResponseListener = (navigation) => {
       console.error("Error dismissing notification:", error);
     }
   });
+
+  // Return cleanup function
+  return () => {
+    subscription.remove();
+  };
 };
